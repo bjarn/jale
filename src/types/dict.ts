@@ -1,0 +1,1 @@
+type Dict = { [key: string]: string}
