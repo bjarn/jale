@@ -5,7 +5,7 @@
   "author": "Bjarn Bronsveld",
   "main": "./src/sheepdog.js",
   "bin": {
-    "bull": "./bin/sheepdog.js"
+    "sheepdog": "./bin/sheepdog.js"
   },
   "keywords": ["local", "development", "environment", "macos", "sheepdog"],
   "repository": "https://github.com/bjarn/sheepdog",
