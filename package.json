@@ -5,9 +5,15 @@
   "author": "Bjarn Bronsveld",
   "main": "./src/sheepdog.js",
   "bin": {
-    "sheepdog": "./bin/sheepdog.js"
+    "sheepdog": "bin/sheepdog.js"
   },
-  "keywords": ["local", "development", "environment", "macos", "sheepdog"],
+  "keywords": [
+    "local",
+    "development",
+    "environment",
+    "macos",
+    "sheepdog"
+  ],
   "repository": "https://github.com/bjarn/sheepdog",
   "license": "GPLv3",
   "preferGlobal": true,
@@ -21,8 +27,10 @@
   },
   "dependencies": {
     "commander": "^6.2.0",
+    "execa": "^4.1.0",
     "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
-    "kleur": "^4.1.3"
+    "kleur": "^4.1.3",
+    "listr2": "^3.2.3"
   }
 }

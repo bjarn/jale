@@ -1,5 +1,10 @@
+import * as fs from 'fs'
 import inquirer from 'inquirer'
 import {white} from 'kleur/colors'
+import {Listr, ListrContext, ListrTask, ListrTaskResult, ListrTaskWrapper} from 'listr2'
+import {Config, Database} from '../models/config'
+import {client} from '../utils/os'
+import {ensureHomeDirExists, sheepdogConfigPath} from '../utils/sheepdog'
 import CliController from './cliController'
 
 class InstallController extends CliController {
@@ -52,17 +57,85 @@ class InstallController extends CliController {
         inquirer
             .prompt(this.questions)
             .then(answers => {
-                // Use user feedback for... whatever!!
+                this.install(answers)
             })
             .catch(error => {
-                if (error.isTtyError) {
-                    // Prompt couldn't be rendered in the current environment
-                } else {
-                    // Something else went wrong
-                }
+                console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.')
             })
 
         return true
+    }
+
+    /**
+     * Start the installation of Sheepdog.
+     *
+     * @param answers
+     * @private
+     */
+    private async install(answers: any) {
+        await ensureHomeDirExists()
+
+        const tasks = new Listr([
+            this.configureSheepdog(answers),
+            this.installDnsMasq(answers.domain)
+        ])
+
+        try {
+            // We're all set. Let's configure Sheepdog. Ruff.
+            await tasks.run()
+            console.log(`\n\n✨ Successfully installed Sheepdog! ✅\n`)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    /**
+     * Configure Sheepdog by parsing the answers and creating a configuration file.
+     *
+     * @param answers
+     * @private
+     */
+    private configureSheepdog(answers: any): ListrTask {
+        return {
+            title: 'Configure Sheepdog',
+            task: (ctx, task): void => {
+                let config = <Config>{
+                    domain: answers.domain,
+                    database: <Database>{password: 'root'},
+                    services: null // TODO: Make services configurable.
+                }
+
+                return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config))
+            }
+        }
+    }
+
+
+    //
+    // Service installation functions
+    //
+
+    private installDnsMasq(domain: string): ListrTask {
+        return {
+            title: 'Installing service: DnsMasq',
+            task: (ctx, task): Listr =>
+                task.newListr([
+                    {
+                        title: 'Installing DnsMasq',
+                        skip: async (ctx) => {
+                            const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
+                            if (isInstalled) {
+                                return 'DnsMasq is already installed.'
+                            }
+
+                            return false
+                        },
+                        task: async (): Promise<void> => {
+
+                        }
+                    }
+                ])
+        }
     }
 
 }

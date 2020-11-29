@@ -1,10 +1,15 @@
-interface PackageManager {
-    name: string
-    path: string
-    alias: string
+abstract class PackageManager {
+    name: string | undefined
+    path: string | undefined
+    alias: string | undefined
 
-    installCommand: string
-    removeCommand: string
-    updateCommand: string
-    upgradeCommand: string
+    abstract install(pkg: string): boolean
+
+    abstract remove(pkg: string): boolean
+
+    abstract update(): boolean
+
+    abstract upgrade(pkg: string | undefined): boolean
+
+    abstract packageIsInstalled(pkg: string): Promise<boolean>
 }
