@@ -1,4 +1,5 @@
 import execa from 'execa'
+import PackageManager from '../packageManager'
 
 class Homebrew extends PackageManager {
     alias: string = 'brew'
