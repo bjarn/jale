@@ -87,7 +87,7 @@ class InstallController extends CliController {
         try {
             // We're all set. Let's configure Sheepdog. Ruff.
             await tasks.run()
-            console.log(`\n\n✨ Successfully installed Sheepdog! ✅\n`)
+            console.log(`\n✨ Successfully installed Sheepdog! ✅\n`)
         } catch (e) {
             console.error(e)
         }
@@ -99,48 +99,44 @@ class InstallController extends CliController {
      * @param answers
      * @private
      */
-    private configureSheepdog(answers: any): ListrTask {
-        return {
-            title: 'Configure Sheepdog',
-            task: (ctx, task): void => {
-                let config = <Config>{
-                    domain: answers.domain,
-                    database: <Database>{password: 'root'},
-                    services: null // TODO: Make services configurable.
-                }
-
-                return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config, null, 2))
+    private configureSheepdog = (answers: any): ListrTask => ({
+        title: 'Configure Sheepdog',
+        task: (ctx, task): void => {
+            let config = <Config>{
+                domain: answers.domain,
+                database: <Database>{password: 'root'},
+                services: null // TODO: Make services configurable.
             }
+
+            return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config, null, 2))
         }
-    }
+    })
 
 
     //
     // Service installation functions
     //
 
-    private installDnsMasq(domain: string): ListrTask {
-        return {
-            title: 'Install Dnsmasq',
-            task: (ctx, task): Listr =>
-                task.newListr([
-                    {
-                        title: 'Installing DnsMasq',
-                        // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                        skip: async (ctx): Promise<string | boolean> => {
-                            const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
+    private installDnsMasq = (domain: string): ListrTask => ({
+        title: 'Install Dnsmasq',
+        task: (ctx, task): Listr =>
+            task.newListr([
+                {
+                    title: 'Installing DnsMasq',
+                    // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                    skip: async (ctx): Promise<string | boolean> => {
+                        const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
 
-                            if (isInstalled) return 'Dnsmasq is already installed.'
-                        },
-                        task: (new Dnsmasq).install
+                        if (isInstalled) return 'Dnsmasq is already installed.'
                     },
-                    {
-                        title: 'Configure DnsMasq',
-                        task: (new Dnsmasq).configure
-                    }
-                ])
-        }
-    }
+                    task: (new Dnsmasq).install
+                },
+                {
+                    title: 'Configure DnsMasq',
+                    task: (new Dnsmasq).configure
+                }
+            ])
+    })
 
 }
 
