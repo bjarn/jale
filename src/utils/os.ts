@@ -1,3 +1,5 @@
+import Darwin from '../client/os/darwin'
+
 function client(): Client {
     switch (process.platform) {
         case 'darwin':

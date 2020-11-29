@@ -13,3 +13,5 @@ abstract class PackageManager {
 
     abstract packageIsInstalled(pkg: string): Promise<boolean>
 }
+
+export default PackageManager

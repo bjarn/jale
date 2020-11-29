@@ -1,3 +1,6 @@
+import PackageManager from '../packageManager'
+import Homebrew from '../packageManager/homebrew'
+
 class Darwin implements Client {
 
     operatingSystem: string = "darwin"
@@ -5,3 +8,5 @@ class Darwin implements Client {
     services: any = null
 
 }
+
+export default Darwin

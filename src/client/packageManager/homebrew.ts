@@ -32,3 +32,5 @@ class Homebrew extends PackageManager {
         return false;
     }
 }
+
+export default Homebrew
