@@ -131,8 +131,6 @@ class InstallController extends CliController {
                             const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
 
                             if (isInstalled) return 'Dnsmasq is already installed.'
-
-                            return false
                         },
                         task: (new Dnsmasq).install
                     },

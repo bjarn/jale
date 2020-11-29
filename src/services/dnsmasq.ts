@@ -1,3 +1,4 @@
+import delay from '../utils/delay'
 import Service from './service'
 
 class Dnsmasq extends Service {
@@ -11,7 +12,10 @@ class Dnsmasq extends Service {
         super(service, requireRoot);
     }
 
-    configure = (): Promise<boolean> => Promise.resolve(false)
+    configure = async (): Promise<boolean> => {
+        await delay(5000)
+        return Promise.resolve(false)
+    }
 
 }
 

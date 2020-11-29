@@ -41,6 +41,33 @@ class BrewServices extends ServiceCtl {
             return false
         }
     }
+
+    async restartAsRoot(pkg: string): Promise<boolean> {
+        try {
+            await execa('sudo', ['brew', 'services', 'restart', pkg])
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    async startAsRoot(pkg: string): Promise<boolean> {
+        try {
+            await execa('sudo', ['brew', 'services', 'start', pkg])
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    async stopAsRoot(pkg: string): Promise<boolean> {
+        try {
+            await execa('sudo', ['brew', 'services', 'stop', pkg])
+            return true
+        } catch (e) {
+            return false
+        }
+    }
 }
 
 export default BrewServices
