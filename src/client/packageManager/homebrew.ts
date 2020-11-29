@@ -6,8 +6,10 @@ class Homebrew extends PackageManager {
     name: string = 'Homebrew'
     path: string = '/usr/local/bin/brew'
 
-    install(pkg: string): boolean {
-        return false;
+    async install(pkg: string): Promise<boolean> {
+        const {stdout} = await execa('brew', ['install', pkg])
+
+        return stdout.includes(pkg)
     }
 
     /**
@@ -16,21 +18,21 @@ class Homebrew extends PackageManager {
      * @param pkg
      */
     async packageIsInstalled(pkg: string): Promise<boolean> {
-        const {stdout} = await execa('brew', ['list', '--formulas'])
+        const {stdout} = await execa('brew', ['list', '--formula'])
 
         return stdout.includes(pkg)
     }
 
-    remove(pkg: string): boolean {
-        return false;
+    remove(pkg: string): Promise<boolean> {
+        return Promise.resolve(false)
     }
 
-    update(): boolean {
-        return false;
+    update(): Promise<boolean> {
+        return Promise.resolve(false)
     }
 
-    upgrade(pkg: string | undefined): boolean {
-        return false;
+    upgrade(pkg: string | undefined): Promise<boolean> {
+        return Promise.resolve(false)
     }
 }
 

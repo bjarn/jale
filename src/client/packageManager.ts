@@ -1,15 +1,15 @@
 abstract class PackageManager {
-    name: string | undefined
-    path: string | undefined
-    alias: string | undefined
+    abstract name: string
+    abstract path: string
+    abstract alias: string
 
-    abstract install(pkg: string): boolean
+    abstract install(pkg: string): Promise<boolean>
 
-    abstract remove(pkg: string): boolean
+    abstract remove(pkg: string): Promise<boolean>
 
-    abstract update(): boolean
+    abstract update(): Promise<boolean>
 
-    abstract upgrade(pkg: string | undefined): boolean
+    abstract upgrade(pkg: string | undefined): Promise<boolean>
 
     abstract packageIsInstalled(pkg: string): Promise<boolean>
 }

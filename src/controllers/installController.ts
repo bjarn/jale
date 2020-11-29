@@ -3,6 +3,7 @@ import inquirer from 'inquirer'
 import {white} from 'kleur/colors'
 import {Listr, ListrContext, ListrTask, ListrTaskResult, ListrTaskWrapper} from 'listr2'
 import {Config, Database} from '../models/config'
+import Dnsmasq from '../services/dnsmasq'
 import {client} from '../utils/os'
 import {ensureHomeDirExists, sheepdogConfigPath} from '../utils/sheepdog'
 import CliController from './cliController'
@@ -51,6 +52,9 @@ class InstallController extends CliController {
         }
     ]
 
+    /**
+     * Execute the installation process.
+     */
     execute(): boolean {
         console.log(white('✨ Thanks for using Sheepdog! Let\'s get you started quickly.\n'))
 
@@ -105,7 +109,7 @@ class InstallController extends CliController {
                     services: null // TODO: Make services configurable.
                 }
 
-                return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config))
+                return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config, null, 2))
             }
         }
     }
@@ -117,22 +121,24 @@ class InstallController extends CliController {
 
     private installDnsMasq(domain: string): ListrTask {
         return {
-            title: 'Installing service: DnsMasq',
+            title: 'Install Dnsmasq',
             task: (ctx, task): Listr =>
                 task.newListr([
                     {
                         title: 'Installing DnsMasq',
-                        skip: async (ctx) => {
+                        // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                        skip: async (ctx): Promise<string | boolean> => {
                             const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
-                            if (isInstalled) {
-                                return 'DnsMasq is already installed.'
-                            }
+
+                            if (isInstalled) return 'Dnsmasq is already installed.'
 
                             return false
                         },
-                        task: async (): Promise<void> => {
-
-                        }
+                        task: (new Dnsmasq).install
+                    },
+                    {
+                        title: 'Configure DnsMasq',
+                        task: (new Dnsmasq).configure
                     }
                 ])
         }

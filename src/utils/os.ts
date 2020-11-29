@@ -1,3 +1,4 @@
+import Client from '../client/client'
 import Darwin from '../client/os/darwin'
 
 function client(): Client {
