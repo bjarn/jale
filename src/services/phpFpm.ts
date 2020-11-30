@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as os from 'os'
 import zPerformanceIni from '../templates/zPerformanceIni'
 import {ensureDirectoryExists} from '../utils/filesystem'
+import {client} from '../utils/os'
 import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import Service from './service'
 
@@ -59,6 +60,10 @@ abstract class PhpFpm extends Service {
         }
 
         return fs.writeFileSync(path, zPerformanceIni)
+    }
+
+    linkPhpVersion = async (): Promise<boolean> => {
+        return client().serviceCtl.link(this.service)
     }
 }
 

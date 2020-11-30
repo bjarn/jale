@@ -209,17 +209,17 @@ class InstallController extends CliController {
                         },
                         {
                             title: `Link ${phpVersion}`,
-                            enabled: (ctx): boolean => index === 0,
-                            task: (getPhpFpmByName(phpVersion)).restart
+                            enabled: (): boolean => index === 0,
+                            task: (getPhpFpmByName(phpVersion)).linkPhpVersion
                         },
                         {
                             title: `Restart ${phpVersion}`,
-                            enabled: (ctx): boolean => index === 0,
+                            enabled: (): boolean => index === 0,
                             task: (getPhpFpmByName(phpVersion)).restart
                         },
                         {
                             title: `Stop ${phpVersion}`,
-                            enabled: (ctx): boolean => index !== 0,
+                            enabled: (): boolean => index !== 0,
                             task: (getPhpFpmByName(phpVersion)).stop
                         }
                     ])

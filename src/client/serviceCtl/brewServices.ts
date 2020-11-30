@@ -68,6 +68,15 @@ class BrewServices extends ServiceCtl {
             return false
         }
     }
+
+    async link(pkg: string): Promise<boolean> {
+        try {
+            await execa('brew', ['link', '--overwrite', pkg])
+            return true
+        } catch (e) {
+            return false
+        }
+    }
 }
 
 export default BrewServices
