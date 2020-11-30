@@ -4,6 +4,7 @@ import {white} from 'kleur/colors'
 import {Listr, ListrTask} from 'listr2'
 import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
+import Mailhog from '../services/mailhog'
 import Nginx from '../services/nginx'
 import {clearConsole} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
@@ -47,7 +48,7 @@ class InstallController {
             type: 'checkbox',
             name: 'optionalServices',
             message: 'Optional services',
-            choices: ['redis', 'elasticsearch', 'mailhog']
+            choices: ['redis', 'elasticsearch']
         },
         {
             type: 'checkbox',
@@ -92,6 +93,7 @@ class InstallController {
             this.configureSheepdog(answers),
             this.installDnsMasq(),
             this.installNginx(),
+            this.installMailhog(),
             {
                 title: 'Install PHP-FPM',
                 task: (ctx, task): Listr =>
@@ -245,12 +247,38 @@ class InstallController {
                     task: (getDatabaseByName(database)).install
                 },
                 {
-                    title: 'Configure Database',
+                    title: 'Configure ${database}',
                     task: (getDatabaseByName(database)).configure
                 },
                 {
-                    title: 'Restart Database',
+                    title: 'Restart ${database}',
                     task: (getDatabaseByName(database)).restart
+                }
+            ])
+    })
+
+    // TODO: make Mailhog configurable. Currently required due to php config which has mailhog set for sendmail.
+    private installMailhog = (): ListrTask => ({
+        title: 'Install Mailhog',
+        task: (ctx, task): Listr =>
+            task.newListr([
+                {
+                    title: `Installing Mailhog`,
+                    // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                    skip: async (ctx): Promise<string | boolean> => {
+                        const isInstalled = await client().packageManager.packageIsInstalled('mailhog')
+
+                        if (isInstalled) return `Mailhog is already installed.`
+                    },
+                    task: (new Mailhog).install
+                },
+                {
+                    title: 'Configure Mailhog',
+                    task: (new Mailhog).configure
+                },
+                {
+                    title: 'Restart Mailhog',
+                    task: (new Mailhog).restart
                 }
             ])
     })

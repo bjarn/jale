@@ -76,6 +76,7 @@ abstract class Mysql extends Service {
             })
             return true
         } catch (e) {
+            // Password probably is not equal to oldPassword so it failed.
             return false
         }
     }

@@ -1,6 +1,4 @@
 import * as fs from 'fs'
-import {existsSync} from 'fs'
-import {mkdir} from 'fs/promises'
 import {homedir} from 'os'
 import {Config} from '../models/config'
 import {ensureDirectoryExists} from './filesystem'
@@ -8,27 +6,32 @@ import {ensureDirectoryExists} from './filesystem'
 /**
  * Get the location of the home directory of Sheepdog.
  */
-let sheepdogHomeDir: string = `${homedir()}/.sheepdog`
+const sheepdogHomeDir: string = `${homedir()}/.sheepdog`
 
 /**
  * Get the location of the Sheepdog configuration.
  */
-let sheepdogConfigPath: string = `${sheepdogHomeDir}/config.json`
+const sheepdogConfigPath: string = `${sheepdogHomeDir}/config.json`
 
 /**
  * Get the location of the Sheepdog log directory.
  */
-let sheepdogLogsPath: string = `${sheepdogHomeDir}/log`
+const sheepdogLogsPath: string = `${sheepdogHomeDir}/log`
 
 /**
  * Get the location of the Sheepdog log directory.
  */
-let sheepdogSitesPath: string = `${sheepdogHomeDir}/sites`
+const sheepdogSitesPath: string = `${sheepdogHomeDir}/sites`
 
 /**
  * Get the location of the fallback server of Sheepdog.
  */
-let sheepdogFallbackServer: string = `${sheepdogHomeDir}/server/index.php`
+const sheepdogFallbackServer: string = `${sheepdogHomeDir}/server/index.php`
+
+/**
+ * Get the location of the Nginx apps vhost directory.
+ */
+const sheepdogNginxAppsPath: string = `/usr/local/etc/nginx/sheepdog/apps`
 
 /**
  * Ensure the Sheepdog home directory exists. If it does not exist, we'll create it.
@@ -50,6 +53,7 @@ export {
     sheepdogLogsPath,
     sheepdogSitesPath,
     sheepdogFallbackServer,
+    sheepdogNginxAppsPath,
     ensureHomeDirExists,
     getConfig
 }
