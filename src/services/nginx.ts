@@ -14,6 +14,7 @@ class Nginx extends Service {
     service = 'nginx'
     requireRoot = true
 
+    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
     configPath = '/usr/local/etc/nginx/nginx.conf'
     sheepdogNginxFolderPath = '/usr/local/etc/nginx/sheepdog'
     sheepdogNginxConfigPath = `${this.sheepdogNginxFolderPath}/sheepdog.conf`

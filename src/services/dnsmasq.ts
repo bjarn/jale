@@ -10,6 +10,7 @@ class Dnsmasq extends Service {
     service = 'dnsmasq'
     requireRoot = true
 
+    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
     resolverPath = '/etc/resolver'
     configPath = '/usr/local/etc/dnsmasq.conf'
 
@@ -51,8 +52,11 @@ class Dnsmasq extends Service {
     addDomainResolver = async (domain: string): Promise<boolean> => {
         try {
             await requireSudo()
-            await execa('sudo', ['mkdir', '-p', this.resolverPath])
-            await execa('sudo', ['echo', 'nameserver 127.0.0.1', '>', `${this.resolverPath}/${domain}`])
+            await execa('sudo', ['mkdir', '-p', this.resolverPath], {shell: true, stdio: 'inherit'})
+            await execa('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
+                shell: true,
+                stdio: 'inherit'
+            })
 
             return true
         } catch (e) {
