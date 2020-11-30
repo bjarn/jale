@@ -1,13 +1,9 @@
-import execa from 'execa'
 import * as fs from 'fs'
-import {Config} from '../models/config'
 import fastcgiParams from '../templates/fastcgiParams'
 import nginxConf from '../templates/nginx'
 import sheepdogNginxConf from '../templates/nginxSheepdog'
-import delay from '../utils/delay'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {getConfig, sheepdogHomeDir, sheepdogLogsPath, sheepdogSitesPath} from '../utils/sheepdog'
-import {requireSudo} from '../utils/sudo'
+import {sheepdogLogsPath, sheepdogSitesPath} from '../utils/sheepdog'
 import Service from './service'
 
 class Nginx extends Service {

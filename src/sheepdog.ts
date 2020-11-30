@@ -5,6 +5,8 @@ const commands = commandLoader(program)
 
 const packageJson = require('../package.json')
 
+console.clear()
+
 program
     .version(packageJson.version)
     .usage('<command> [options]')

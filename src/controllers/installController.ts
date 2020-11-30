@@ -1,12 +1,13 @@
 import * as fs from 'fs'
 import inquirer from 'inquirer'
 import {white} from 'kleur/colors'
-import {Listr, ListrContext, ListrTask, ListrTaskResult, ListrTaskWrapper} from 'listr2'
+import {Listr, ListrTask} from 'listr2'
 import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import Nginx from '../services/nginx'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
+import {getPhpFpmByName} from '../utils/phpFpm'
 import {ensureHomeDirExists, sheepdogConfigPath, sheepdogLogsPath} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
 import CliController from './cliController'
@@ -28,8 +29,8 @@ class InstallController extends CliController {
             name: 'phpVersions',
             message: 'Choose one or more Php versions',
             choices: ['php@7.1', 'php@7.2', 'php@7.3', 'php@7.4', 'php@8.0'],
-            validate: (input: string) => {
-                return input !== ''
+            validate: (input: string[]) => {
+                return input.length >= 1
             }
         },
         {
@@ -37,8 +38,8 @@ class InstallController extends CliController {
             name: 'database',
             message: 'Choose a database',
             choices: ['mysql@8.0', 'mysql@5.7', 'mysql@5.6', 'mariadb'],
-            validate: (input: string) => {
-                return input !== ''
+            validate: (input: string[]) => {
+                return input.length >= 1
             }
         },
         {
@@ -88,7 +89,14 @@ class InstallController extends CliController {
         const tasks = new Listr([
             this.configureSheepdog(answers),
             this.installDnsMasq(),
-            this.installNginx()
+            this.installNginx(),
+            {
+                title: 'Install Php-Fpm',
+                task: (ctx, task): Listr =>
+                    task.newListr(
+                        this.installPhpFpm(answers.phpVersions)
+                    )
+            }
         ])
 
         try {
@@ -173,6 +181,39 @@ class InstallController extends CliController {
                 }
             ])
     })
+
+    private installPhpFpm = (phpVersions: string[]): ListrTask[] => {
+        let phpInstallTasks: ListrTask[] = []
+
+        phpVersions.forEach((phpVersion: string) => {
+            phpInstallTasks.push({
+                title: `Install ${phpVersion}`,
+                task: (ctx, task): Listr =>
+                    task.newListr([
+                        {
+                            title: `Installing ${phpVersion}`,
+                            // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                            skip: async (ctx): Promise<string | boolean> => {
+                                const isInstalled = await client().packageManager.packageIsInstalled(phpVersion)
+
+                                if (isInstalled) return `${phpVersion} is already installed.`
+                            },
+                            task: (getPhpFpmByName(phpVersion)).install
+                        },
+                        {
+                            title: `Configure ${phpVersion}`,
+                            task: (getPhpFpmByName(phpVersion)).configure
+                        },
+                        {
+                            title: `Restart ${phpVersion}`,
+                            task: (getPhpFpmByName(phpVersion)).restart
+                        }
+                    ])
+            })
+        })
+
+        return phpInstallTasks
+    }
 
 }
 
