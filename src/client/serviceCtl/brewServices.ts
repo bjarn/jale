@@ -8,7 +8,7 @@ class BrewServices extends ServiceCtl {
 
     async reload(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['services', 'reload', pkg])
+            await execa('brew', ['services', 'reload', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -17,7 +17,8 @@ class BrewServices extends ServiceCtl {
 
     async restart(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['services', 'restart', pkg])
+            await this.stop(pkg)
+            await this.start(pkg)
             return true
         } catch (e) {
             return false
@@ -26,16 +27,16 @@ class BrewServices extends ServiceCtl {
 
     async start(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['services', 'start', pkg])
+            await execa('brew', ['services', 'start', pkg], {shell: true})
             return true
         } catch (e) {
-            return false
+            throw e
         }
     }
 
     async stop(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['services', 'stop', pkg])
+            await execa('brew', ['services', 'stop', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -44,7 +45,8 @@ class BrewServices extends ServiceCtl {
 
     async restartAsRoot(pkg: string): Promise<boolean> {
         try {
-            await execa('sudo', ['brew', 'services', 'restart', pkg])
+            await this.stopAsRoot(pkg)
+            await this.startAsRoot(pkg)
             return true
         } catch (e) {
             return false
@@ -53,7 +55,7 @@ class BrewServices extends ServiceCtl {
 
     async startAsRoot(pkg: string): Promise<boolean> {
         try {
-            await execa('sudo', ['brew', 'services', 'start', pkg])
+            await execa('sudo', ['brew', 'services', 'start', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -62,7 +64,7 @@ class BrewServices extends ServiceCtl {
 
     async stopAsRoot(pkg: string): Promise<boolean> {
         try {
-            await execa('sudo', ['brew', 'services', 'stop', pkg])
+            await execa('sudo', ['brew', 'services', 'stop', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -71,7 +73,7 @@ class BrewServices extends ServiceCtl {
 
     async link(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['link', '--overwrite', '--force', pkg])
+            await execa('brew', ['link', '--overwrite', '--force', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -80,7 +82,7 @@ class BrewServices extends ServiceCtl {
 
     async unlink(pkg: string): Promise<boolean> {
         try {
-            await execa('brew', ['unlink', pkg])
+            await execa('brew', ['unlink', pkg], {shell: true})
             return true
         } catch (e) {
             return false

@@ -1,13 +1,8 @@
 import execa from 'execa'
 import {chmodSync, copyFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync, writeSync} from 'fs'
-import * as fs from 'fs'
-import * as os from 'os'
 import limitMaxFilesPlist from '../templates/limitMaxFilesPlist'
 import myCnf from '../templates/myCnf'
-import zPerformanceIni from '../templates/zPerformanceIni'
-import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
-import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import Service from './service'
 
 abstract class Mysql extends Service {
@@ -73,8 +68,16 @@ abstract class Mysql extends Service {
         await client().serviceCtl.link(this.service)
     }
 
-    setRootPassword = async (password: string = 'root'): Promise<void> => {
-
+    // TODO: We should get the current password from the Sheepdog config instead.
+    setRootPassword = async (oldPassword: string = '', password: string = 'root'): Promise<boolean> => {
+        try {
+            await execa('mysqladmin', ['-u', 'root', `--password='${oldPassword}'`, 'password', password], {
+                stdio: 'inherit'
+            })
+            return true
+        } catch (e) {
+            return false
+        }
     }
 }
 
