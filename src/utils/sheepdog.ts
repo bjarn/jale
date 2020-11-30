@@ -21,6 +21,11 @@ let sheepdogConfigPath: string = `${sheepdogHomeDir}/config.json`
 let sheepdogLogsPath: string = `${sheepdogHomeDir}/log`
 
 /**
+ * Get the location of the Sheepdog log directory.
+ */
+let sheepdogSitesPath: string = `${sheepdogHomeDir}/sites`
+
+/**
  * Get the location of the fallback server of Sheepdog.
  */
 let sheepdogFallbackServer: string = `${sheepdogHomeDir}/server/index.php`
@@ -43,6 +48,7 @@ export {
     sheepdogHomeDir,
     sheepdogConfigPath,
     sheepdogLogsPath,
+    sheepdogSitesPath,
     sheepdogFallbackServer,
     ensureHomeDirExists,
     getConfig

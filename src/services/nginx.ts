@@ -6,7 +6,7 @@ import nginxConf from '../templates/nginx'
 import sheepdogNginxConf from '../templates/nginxSheepdog'
 import delay from '../utils/delay'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {getConfig, sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
+import {getConfig, sheepdogHomeDir, sheepdogLogsPath, sheepdogSitesPath} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
 import Service from './service'
 
@@ -23,6 +23,8 @@ class Nginx extends Service {
     configure = async (): Promise<boolean> => {
         try {
             await ensureDirectoryExists(this.sheepdogNginxFolderPath)
+            await ensureDirectoryExists(`${this.sheepdogNginxFolderPath}/apps`)
+            await ensureDirectoryExists(sheepdogSitesPath)
             await ensureDirectoryExists(`${sheepdogLogsPath}/nginx`)
             await this.addConfiguration()
             await this.addFallbackConfiguration()
