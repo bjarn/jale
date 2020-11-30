@@ -6,6 +6,7 @@ import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import Nginx from '../services/nginx'
 import {clearConsole} from '../utils/console'
+import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
@@ -37,7 +38,7 @@ class InstallController {
             type: 'list',
             name: 'database',
             message: 'Choose a database',
-            choices: ['mysql@8.0', 'mysql@5.7', 'mysql@5.6', 'mariadb'],
+            choices: ['mysql@8.0', 'mysql@5.7', 'mariadb'],
             validate: (input: string[]) => {
                 return input.length >= 1
             }
@@ -97,7 +98,8 @@ class InstallController {
                     task.newListr(
                         this.installPhpFpm(answers.phpVersions)
                     )
-            }
+            },
+            this.installDatabase(answers.database)
         ])
 
         try {
@@ -228,6 +230,30 @@ class InstallController {
         return phpInstallTasks
     }
 
+    private installDatabase = (database: string): ListrTask => ({
+        title: 'Install Database',
+        task: (ctx, task): Listr =>
+            task.newListr([
+                {
+                    title: `Installing ${database}`,
+                    // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                    skip: async (ctx): Promise<string | boolean> => {
+                        const isInstalled = await client().packageManager.packageIsInstalled(database)
+
+                        if (isInstalled) return `${database} is already installed.`
+                    },
+                    task: (getDatabaseByName(database)).install
+                },
+                {
+                    title: 'Configure Database',
+                    task: (getDatabaseByName(database)).configure
+                },
+                {
+                    title: 'Restart Database',
+                    task: (getDatabaseByName(database)).restart
+                }
+            ])
+    })
 }
 
 export default InstallController
