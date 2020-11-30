@@ -1,5 +1,5 @@
 {
-  "name": "sheepdog",
+  "name": "@bjarnbronsveld/sheepdog",
   "version": "0.1.0",
   "description": "Sheepdog is a blazing fast local development environment for MacOS written in Typescript.",
   "author": "Bjarn Bronsveld",
