@@ -6,6 +6,6 @@ export default function installCommand(program: typeof commander) {
         .command('install')
         .description('Run the initial setup of Sheepdog')
         .action(() => {
-            (new InstallController()).execute()
+            (new InstallController()).execute().catch(err => console.log(err.message))
         })
 }
