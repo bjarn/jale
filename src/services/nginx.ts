@@ -6,9 +6,8 @@ import {getConfig, sheepdogHomeDir} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
 import Service from './service'
 
-class Dnsmasq extends Service {
-    service = 'dnsmasq'
-    requireRoot = true
+class Nginx extends Service {
+    service = 'nginx'
 
     resolverPath = '/etc/resolver'
     configPath = '/usr/local/etc/dnsmasq.conf'
@@ -50,7 +49,6 @@ class Dnsmasq extends Service {
      */
     addDomainResolver = async (domain: string): Promise<boolean> => {
         try {
-            await requireSudo()
             await execa('sudo', ['mkdir', '-p', this.resolverPath])
             await execa('sudo', ['echo', 'nameserver 127.0.0.1', '>', `${this.resolverPath}/${domain}`])
 
@@ -62,4 +60,4 @@ class Dnsmasq extends Service {
 
 }
 
-export default Dnsmasq
+export default Nginx

@@ -4,7 +4,7 @@ abstract class CliController {
 
     }
 
-    abstract execute(): boolean;
+    abstract execute(): Promise<boolean>;
 
 }
 

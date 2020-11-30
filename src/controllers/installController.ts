@@ -6,6 +6,7 @@ import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import {client} from '../utils/os'
 import {ensureHomeDirExists, sheepdogConfigPath} from '../utils/sheepdog'
+import {requireSudo} from '../utils/sudo'
 import CliController from './cliController'
 
 class InstallController extends CliController {
@@ -55,8 +56,10 @@ class InstallController extends CliController {
     /**
      * Execute the installation process.
      */
-    execute(): boolean {
+    execute = async (): Promise<boolean> => {
         console.log(white('✨ Thanks for using Sheepdog! Let\'s get you started quickly.\n'))
+
+        await requireSudo()
 
         inquirer
             .prompt(this.questions)
@@ -81,7 +84,7 @@ class InstallController extends CliController {
 
         const tasks = new Listr([
             this.configureSheepdog(answers),
-            this.installDnsMasq(answers.domain)
+            this.installDnsMasq()
         ])
 
         try {
@@ -117,7 +120,7 @@ class InstallController extends CliController {
     // Service installation functions
     //
 
-    private installDnsMasq = (domain: string): ListrTask => ({
+    private installDnsMasq = (): ListrTask => ({
         title: 'Install Dnsmasq',
         task: (ctx, task): Listr =>
             task.newListr([
@@ -134,6 +137,10 @@ class InstallController extends CliController {
                 {
                     title: 'Configure DnsMasq',
                     task: (new Dnsmasq).configure
+                },
+                {
+                    title: 'Restart DnsMasq',
+                    task: (new Dnsmasq).restart
                 }
             ])
     })

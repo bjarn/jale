@@ -1,18 +1,8 @@
 import {client} from '../utils/os'
 
 abstract class Service {
-    service: string
+    abstract service: string
     requireRoot: boolean = false
-
-    /**
-     * Service constructor
-     * @param service
-     * @param requireRoot
-     */
-    protected constructor(service: string, requireRoot = false) {
-        this.service = service
-        this.requireRoot = requireRoot
-    }
 
     start = async (): Promise<boolean> =>
         this.requireRoot ?
