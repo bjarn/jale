@@ -20,6 +20,11 @@ class Service {
                 os_1.client().serviceCtl.restartAsRoot(this.service) :
                 os_1.client().serviceCtl.restart(this.service);
         });
+        this.reload = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            return this.requireRoot ?
+                os_1.client().serviceCtl.reloadAsRoot(this.service) :
+                os_1.client().serviceCtl.reload(this.service);
+        });
         this.install = () => {
             return os_1.client().packageManager.install(this.service);
         };

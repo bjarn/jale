@@ -19,6 +19,11 @@ abstract class Service {
             client().serviceCtl.restartAsRoot(this.service) :
             client().serviceCtl.restart(this.service)
 
+    reload = async (): Promise<boolean> =>
+        this.requireRoot ?
+            client().serviceCtl.reloadAsRoot(this.service) :
+            client().serviceCtl.reload(this.service)
+
     install = (): Promise<boolean> => {
         return client().packageManager.install(this.service)
     }

@@ -55,6 +55,17 @@ class BrewServices extends serviceCtl_1.default {
             }
         });
     }
+    reloadAsRoot(pkg) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield execa_1.default('sudo', ['brew', 'services', 'reload', pkg], { shell: true });
+                return true;
+            }
+            catch (e) {
+                return false;
+            }
+        });
+    }
     restartAsRoot(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {

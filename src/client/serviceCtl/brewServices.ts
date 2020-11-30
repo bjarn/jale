@@ -43,6 +43,15 @@ class BrewServices extends ServiceCtl {
         }
     }
 
+    async reloadAsRoot(pkg: string): Promise<boolean> {
+        try {
+            await execa('sudo', ['brew', 'services', 'reload', pkg], {shell: true})
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
     async restartAsRoot(pkg: string): Promise<boolean> {
         try {
             await this.stopAsRoot(pkg)

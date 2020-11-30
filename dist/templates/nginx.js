@@ -43,7 +43,7 @@ http {
     text/plain
     text/x-component;
 
-    include ${sheepdog_1.sheepdogHomeDir}/sites/*;
+    include ${sheepdog_1.sheepdogSitesPath}/*;
     include sheepdog/apps/*.conf;
     include sheepdog/sheepdog.conf;
 }`;

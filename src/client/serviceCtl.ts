@@ -13,6 +13,7 @@ abstract class ServiceCtl {
     abstract restartAsRoot(pkg: string): Promise<boolean>
 
     abstract reload(pkg: string): Promise<boolean>
+    abstract reloadAsRoot(pkg: string): Promise<boolean>
 
     abstract link(pkg: string): Promise<boolean>
 
