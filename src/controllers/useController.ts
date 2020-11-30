@@ -4,7 +4,7 @@ import {getLinkedPhpVersion, getPhpFpmByName, supportedPhpVersions} from '../uti
 class UseController {
 
     /**
-     * Execute the installation process.
+     * Switch the service to the given version.
      */
     execute = async (service: string, version: string): Promise<boolean> => {
         try {
@@ -44,6 +44,8 @@ class UseController {
         if (await client().packageManager.packageIsInstalled(newPhpVersion.service)) {
             console.log(`Installing PHP ${newPhpVersion.versionName}`)
             await client().packageManager.install(newPhpVersion.service)
+            console.log(`Configuring PHP ${newPhpVersion.versionName}`)
+            await newPhpVersion.configure()
         }
 
         await currentPhpVersion.unLinkPhpVersion()
