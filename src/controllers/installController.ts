@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import inquirer from 'inquirer'
+import inquirer, {Answers} from 'inquirer'
 import {white} from 'kleur/colors'
 import {Listr, ListrTask} from 'listr2'
 import {Config, Database} from '../models/config'
@@ -9,6 +9,7 @@ import Nginx from '../services/nginx'
 import {clearConsole} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
+import {getOptionalServiceByname} from '../utils/optionalService'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
 import {ensureHomeDirExists, sheepdogConfigPath, sheepdogLogsPath} from '../utils/sheepdog'
@@ -101,7 +102,8 @@ class InstallController {
                         this.installPhpFpm(answers.phpVersions)
                     )
             },
-            this.installDatabase(answers.database)
+            this.installDatabase(answers.database),
+            this.installOptionalServices(answers)
         ])
 
         try {
@@ -282,6 +284,44 @@ class InstallController {
                 }
             ])
     })
+
+    private installOptionalServices = (answers: Answers): ListrTask => {
+        let optionalServicesTasks: ListrTask[] = []
+
+        answers.optionalServices.forEach((serviceName: string) => {
+            const service = getOptionalServiceByname(serviceName)
+            optionalServicesTasks.push({
+                title: `Install ${service.service}`,
+                task: (ctx, task): Listr =>
+                    task.newListr([
+                        {
+                            title: `Installing ${service.service}`,
+                            // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                            skip: async (ctx): Promise<string | boolean> => {
+                                const isInstalled = await client().packageManager.packageIsInstalled(service.service)
+
+                                if (isInstalled) return `${service.service} is already installed.`
+                            },
+                            task: service.install
+                        },
+                        {
+                            title: `Configure ${service.service}`,
+                            task: service.configure
+                        },
+                        {
+                            title: `Restart ${service.service}`,
+                            task: service.restart
+                        }
+                    ])
+            })
+        })
+
+        return {
+            title: 'Install Optional Services',
+            task: (ctx, task): Listr =>
+                task.newListr(optionalServicesTasks)
+        }
+    }
 }
 
 export default InstallController

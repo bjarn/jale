@@ -6,8 +6,14 @@ class Homebrew extends PackageManager {
     name: string = 'Homebrew'
     path: string = '/usr/local/bin/brew'
 
-    async install(pkg: string): Promise<boolean> {
-        const {stdout} = await execa('brew', ['install', pkg])
+    async install(pkg: string, cask: boolean = false): Promise<boolean> {
+        let args: string[] = ['install', pkg]
+
+        if (cask) {
+            args = ['cask', 'install', pkg]
+        }
+
+        const {stdout} = await execa('brew', args)
 
         return stdout.includes(pkg)
     }
