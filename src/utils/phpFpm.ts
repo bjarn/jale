@@ -5,9 +5,12 @@ import PhpFpm73 from '../services/phpFpm73'
 import PhpFpm74 from '../services/phpFpm74'
 import PhpFpm80 from '../services/phpFpm80'
 
-const supportedPhpVersions = [
-    PhpFpm72, PhpFpm73, PhpFpm74, PhpFpm74, PhpFpm80
-]
+const supportedPhpVersions = new Map([
+    [(new PhpFpm80).versionName, `${(new PhpFpm80).formulaName}${(new PhpFpm80).versionName}`],
+    [(new PhpFpm74).versionName, `${(new PhpFpm74).formulaName}${(new PhpFpm74).versionName}`],
+    [(new PhpFpm73).versionName, `${(new PhpFpm73).formulaName}${(new PhpFpm73).versionName}`],
+    [(new PhpFpm72).versionName, `${(new PhpFpm72).formulaName}${(new PhpFpm72).versionName}`],
+])
 
 const getPhpFpmByName = (phpVersion: string): PhpFpm => {
     let phpService: PhpFpm
@@ -44,9 +47,9 @@ const getLinkedPhpVersion = async (): Promise<PhpFpm> => {
 
     const phpBinary = await fs.realpathSync('/usr/local/bin/php')
 
-    supportedPhpVersions.forEach((phpVersion) => {
-        if (phpBinary.includes(phpVersion.versionName)) {
-            return phpVersion
+    supportedPhpVersions.forEach((versionName, formulaName) => {
+        if (phpBinary.includes(versionName)) {
+            return getPhpFpmByName(`${formulaName}${versionName}`)
         }
     })
 
@@ -54,6 +57,7 @@ const getLinkedPhpVersion = async (): Promise<PhpFpm> => {
 }
 
 export {
+    supportedPhpVersions,
     getPhpFpmByName,
     getLinkedPhpVersion
 }

@@ -3,6 +3,7 @@ import * as os from 'os'
 import zPerformanceIni from '../templates/zPerformanceIni'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
+import {getLinkedPhpVersion, supportedPhpVersions} from '../utils/phpFpm'
 import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import Service from './service'
 
@@ -11,9 +12,9 @@ abstract class PhpFpm extends Service {
     isEndOfLife: boolean = false
 
     formulaName: string = 'php@'
-    static versionName: string = ''
+    versionName: string = ''
 
-    service: string = `${this.formulaName}${PhpFpm.versionName}`
+    service: string = `${this.formulaName}${this.versionName}`
 
     abstract configPath: string
     abstract iniDirectoryPath: string
@@ -65,6 +66,10 @@ abstract class PhpFpm extends Service {
         }
 
         return fs.writeFileSync(path, zPerformanceIni)
+    }
+
+    unLinkPhpVersion = async (): Promise<boolean> => {
+        return client().serviceCtl.unlink(this.service)
     }
 
     linkPhpVersion = async (): Promise<boolean> => {

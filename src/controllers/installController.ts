@@ -11,9 +11,8 @@ import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
 import {ensureHomeDirExists, sheepdogConfigPath, sheepdogLogsPath} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
-import CliController from './cliController'
 
-class InstallController extends CliController {
+class InstallController {
 
     private readonly questions = [
         {

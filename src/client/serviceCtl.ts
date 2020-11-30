@@ -15,6 +15,8 @@ abstract class ServiceCtl {
     abstract reload(pkg: string): Promise<boolean>
 
     abstract link(pkg: string): Promise<boolean>
+
+    abstract unlink(pkg: string): Promise<boolean>
 }
 
 export default ServiceCtl
