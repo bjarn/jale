@@ -1,26 +1,31 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {Config} from '../models/config'
+import fastcgiParams from '../templates/fastcgiParams'
+import nginxConf from '../templates/nginx'
+import sheepdogNginxConf from '../templates/nginxSheepdog'
 import delay from '../utils/delay'
-import {getConfig, sheepdogHomeDir} from '../utils/sheepdog'
+import {ensureDirectoryExists} from '../utils/filesystem'
+import {getConfig, sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
 import Service from './service'
 
 class Nginx extends Service {
     service = 'nginx'
+    requireRoot = true
 
-    resolverPath = '/etc/resolver'
-    configPath = '/usr/local/etc/dnsmasq.conf'
-
-    customConfigPath = `${sheepdogHomeDir}/dnsmasq.conf`
+    configPath = '/usr/local/etc/nginx/nginx.conf'
+    sheepdogNginxFolderPath = '/usr/local/etc/nginx/sheepdog'
+    sheepdogNginxConfigPath = `${this.sheepdogNginxFolderPath}/sheepdog.conf`
+    fastCgiParamsConfigPath = '/usr/local/etc/nginx/fastcgi_params'
 
     configure = async (): Promise<boolean> => {
-        let config: Config = await getConfig()
-
         try {
-            await this.appendCustomConfig
-            await this.setDomain(config.domain)
-            await this.addDomainResolver(config.domain)
+            await ensureDirectoryExists(this.sheepdogNginxFolderPath)
+            await ensureDirectoryExists(`${sheepdogLogsPath}/nginx`)
+            await this.addConfiguration()
+            await this.addFallbackConfiguration()
+            await this.addFastCgiParams()
 
             return true
         } catch (e) {
@@ -29,33 +34,24 @@ class Nginx extends Service {
     }
 
     /**
-     * Append our custom configuration file to the dnsmasq.conf.
+     * Install the customized Nginx configuration.
      */
-    appendCustomConfig = async (): Promise<void> => {
-        return fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`)
+    addConfiguration = async (): Promise<void> => {
+        return fs.writeFileSync(this.configPath, nginxConf)
     }
 
     /**
-     * Set our custom domain in our custom dnsmasq config file.
-     * @param domain
+     * Install the customized Nginx configuration.
      */
-    setDomain = async (domain: string): Promise<void> => {
-        return fs.appendFileSync(this.customConfigPath, `address=/.${domain}/127.0.0.1\n`)
+    addFallbackConfiguration = async (): Promise<void> => {
+        return fs.writeFileSync(this.sheepdogNginxConfigPath, sheepdogNginxConf)
     }
 
     /**
-     * Create the Resolver config to resolve our custom domain.
-     * @param domain
+     * Install our custom fastcgi_params config for better performance.
      */
-    addDomainResolver = async (domain: string): Promise<boolean> => {
-        try {
-            await execa('sudo', ['mkdir', '-p', this.resolverPath])
-            await execa('sudo', ['echo', 'nameserver 127.0.0.1', '>', `${this.resolverPath}/${domain}`])
-
-            return true
-        } catch (e) {
-            throw e
-        }
+    addFastCgiParams = async (): Promise<void> => {
+        return fs.writeFileSync(this.fastCgiParamsConfigPath, fastcgiParams)
     }
 
 }

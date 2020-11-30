@@ -4,8 +4,10 @@ import {white} from 'kleur/colors'
 import {Listr, ListrContext, ListrTask, ListrTaskResult, ListrTaskWrapper} from 'listr2'
 import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
+import Nginx from '../services/nginx'
+import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
-import {ensureHomeDirExists, sheepdogConfigPath} from '../utils/sheepdog'
+import {ensureHomeDirExists, sheepdogConfigPath, sheepdogLogsPath} from '../utils/sheepdog'
 import {requireSudo} from '../utils/sudo'
 import CliController from './cliController'
 
@@ -81,10 +83,12 @@ class InstallController extends CliController {
      */
     private async install(answers: any) {
         await ensureHomeDirExists()
+        await ensureDirectoryExists(sheepdogLogsPath)
 
         const tasks = new Listr([
             this.configureSheepdog(answers),
-            this.installDnsMasq()
+            this.installDnsMasq(),
+            this.installNginx()
         ])
 
         try {
@@ -141,6 +145,31 @@ class InstallController extends CliController {
                 {
                     title: 'Restart DnsMasq',
                     task: (new Dnsmasq).restart
+                }
+            ])
+    })
+
+    private installNginx = (): ListrTask => ({
+        title: 'Install Nginx',
+        task: (ctx, task): Listr =>
+            task.newListr([
+                {
+                    title: 'Installing Nginx',
+                    // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                    skip: async (ctx): Promise<string | boolean> => {
+                        const isInstalled = await client().packageManager.packageIsInstalled('nginx')
+
+                        if (isInstalled) return 'Nginx is already installed.'
+                    },
+                    task: (new Nginx).install
+                },
+                {
+                    title: 'Configure Nginx',
+                    task: (new Nginx).configure
+                },
+                {
+                    title: 'Restart Nginx',
+                    task: (new Nginx).restart
                 }
             ])
     })
