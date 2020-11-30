@@ -7,7 +7,7 @@ const service_1 = tslib_1.__importDefault(require("./service"));
 class Redis extends service_1.default {
     constructor() {
         super(...arguments);
-        this.requireRoot = true;
+        this.requireRoot = false;
         this.service = 'redis';
         // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
         this.configPath = `/usr/local/etc/redis.conf`;
