@@ -10,6 +10,11 @@ abstract class PhpFpm extends Service {
     requireRoot: boolean = true
     isEndOfLife: boolean = false
 
+    formulaName: string = 'php@'
+    static versionName: string = ''
+
+    service: string = `${this.formulaName}${PhpFpm.versionName}`
+
     abstract configPath: string
     abstract iniDirectoryPath: string
 
