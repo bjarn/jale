@@ -1,11 +1,12 @@
 import program from 'commander'
 import commandLoader from './commands/index'
+import {clearConsole} from './utils/console'
 
 const commands = commandLoader(program)
 
 const packageJson = require('../package.json')
 
-console.clear()
+clearConsole()
 
 program
     .version(packageJson.version)
