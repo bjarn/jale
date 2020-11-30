@@ -22,7 +22,7 @@ const getPhpFpmByName = (phpVersion: string): PhpFpm => {
             phpService = new PhpFpm80()
             break
         default:
-            throw Error('Invalid PHP version')
+            throw Error('Invalid PHP version: ' + phpVersion)
     }
 
     return phpService

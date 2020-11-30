@@ -29,7 +29,7 @@ class InstallController extends CliController {
             type: 'checkbox',
             name: 'phpVersions',
             message: 'Choose one or more Php versions',
-            choices: ['php@7.1', 'php@7.2', 'php@7.3', 'php@7.4', 'php@8.0'],
+            choices: ['php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
             validate: (input: string[]) => {
                 return input.length >= 1
             }
@@ -187,7 +187,7 @@ class InstallController extends CliController {
     private installPhpFpm = (phpVersions: string[]): ListrTask[] => {
         let phpInstallTasks: ListrTask[] = []
 
-        phpVersions.forEach((phpVersion: string) => {
+        phpVersions.forEach((phpVersion: string, index) => {
             phpInstallTasks.push({
                 title: `Install ${phpVersion}`,
                 task: (ctx, task): Listr =>
@@ -196,6 +196,7 @@ class InstallController extends CliController {
                             title: `Installing ${phpVersion}`,
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                             skip: async (ctx): Promise<string | boolean> => {
+                                if (phpVersion == 'php@8.0') phpVersion = 'php'
                                 const isInstalled = await client().packageManager.packageIsInstalled(phpVersion)
 
                                 if (isInstalled) return `${phpVersion} is already installed.`
@@ -207,8 +208,19 @@ class InstallController extends CliController {
                             task: (getPhpFpmByName(phpVersion)).configure
                         },
                         {
-                            title: `Restart ${phpVersion}`,
+                            title: `Link ${phpVersion}`,
+                            enabled: (ctx): boolean => index === 0,
                             task: (getPhpFpmByName(phpVersion)).restart
+                        },
+                        {
+                            title: `Restart ${phpVersion}`,
+                            enabled: (ctx): boolean => index === 0,
+                            task: (getPhpFpmByName(phpVersion)).restart
+                        },
+                        {
+                            title: `Stop ${phpVersion}`,
+                            enabled: (ctx): boolean => index !== 0,
+                            task: (getPhpFpmByName(phpVersion)).stop
                         }
                     ])
             })

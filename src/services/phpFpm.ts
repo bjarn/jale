@@ -6,6 +6,7 @@ import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import Service from './service'
 
 abstract class PhpFpm extends Service {
+    requireRoot: boolean = true
     isEndOfLife: boolean = false
 
     abstract configPath: string
@@ -14,17 +15,21 @@ abstract class PhpFpm extends Service {
     // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
     configRootPath = '/usr/local/etc/php'
 
-    async configure(): Promise<boolean> {
-        await this.updateConfiguration
-        await this.addPerformanceConfiguration
+    configure = async (): Promise<boolean> => {
+        try {
+            await this.updateConfiguration()
+            await this.addPerformanceConfiguration()
 
-        return true
+            return true
+        } catch (e) {
+            throw e
+        }
     }
 
     /**
      * Update Php's www.conf configuration.
      */
-    async updateConfiguration(): Promise<void> {
+    updateConfiguration = async (): Promise<void> => {
         let config: string = await fs.readFileSync(this.configPath, 'utf-8')
 
         config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`)
