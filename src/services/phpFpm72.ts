@@ -5,7 +5,8 @@ class PhpFpm72 extends PhpFpm {
     isEndOfLife: boolean = true
 
     // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    configPath = '/usr/local/etc/valet-php'
+    configPath = `${this.configRootPath}/7.2/php-fpm.d/www.conf`
+    iniDirectoryPath = `${this.configRootPath}/7.2/conf.d`
 
     configure(): Promise<boolean> {
         return Promise.resolve(false);

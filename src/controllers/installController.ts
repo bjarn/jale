@@ -5,6 +5,7 @@ import {Listr, ListrTask} from 'listr2'
 import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import Nginx from '../services/nginx'
+import {clearConsole} from '../utils/console'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
@@ -60,6 +61,7 @@ class InstallController extends CliController {
      * Execute the installation process.
      */
     execute = async (): Promise<boolean> => {
+        clearConsole()
         console.log(white('✨ Thanks for using Sheepdog! Let\'s get you started quickly.\n'))
 
         await requireSudo()
