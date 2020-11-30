@@ -27,7 +27,7 @@ class InstallController {
         {
             type: 'checkbox',
             name: 'phpVersions',
-            message: 'Choose one or more Php versions',
+            message: 'Choose one or more PHP versions',
             choices: ['php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
             validate: (input: string[]) => {
                 return input.length >= 1
@@ -92,7 +92,7 @@ class InstallController {
             this.installDnsMasq(),
             this.installNginx(),
             {
-                title: 'Install Php-Fpm',
+                title: 'Install PHP-FPM',
                 task: (ctx, task): Listr =>
                     task.newListr(
                         this.installPhpFpm(answers.phpVersions)

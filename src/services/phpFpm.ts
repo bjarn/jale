@@ -3,7 +3,6 @@ import * as os from 'os'
 import zPerformanceIni from '../templates/zPerformanceIni'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
-import {getLinkedPhpVersion, supportedPhpVersions} from '../utils/phpFpm'
 import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
 import Service from './service'
 
@@ -11,10 +10,7 @@ abstract class PhpFpm extends Service {
     requireRoot: boolean = true
     isEndOfLife: boolean = false
 
-    formulaName: string = 'php@'
-    versionName: string = ''
-
-    service: string = `${this.formulaName}${this.versionName}`
+    abstract versionName: string
 
     abstract configPath: string
     abstract iniDirectoryPath: string

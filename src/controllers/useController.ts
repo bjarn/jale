@@ -2,6 +2,7 @@ import {client} from '../utils/os'
 import {getLinkedPhpVersion, getPhpFpmByName, supportedPhpVersions} from '../utils/phpFpm'
 
 class UseController {
+
     /**
      * Execute the installation process.
      */
@@ -10,17 +11,15 @@ class UseController {
             switch (service) {
                 case 'php':
                     console.log(`Switching to PHP ${version}`)
-                    await this.switchPhpVersionTo(`php@${version}`)
-
+                    await this.switchPhpVersionTo(version)
                     return true
                 default:
                     console.log('Invalid service.')
+                    return false
             }
         } catch (e) {
-            return false
+            throw new Error(e.message)
         }
-
-        return false
     }
 
     /**
@@ -30,11 +29,11 @@ class UseController {
     switchPhpVersionTo = async (phpVersion: string): Promise<void> => {
         const currentPhpVersion = await getLinkedPhpVersion()
 
-        if (!supportedPhpVersions.has(phpVersion)) {
-            throw Error(`Invalid Php version. Please pick one of the following version: ${supportedPhpVersions.keys()}`)
+        if (!supportedPhpVersions.includes(phpVersion)) {
+            throw Error(`Invalid PHP version. Please pick one of the following version: ${supportedPhpVersions.join(', ')}`)
         }
 
-        const newPhpVersion = getPhpFpmByName(phpVersion)
+        const newPhpVersion = getPhpFpmByName(`php@${phpVersion}`)
 
         if (newPhpVersion.isEndOfLife) {
             console.warn('This PHP version is End Of Life. Be aware it might contain security flaws.')
