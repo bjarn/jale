@@ -51,6 +51,7 @@ class Dnsmasq extends Service {
      */
     addDomainResolver = async (domain: string): Promise<boolean> => {
         try {
+            // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
             await requireSudo()
             await execa('sudo', ['mkdir', '-p', this.resolverPath], {shell: true, stdio: 'inherit'})
             await execa('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
