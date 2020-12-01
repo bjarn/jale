@@ -1,0 +1,1 @@
+{"version":3,"file":"os.js","sourceRoot":"","sources":["../../src/utils/os.ts"],"names":[],"mappings":";;;;AACA,yEAAwC;AAExC,SAAS,MAAM;IACX,QAAQ,OAAO,CAAC,QAAQ,EAAE;QACtB,KAAK,QAAQ;YACT,OAAO,IAAI,gBAAM,CAAA;QACrB;YACI,OAAO,IAAI,gBAAM,CAAA,CAAC,iGAAiG;KAC1H;AACL,CAAC;AAGG,wBAAM"}

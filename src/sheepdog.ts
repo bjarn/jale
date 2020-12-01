@@ -1,9 +1,10 @@
 import program from 'commander'
 import commandLoader from './commands/index'
+import {clearConsole} from './utils/console'
 
 const commands = commandLoader(program)
 
-const packageJson = require('../package.json');
+const packageJson = require('../package.json')
 
 program
     .version(packageJson.version)
@@ -17,6 +18,6 @@ program.on('command:*', () => {
 program.parse(process.argv)
 
 if (!process.argv.slice(2).length) {
-    program.outputHelp();
+    program.outputHelp()
     process.exit()
 }
