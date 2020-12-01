@@ -12,7 +12,16 @@ Walk through the installation steps, which allow you to select which PHP version
 
 Sheepdog is currently still under heavy development and not ready to be used as your daily driver. However, it works but lacks error messages, useful notices and yes, might contain bugs.
 
+The name 'Sheepdog' will change in the future, any suggestions are welcome!
+
 Services are using optimized configs (credits to [Valet+](https://github.com/weprovide/valet-plus)) to improve the performance of your local development environment.
+
+## Why Sheepdog?
+It has a completely different approach compared to services like Laravel Valet and aims to be both flexible and performant.
+
+Instead of using a single 'server.php' file which proxies every request, we just use Nginx configuration files per site. Don't be afraid though! We made it as easy as possible. We'll even introduce templates** for certain projects very soon!
+
+<sup><sub>** Templates allow you to link a site with a specific app configuration for Nginx. I.e. an optimized config for Laravel or Magento 2.</sub></sup></center>
 
 ## Included services
 The following services are currently installed by Sheepdog. Services marked with a * are optional, you can uncheck them ;-).
@@ -33,5 +42,3 @@ The following development tools are included.
 
 ## Migrating from...?
 Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.
-
-Why you should be exited, you ask? Well, Sheepdog's as barebone as possible and has a different approach than services like Laravel Valet, which use a single 'server.php' file which proxies every single request. This does have advantages in terms of flexibility, however it has to load Valet and its server.php every request. That might be a bottleneck. Sheepdog just uses plain Nginx configs per site, which allows you to do everything you want to do like you're used to on real servers.
