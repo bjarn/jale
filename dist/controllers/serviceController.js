@@ -5,14 +5,18 @@ const dnsmasq_1 = tslib_1.__importDefault(require("../services/dnsmasq"));
 const elasticsearch_1 = tslib_1.__importDefault(require("../services/elasticsearch"));
 const mailhog_1 = tslib_1.__importDefault(require("../services/mailhog"));
 const mariadb_1 = tslib_1.__importDefault(require("../services/mariadb"));
+const mysql_1 = tslib_1.__importDefault(require("../services/mysql"));
 const mysql57_1 = tslib_1.__importDefault(require("../services/mysql57"));
 const mysql80_1 = tslib_1.__importDefault(require("../services/mysql80"));
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
+const phpFpm_1 = tslib_1.__importDefault(require("../services/phpFpm"));
 const phpFpm72_1 = tslib_1.__importDefault(require("../services/phpFpm72"));
 const phpFpm73_1 = tslib_1.__importDefault(require("../services/phpFpm73"));
 const phpFpm74_1 = tslib_1.__importDefault(require("../services/phpFpm74"));
 const phpFpm80_1 = tslib_1.__importDefault(require("../services/phpFpm80"));
 const redis_1 = tslib_1.__importDefault(require("../services/redis"));
+const database_1 = require("../utils/database");
+const phpFpm_2 = require("../utils/phpFpm");
 class ServiceController {
     constructor() {
         this.allServices = [
@@ -33,6 +37,18 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
+                        if (service instanceof mysql_1.default) {
+                            const linkedDatabase = yield database_1.getLinkedDatabase();
+                            if (linkedDatabase === service)
+                                yield service.start();
+                            continue;
+                        }
+                        if (service instanceof phpFpm_1.default) {
+                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
+                            if (linkedPhpVersion === service)
+                                yield service.start();
+                            continue;
+                        }
                         yield service.start();
                         return true;
                     }
@@ -61,6 +77,18 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
+                        if (service instanceof mysql_1.default) {
+                            const linkedDatabase = yield database_1.getLinkedDatabase();
+                            if (linkedDatabase === service)
+                                yield service.start();
+                            continue;
+                        }
+                        if (service instanceof phpFpm_1.default) {
+                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
+                            if (linkedPhpVersion === service)
+                                yield service.start();
+                            continue;
+                        }
                         yield service.stop();
                         return true;
                     }
@@ -89,6 +117,18 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
+                        if (service instanceof mysql_1.default) {
+                            const linkedDatabase = yield database_1.getLinkedDatabase();
+                            if (linkedDatabase === service)
+                                yield service.start();
+                            continue;
+                        }
+                        if (service instanceof phpFpm_1.default) {
+                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
+                            if (linkedPhpVersion === service)
+                                yield service.start();
+                            continue;
+                        }
                         yield service.restart();
                         return true;
                     }

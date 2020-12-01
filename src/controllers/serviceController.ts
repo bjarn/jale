@@ -2,15 +2,19 @@ import Dnsmasq from '../services/dnsmasq'
 import Elasticsearch from '../services/elasticsearch'
 import Mailhog from '../services/mailhog'
 import Mariadb from '../services/mariadb'
+import Mysql from '../services/mysql'
 import Mysql57 from '../services/mysql57'
 import Mysql80 from '../services/mysql80'
 import Nginx from '../services/nginx'
+import PhpFpm from '../services/phpFpm'
 import PhpFpm72 from '../services/phpFpm72'
 import PhpFpm73 from '../services/phpFpm73'
 import PhpFpm74 from '../services/phpFpm74'
 import PhpFpm80 from '../services/phpFpm80'
 import Redis from '../services/redis'
 import Service from '../services/service'
+import {getDatabaseByName, getLinkedDatabase} from '../utils/database'
+import {getLinkedPhpVersion} from '../utils/phpFpm'
 
 class ServiceController {
     allServices: Service[] = [
@@ -32,6 +36,18 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
+                    if (service instanceof Mysql) {
+                        const linkedDatabase = await getLinkedDatabase()
+                        if (linkedDatabase === service)
+                            await service.start()
+                        continue
+                    }
+                    if (service instanceof PhpFpm) {
+                        const linkedPhpVersion = await getLinkedPhpVersion()
+                        if (linkedPhpVersion === service)
+                            await service.start()
+                        continue
+                    }
                     await service.start()
                     return true
                 } catch (e) {
@@ -62,6 +78,18 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
+                    if (service instanceof Mysql) {
+                        const linkedDatabase = await getLinkedDatabase()
+                        if (linkedDatabase === service)
+                            await service.start()
+                        continue
+                    }
+                    if (service instanceof PhpFpm) {
+                        const linkedPhpVersion = await getLinkedPhpVersion()
+                        if (linkedPhpVersion === service)
+                            await service.start()
+                        continue
+                    }
                     await service.stop()
                     return true
                 } catch (e) {
@@ -92,6 +120,18 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
+                    if (service instanceof Mysql) {
+                        const linkedDatabase = await getLinkedDatabase()
+                        if (linkedDatabase === service)
+                            await service.start()
+                        continue
+                    }
+                    if (service instanceof PhpFpm) {
+                        const linkedPhpVersion = await getLinkedPhpVersion()
+                        if (linkedPhpVersion === service)
+                            await service.start()
+                        continue
+                    }
                     await service.restart()
                     return true
                 } catch (e) {
