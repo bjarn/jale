@@ -36,10 +36,10 @@ abstract class PhpFpm extends Service {
         let config: string = await fs.readFileSync(this.configPath, 'utf-8')
 
         config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`)
-        config = config.replace(/^group = .+$/m, `group = ${os.userInfo().gid}`)
+        config = config.replace(/^group = .+$/m, `group = staff`) // TODO: Make this dynamic. GIDs dont work.
         config = config.replace(/^listen = .+$/m, `listen = ${sheepdogHomeDir}/sheepdog.sock`)
         config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`)
-        config = config.replace(/^;?listen\.group = .+$/m, `listen.group = ${os.userInfo().gid}`)
+        config = config.replace(/^;?listen\.group = .+$/m, `listen.group = staff`) // TODO: Make this dynamic. GIDs dont work.
         config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`)
         config = config.replace(
             /^;?php_admin_value\[error_log\] = .+$/m,
