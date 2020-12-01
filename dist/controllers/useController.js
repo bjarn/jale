@@ -28,13 +28,18 @@ class UseController {
             if (!phpFpm_1.supportedPhpVersions.includes(phpVersion)) {
                 throw Error(`Invalid PHP version. Please pick one of the following version: ${phpFpm_1.supportedPhpVersions.join(', ')}`);
             }
+            if (currentPhpVersion.versionName === phpVersion) {
+                console.log(`PHP ${phpVersion} is already active.`);
+                return;
+            }
             const newPhpVersion = phpFpm_1.getPhpFpmByName(`php@${phpVersion}`);
             if (newPhpVersion.isEndOfLife) {
                 console.warn('This PHP version is End Of Life. Be aware it might contain security flaws.');
                 console.warn('Please check http://php.net/supported-versions.php for more information.');
             }
             // Make sure the PHP version is installed.
-            if (yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service)) {
+            const isVersionInstalled = yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service);
+            if (!isVersionInstalled) {
                 console.log(`Installing PHP ${newPhpVersion.versionName}`);
                 yield os_1.client().packageManager.install(newPhpVersion.service);
                 console.log(`Configuring PHP ${newPhpVersion.versionName}`);

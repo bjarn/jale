@@ -29,6 +29,11 @@ class UseController {
             throw Error(`Invalid PHP version. Please pick one of the following version: ${supportedPhpVersions.join(', ')}`)
         }
 
+        if (currentPhpVersion.versionName === phpVersion) {
+            console.log(`PHP ${phpVersion} is already active.`)
+            return
+        }
+
         const newPhpVersion = getPhpFpmByName(`php@${phpVersion}`)
 
         if (newPhpVersion.isEndOfLife) {
@@ -37,7 +42,9 @@ class UseController {
         }
 
         // Make sure the PHP version is installed.
-        if (await client().packageManager.packageIsInstalled(newPhpVersion.service)) {
+        const isVersionInstalled = await client().packageManager.packageIsInstalled(newPhpVersion.service)
+
+        if (!isVersionInstalled) {
             console.log(`Installing PHP ${newPhpVersion.versionName}`)
             await client().packageManager.install(newPhpVersion.service)
             console.log(`Configuring PHP ${newPhpVersion.versionName}`)
