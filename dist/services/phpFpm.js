@@ -34,7 +34,7 @@ class PhpFpm extends service_1.default {
             config = config.replace(/^group = .+$/m, `group = ${os.userInfo().gid}`);
             config = config.replace(/^listen = .+$/m, `listen = ${sheepdog_1.sheepdogHomeDir}/sheepdog.sock`);
             config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`);
-            config = config.replace(/^;?listen\.group = .+$/m, `listen.owner = ${os.userInfo().gid}`);
+            config = config.replace(/^;?listen\.group = .+$/m, `listen.group = ${os.userInfo().gid}`);
             config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`);
             config = config.replace(/^;?php_admin_value\[error_log\] = .+$/m, `php_admin_value[error_log] = ${sheepdog_1.sheepdogLogsPath}/php.log`);
             return fs.writeFileSync(this.configPath, config);
