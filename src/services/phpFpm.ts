@@ -39,7 +39,7 @@ abstract class PhpFpm extends Service {
         config = config.replace(/^group = .+$/m, `group = ${os.userInfo().gid}`)
         config = config.replace(/^listen = .+$/m, `listen = ${sheepdogHomeDir}/sheepdog.sock`)
         config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`)
-        config = config.replace(/^;?listen\.group = .+$/m, `listen.owner = ${os.userInfo().gid}`)
+        config = config.replace(/^;?listen\.group = .+$/m, `listen.group = ${os.userInfo().gid}`)
         config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`)
         config = config.replace(
             /^;?php_admin_value\[error_log\] = .+$/m,
