@@ -1,18 +1,17 @@
 {
   "name": "jale",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Jale is a blazing fast local development environment for MacOS written in Typescript.",
   "author": "Bjarn Bronsveld",
-  "main": "./src/sheepdog.js",
+  "main": "./src/jale.js",
   "bin": {
-    "jale": "bin/sheepdog.js"
+    "jale": "bin/jale.js"
   },
   "keywords": [
     "local",
     "development",
     "environment",
     "macos",
-    "sheepdog",
     "jale",
     "just another local environment"
   ],
