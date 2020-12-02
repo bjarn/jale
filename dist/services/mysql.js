@@ -56,7 +56,7 @@ class Mysql extends service_1.default {
         this.linkDatabase = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield os_1.client().serviceCtl.link(this.service);
         });
-        // TODO: We should get the current password from the Sheepdog config instead.
+        // TODO: We should get the current password from the Jale config instead.
         this.setRootPassword = (oldPassword = '', password = 'root') => tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
                 yield execa_1.default('mysqladmin', ['-u', 'root', `--password='${oldPassword}'`, 'password', password], {

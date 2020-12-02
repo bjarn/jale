@@ -6,7 +6,7 @@ const os = tslib_1.__importStar(require("os"));
 const zPerformanceIni_1 = tslib_1.__importDefault(require("../templates/zPerformanceIni"));
 const filesystem_1 = require("../utils/filesystem");
 const os_1 = require("../utils/os");
-const sheepdog_1 = require("../utils/sheepdog");
+const jale_1 = require("../utils/jale");
 const service_1 = tslib_1.__importDefault(require("./service"));
 class PhpFpm extends service_1.default {
     constructor() {
@@ -32,11 +32,11 @@ class PhpFpm extends service_1.default {
             let config = yield fs.readFileSync(this.configPath, 'utf-8');
             config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`);
             config = config.replace(/^group = .+$/m, `group = staff`); // TODO: Make this dynamic. GIDs dont work.
-            config = config.replace(/^listen = .+$/m, `listen = ${sheepdog_1.sheepdogHomeDir}/sheepdog.sock`);
+            config = config.replace(/^listen = .+$/m, `listen = ${jale_1.jaleHomeDir}/jale.sock`);
             config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`);
             config = config.replace(/^;?listen\.group = .+$/m, `listen.group = staff`); // TODO: Make this dynamic. GIDs dont work.
             config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`);
-            config = config.replace(/^;?php_admin_value\[error_log\] = .+$/m, `php_admin_value[error_log] = ${sheepdog_1.sheepdogLogsPath}/php.log`);
+            config = config.replace(/^;?php_admin_value\[error_log\] = .+$/m, `php_admin_value[error_log] = ${jale_1.jaleLogsPath}/php.log`);
             return fs.writeFileSync(this.configPath, config);
         });
         /**

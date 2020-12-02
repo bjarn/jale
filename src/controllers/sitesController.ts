@@ -2,7 +2,7 @@ import {writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
 import nginxSiteConfig from '../templates/nginxSite'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {getConfig, sheepdogSitesPath} from '../utils/sheepdog'
+import {getConfig, jaleSitesPath} from '../utils/jale'
 
 class SitesController {
 
@@ -11,9 +11,9 @@ class SitesController {
         const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
         const hostname = `${domain}.${config.domain}`
 
-        await ensureDirectoryExists(sheepdogSitesPath)
+        await ensureDirectoryExists(jaleSitesPath)
 
-        await writeFileSync(`${sheepdogSitesPath}/${hostname}.conf`, nginxSiteConfig(hostname, process.cwd()))
+        await writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxSiteConfig(hostname, process.cwd()))
 
         await (new Nginx()).reload
     }

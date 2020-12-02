@@ -68,7 +68,7 @@ abstract class Mysql extends Service {
         await client().serviceCtl.link(this.service)
     }
 
-    // TODO: We should get the current password from the Sheepdog config instead.
+    // TODO: We should get the current password from the Jale config instead.
     setRootPassword = async (oldPassword: string = '', password: string = 'root'): Promise<boolean> => {
         try {
             await execa('mysqladmin', ['-u', 'root', `--password='${oldPassword}'`, 'password', password], {

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const os = tslib_1.__importStar(require("os"));
-const sheepdog_1 = require("../utils/sheepdog");
+const jale_1 = require("../utils/jale");
 const nginxConf = `user ${os.userInfo().username} staff;
 worker_processes auto;
 
@@ -43,9 +43,9 @@ http {
     text/plain
     text/x-component;
 
-    include ${sheepdog_1.sheepdogSitesPath}/*;
-    include sheepdog/apps/*.conf;
-    include sheepdog/sheepdog.conf;
+    include ${jale_1.jaleSitesPath}/*;
+    include jale/apps/*.conf;
+    include jale/jale.conf;
 }`;
 exports.default = nginxConf;
 //# sourceMappingURL=nginx.js.map

@@ -8,7 +8,7 @@ const packageJson = require('../package.json');
 commander_1.default
     .version(packageJson.version)
     .usage('<command> [options]')
-    .description(`Sheepdog ${packageJson.version}\n${packageJson.description}`);
+    .description(`Jale ${packageJson.version}\n${packageJson.description}`);
 commander_1.default.on('command:*', () => {
     commander_1.default.help();
 });
@@ -17,4 +17,4 @@ if (!process.argv.slice(2).length) {
     commander_1.default.outputHelp();
     process.exit();
 }
-//# sourceMappingURL=sheepdog.js.map
+//# sourceMappingURL=jale.js.map

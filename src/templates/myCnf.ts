@@ -1,4 +1,4 @@
-import {sheepdogLogsPath} from '../utils/sheepdog'
+import {jaleLogsPath} from '../utils/jale'
 
 const myCnf = `[client]
 user=root
@@ -10,7 +10,7 @@ sql_mode="NO_ENGINE_SUBSTITUTION"
 innodb_file_per_table=OFF
 show_compatibility_56=ON
 open_files_limit=999999
-log-error=${sheepdogLogsPath}/mysql.log
+log-error=${jaleLogsPath}/mysql.log
 local_infile=ON
 secure_file_priv=""
 max_allowed_packet=1073741824
