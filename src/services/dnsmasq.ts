@@ -1,8 +1,7 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {Config} from '../models/config'
-import delay from '../utils/delay'
-import {getConfig, sheepdogHomeDir} from '../utils/sheepdog'
+import {getConfig, jaleHomeDir} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
 import Service from './service'
 
@@ -14,7 +13,7 @@ class Dnsmasq extends Service {
     resolverPath = '/etc/resolver'
     configPath = '/usr/local/etc/dnsmasq.conf'
 
-    customConfigPath = `${sheepdogHomeDir}/dnsmasq.conf`
+    customConfigPath = `${jaleHomeDir}/dnsmasq.conf`
 
     configure = async (): Promise<boolean> => {
         let config: Config = await getConfig()

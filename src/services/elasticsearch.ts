@@ -1,8 +1,7 @@
 import {writeFileSync} from 'fs'
 import nginxElasticsearchConf from '../templates/nginxElasticsearch'
-import redisConf from '../templates/redis'
 import {client} from '../utils/os'
-import {getConfig, sheepdogNginxAppsPath} from '../utils/sheepdog'
+import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'
 import Service from './service'
 
@@ -14,7 +13,7 @@ class Elasticsearch extends Service {
     configPath = `/usr/local/etc/elasticsearch/elasticsearch.yml`
     dataPath = `path.data`
     dataRootPath = `/usr/local/var`
-    nginxConfigPath = `${sheepdogNginxAppsPath}/elasticsearch.conf`
+    nginxConfigPath = `${jaleNginxAppsPath}/elasticsearch.conf`
 
     install = async (): Promise<boolean> => {
         try {

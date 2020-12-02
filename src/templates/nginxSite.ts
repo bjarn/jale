@@ -1,4 +1,4 @@
-import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
+import {jaleHomeDir, jaleLogsPath} from '../utils/jale'
 
 const nginxSiteConfig = (hostname: string, docroot: string) => `server {
     listen 80;
@@ -15,13 +15,13 @@ const nginxSiteConfig = (hostname: string, docroot: string) => `server {
     }
 
     access_log off;
-    error_log ${sheepdogLogsPath}/nginx/${hostname}-error.log;
+    error_log ${jaleLogsPath}/nginx/${hostname}-error.log;
 
     location ~ \\.php$ {
         try_files $uri /index.php =404;
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
         fastcgi_read_timeout 3600;
-        fastcgi_pass unix:${sheepdogHomeDir}/sheepdog.sock;
+        fastcgi_pass unix:${jaleHomeDir}/jale.sock;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;

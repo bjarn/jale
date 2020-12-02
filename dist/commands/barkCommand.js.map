@@ -1,1 +1,0 @@
-{"version":3,"file":"barkCommand.js","sourceRoot":"","sources":["../../src/commands/barkCommand.ts"],"names":[],"mappings":";;AACA,iCAA4B;AAE5B,SAAwB,WAAW,CAAC,OAAyB;IACzD,OAAO,OAAO;SACT,OAAO,CAAC,MAAM,CAAC;SACf,WAAW,CAAC,oBAAoB,CAAC;SACjC,MAAM,CAAC,GAAG,EAAE;QACT,OAAO,CAAC,GAAG,CAAC,cAAM,CAAC,WAAW,CAAC,CAAC,CAAA;IACpC,CAAC,CAAC,CAAA;AACV,CAAC;AAPD,8BAOC"}

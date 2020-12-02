@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sheepdog_1 = require("../utils/sheepdog");
+const jale_1 = require("../utils/jale");
 const myCnf = `[client]
 user=root
 password=root
@@ -11,7 +11,7 @@ sql_mode="NO_ENGINE_SUBSTITUTION"
 innodb_file_per_table=OFF
 show_compatibility_56=ON
 open_files_limit=999999
-log-error=${sheepdog_1.sheepdogLogsPath}/mysql.log
+log-error=${jale_1.jaleLogsPath}/mysql.log
 local_infile=ON
 secure_file_priv=""
 max_allowed_packet=1073741824

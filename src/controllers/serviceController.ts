@@ -54,7 +54,7 @@ class ServiceController {
                     return false // TODO: Silently fail for now. Add error logging.
                 }
             }
-            console.log(`Successfully started all Sheepdog services.`)
+            console.log(`Successfully started all Jale services.`)
         }
 
         for (const service of this.allServices) {
@@ -96,7 +96,7 @@ class ServiceController {
                     return false // TODO: Silently fail for now. Add error logging.
                 }
             }
-            console.log(`Successfully stop all Sheepdog services.`)
+            console.log(`Successfully stop all Jale services.`)
         }
 
         for (const service of this.allServices) {
@@ -138,7 +138,7 @@ class ServiceController {
                     return false // TODO: Silently fail for now. Add error logging.
                 }
             }
-            console.log(`Successfully restarted all Sheepdog services.`)
+            console.log(`Successfully restarted all Jale services.`)
         }
 
         for (const service of this.allServices) {

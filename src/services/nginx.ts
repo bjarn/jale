@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 import fastcgiParams from '../templates/fastcgiParams'
 import nginxConf from '../templates/nginx'
-import sheepdogNginxConf from '../templates/nginxSheepdog'
+import jaleNginxConf from '../templates/nginxJale'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {sheepdogLogsPath, sheepdogSitesPath} from '../utils/sheepdog'
+import {jaleLogsPath, jaleSitesPath} from '../utils/jale'
 import Service from './service'
 
 class Nginx extends Service {
@@ -12,16 +12,16 @@ class Nginx extends Service {
 
     // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
     configPath = '/usr/local/etc/nginx/nginx.conf'
-    sheepdogNginxFolderPath = '/usr/local/etc/nginx/sheepdog'
-    sheepdogNginxConfigPath = `${this.sheepdogNginxFolderPath}/sheepdog.conf`
+    jaleNginxFolderPath = '/usr/local/etc/nginx/jale'
+    jaleNginxConfigPath = `${this.jaleNginxFolderPath}/jale.conf`
     fastCgiParamsConfigPath = '/usr/local/etc/nginx/fastcgi_params'
 
     configure = async (): Promise<boolean> => {
         try {
-            await ensureDirectoryExists(this.sheepdogNginxFolderPath)
-            await ensureDirectoryExists(`${this.sheepdogNginxFolderPath}/apps`)
-            await ensureDirectoryExists(sheepdogSitesPath)
-            await ensureDirectoryExists(`${sheepdogLogsPath}/nginx`)
+            await ensureDirectoryExists(this.jaleNginxFolderPath)
+            await ensureDirectoryExists(`${this.jaleNginxFolderPath}/apps`)
+            await ensureDirectoryExists(jaleSitesPath)
+            await ensureDirectoryExists(`${jaleLogsPath}/nginx`)
             await this.addConfiguration()
             await this.addFallbackConfiguration()
             await this.addFastCgiParams()
@@ -43,7 +43,7 @@ class Nginx extends Service {
      * Install the customized Nginx configuration.
      */
     addFallbackConfiguration = async (): Promise<void> => {
-        return fs.writeFileSync(this.sheepdogNginxConfigPath, sheepdogNginxConf)
+        return fs.writeFileSync(this.jaleNginxConfigPath, jaleNginxConf)
     }
 
     /**
