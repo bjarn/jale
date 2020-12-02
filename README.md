@@ -38,7 +38,7 @@ The following development tools are included.
 - wp-cli (soon!)*
 - magerun (soon!)*
 - magerun2 (soon!)*
-- drush
+- drush (soon!)*
 
 ## Migrating from...?
 Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.
