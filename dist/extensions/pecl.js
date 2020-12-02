@@ -3,23 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs_1 = require("fs");
-const apcu_1 = tslib_1.__importDefault(require("./php/apcu"));
-const geoip_1 = tslib_1.__importDefault(require("./php/geoip"));
-const memcached_1 = tslib_1.__importDefault(require("./php/memcached"));
-const xdebug_1 = tslib_1.__importDefault(require("./php/xdebug"));
-const yaml_1 = tslib_1.__importDefault(require("./php/yaml"));
+const extensions_1 = require("./extensions");
 class Pecl {
 }
-/**
- * All extensions available in Jale.
- */
-Pecl.PHP_EXTENSIONS = [
-    new apcu_1.default,
-    new geoip_1.default,
-    new memcached_1.default,
-    new xdebug_1.default,
-    new yaml_1.default
-];
 /**
  * Get the path of the PHP ini currently used by PECL.
  */
@@ -51,11 +37,12 @@ Pecl.getExtensionDirectory = () => tslib_1.__awaiter(void 0, void 0, void 0, fun
  */
 Pecl.installExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     console.log('Installing PECL extensions');
-    for (const extension of Pecl.PHP_EXTENSIONS) {
-        if (!optionals && !extension.default)
+    for (const extension of extensions_1.PHP_EXTENSIONS) {
+        const ext = new extension;
+        if (!optionals && !ext.default)
             continue;
-        yield extension.install();
-        yield extension.enable();
+        yield ext.install();
+        yield ext.enable();
     }
 });
 /**
@@ -65,11 +52,12 @@ Pecl.installExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0
  */
 Pecl.uninstallExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     console.log('Uninstalling PECL extensions');
-    for (const extension of Pecl.PHP_EXTENSIONS) {
-        if (!optionals && !extension.default)
+    for (const extension of extensions_1.PHP_EXTENSIONS) {
+        const ext = new extension;
+        if (!optionals && !ext.default)
             continue;
-        yield extension.uninstall();
-        yield extension.disable();
+        yield ext.uninstall();
+        yield ext.disable();
     }
 });
 exports.default = Pecl;

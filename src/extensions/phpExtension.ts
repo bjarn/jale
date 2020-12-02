@@ -1,17 +1,15 @@
 import execa from 'execa'
 import * as fs from 'fs'
+import {NORMAL_EXTENSION_TYPE} from './extensions'
 import Pecl from './pecl'
 
 abstract class PhpExtension {
-    static NORMAL_EXTENSION_TYPE = 'extension'
-    static ZEND_EXTENSION_TYPE = 'zend_extension'
-
     abstract extension: string
     abstract alias: string
 
     // Extension settings
     default: boolean = true
-    extensionType: string = PhpExtension.NORMAL_EXTENSION_TYPE
+    extensionType: string = NORMAL_EXTENSION_TYPE
 
     /**
      * Check if the extension is enabled.
@@ -42,10 +40,9 @@ abstract class PhpExtension {
 
         const {stdout} = await execa('pecl', ['install', this.extension])
 
-        const installRegex = new RegExp(`/Installing '(.*${this.alias}.so)'/`)
-        // @ts-ignore
-        if (installRegex.exec(stdout).length < 1)
-            throw new Error(`Unable to find installation path for ${this.extension}. Result:\n\n${stdout}`)
+        const installRegex = new RegExp(`Installing '(.*${this.alias}.so)'`, 'g').test(stdout)
+        if (!installRegex)
+            throw new Error(`Unable to find installation path for ${this.extension}. Result:\n\n`)
 
         if (stdout.includes('Error:'))
             throw new Error(`Found installation path, but installation still failed: \n\n${stdout}`)
@@ -53,9 +50,9 @@ abstract class PhpExtension {
         const phpIniPath = await Pecl.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
-        const extensionRegex = new RegExp(`/(zend_extension|extension)="(.*${this.alias}.so)"/`)
-        // @ts-ignore
-        if (extensionRegex.exec(phpIni).length < 1)
+        // TODO: Fix duplicate extension entires in php.ini
+        const extensionRegex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"`, 'g').test(phpIni)
+        if (!extensionRegex)
             throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`)
 
         console.log(`Extension ${this.extension} has been installed.`)
@@ -78,13 +75,13 @@ abstract class PhpExtension {
 
         const phpIniPath = await Pecl.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
-        const regex = new RegExp(`/(zend_extension|extension)="(.*${this.alias}.so)"\/n/`);
+        const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\/n`, 'g')
         phpIni = phpIni.replace(regex, '')
         phpIni = `${this.extensionType}="${this.alias}.so"\n${phpIni}`
 
         await fs.writeFileSync(phpIniPath, phpIni)
 
-        console.log(`Extension ${this.extension} has been enabled`);
+        console.log(`Extension ${this.extension} has been enabled`)
     }
 
     /**
@@ -94,7 +91,7 @@ abstract class PhpExtension {
         const phpIniPath = await Pecl.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
-        const regex = new RegExp(`/;?(zend_extension|extension)=".*${this.alias}.so"/`)
+        const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"`, 'g')
         phpIni = phpIni.replace(regex, '')
 
         await fs.writeFileSync(phpIniPath, phpIni)

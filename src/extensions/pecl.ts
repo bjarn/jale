@@ -1,23 +1,8 @@
 import execa from 'execa'
 import {existsSync} from 'fs'
-import Apcu from './php/apcu'
-import Geoip from './php/geoip'
-import Memcached from './php/memcached'
-import Xdebug from './php/xdebug'
-import Yaml from './php/yaml'
+import {PHP_EXTENSIONS} from './extensions'
 
 class Pecl {
-    /**
-     * All extensions available in Jale.
-     */
-    static PHP_EXTENSIONS = [
-        new Apcu,
-        new Geoip,
-        new Memcached,
-        new Xdebug,
-        new Yaml
-    ]
-
     /**
      * Get the path of the PHP ini currently used by PECL.
      */
@@ -59,12 +44,13 @@ class Pecl {
     static installExtensions = async (optionals: boolean = false) => {
         console.log('Installing PECL extensions')
 
-        for (const extension of Pecl.PHP_EXTENSIONS) {
-            if (!optionals && !extension.default)
+        for (const extension of PHP_EXTENSIONS) {
+            const ext = new extension
+            if (!optionals && !ext.default)
                 continue
 
-            await extension.install()
-            await extension.enable()
+            await ext.install()
+            await ext.enable()
         }
     }
 
@@ -76,12 +62,13 @@ class Pecl {
     static uninstallExtensions = async (optionals: boolean = false) => {
         console.log('Uninstalling PECL extensions')
 
-        for (const extension of Pecl.PHP_EXTENSIONS) {
-            if (!optionals && !extension.default)
+        for (const extension of PHP_EXTENSIONS) {
+            const ext = new extension
+            if (!optionals && !ext.default)
                 continue
 
-            await extension.uninstall()
-            await extension.disable()
+            await ext.uninstall()
+            await ext.disable()
         }
     }
 }

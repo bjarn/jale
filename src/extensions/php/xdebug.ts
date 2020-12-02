@@ -1,3 +1,4 @@
+import {ZEND_EXTENSION_TYPE} from '../extensions'
 import PhpExtension from '../phpExtension'
 
 class Xdebug extends PhpExtension {
@@ -5,7 +6,7 @@ class Xdebug extends PhpExtension {
     extension = 'xdebug'
 
     defaulft = false
-    extensionType = PhpExtension.ZEND_EXTENSION_TYPE
+    extensionType = ZEND_EXTENSION_TYPE
 }
 
 export default Xdebug
