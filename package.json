@@ -1,20 +1,21 @@
 {
-  "name": "@bjarnbronsveld/sheepdog",
-  "version": "0.1.2",
-  "description": "Sheepdog is a blazing fast local development environment for MacOS written in Typescript.",
+  "name": "jale",
+  "version": "0.1.5",
+  "description": "Jale is a blazing fast local development environment for MacOS written in Typescript.",
   "author": "Bjarn Bronsveld",
-  "main": "./src/sheepdog.js",
+  "main": "./src/jale.js",
   "bin": {
-    "sheepdog": "bin/sheepdog.js"
+    "jale": "bin/jale.js"
   },
   "keywords": [
     "local",
     "development",
     "environment",
     "macos",
-    "sheepdog"
+    "jale",
+    "just another local environment"
   ],
-  "repository": "https://github.com/bjarn/sheepdog",
+  "repository": "https://github.com/bjarn/jale",
   "license": "GPLv3",
   "preferGlobal": true,
   "devDependencies": {

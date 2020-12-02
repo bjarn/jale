@@ -3,7 +3,7 @@ import * as os from 'os'
 import zPerformanceIni from '../templates/zPerformanceIni'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {client} from '../utils/os'
-import {sheepdogHomeDir, sheepdogLogsPath} from '../utils/sheepdog'
+import {jaleHomeDir, jaleLogsPath} from '../utils/jale'
 import Service from './service'
 
 abstract class PhpFpm extends Service {
@@ -37,13 +37,13 @@ abstract class PhpFpm extends Service {
 
         config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`)
         config = config.replace(/^group = .+$/m, `group = staff`) // TODO: Make this dynamic. GIDs dont work.
-        config = config.replace(/^listen = .+$/m, `listen = ${sheepdogHomeDir}/sheepdog.sock`)
+        config = config.replace(/^listen = .+$/m, `listen = ${jaleHomeDir}/jale.sock`)
         config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`)
         config = config.replace(/^;?listen\.group = .+$/m, `listen.group = staff`) // TODO: Make this dynamic. GIDs dont work.
         config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`)
         config = config.replace(
             /^;?php_admin_value\[error_log\] = .+$/m,
-            `php_admin_value[error_log] = ${sheepdogLogsPath}/php.log`
+            `php_admin_value[error_log] = ${jaleLogsPath}/php.log`
         )
 
         return fs.writeFileSync(this.configPath, config)

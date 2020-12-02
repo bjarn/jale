@@ -1,5 +1,5 @@
 import * as os from 'os'
-import {sheepdogHomeDir, sheepdogSitesPath} from '../utils/sheepdog'
+import {jaleSitesPath} from '../utils/jale'
 
 const nginxConf = `user ${os.userInfo().username} staff;
 worker_processes auto;
@@ -41,9 +41,9 @@ http {
     text/plain
     text/x-component;
 
-    include ${sheepdogSitesPath}/*;
-    include sheepdog/apps/*.conf;
-    include sheepdog/sheepdog.conf;
+    include ${jaleSitesPath}/*;
+    include jale/apps/*.conf;
+    include jale/jale.conf;
 }`
 
 export default nginxConf

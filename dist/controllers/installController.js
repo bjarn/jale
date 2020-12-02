@@ -14,7 +14,7 @@ const filesystem_1 = require("../utils/filesystem");
 const optionalService_1 = require("../utils/optionalService");
 const os_1 = require("../utils/os");
 const phpFpm_1 = require("../utils/phpFpm");
-const sheepdog_1 = require("../utils/sheepdog");
+const jale_1 = require("../utils/jale");
 const sudo_1 = require("../utils/sudo");
 class InstallController {
     constructor() {
@@ -64,7 +64,7 @@ class InstallController {
          */
         this.execute = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             console_1.clearConsole();
-            console.log(colors_1.white('✨ Thanks for using Sheepdog! Let\'s get you started quickly.\n'));
+            console.log(colors_1.white('✨ Thanks for using Jale! Let\'s get you started quickly.\n'));
             yield sudo_1.requireSudo();
             inquirer_1.default
                 .prompt(this.questions)
@@ -77,20 +77,20 @@ class InstallController {
             return true;
         });
         /**
-         * Configure Sheepdog by parsing the answers and creating a configuration file.
+         * Configure Jale by parsing the answers and creating a configuration file.
          *
          * @param answers
          * @private
          */
-        this.configureSheepdog = (answers) => ({
-            title: 'Configure Sheepdog',
+        this.configureJale = (answers) => ({
+            title: 'Configure Jale',
             task: (ctx, task) => {
                 let config = {
                     domain: answers.domain,
                     database: { password: 'root' },
                     services: null // TODO: Make services configurable.
                 };
-                return fs.writeFileSync(sheepdog_1.sheepdogConfigPath, JSON.stringify(config, null, 2));
+                return fs.writeFileSync(jale_1.jaleConfigPath, JSON.stringify(config, null, 2));
             }
         });
         //
@@ -266,17 +266,17 @@ class InstallController {
         };
     }
     /**
-     * Start the installation of Sheepdog.
+     * Start the installation of Jale.
      *
      * @param answers
      * @private
      */
     install(answers) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield sheepdog_1.ensureHomeDirExists();
-            yield filesystem_1.ensureDirectoryExists(sheepdog_1.sheepdogLogsPath);
+            yield jale_1.ensureHomeDirExists();
+            yield filesystem_1.ensureDirectoryExists(jale_1.jaleLogsPath);
             const tasks = new listr2_1.Listr([
-                this.configureSheepdog(answers),
+                this.configureJale(answers),
                 this.installDnsMasq(),
                 this.installNginx(),
                 this.installMailhog(),
@@ -288,9 +288,9 @@ class InstallController {
                 this.installOptionalServices(answers)
             ]);
             try {
-                // We're all set. Let's configure Sheepdog. Ruff.
+                // We're all set. Let's configure Jale.
                 yield tasks.run();
-                console.log(`\n✨ Successfully installed Sheepdog! ✅\n`);
+                console.log(`\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n`);
             }
             catch (e) {
                 console.error(e);

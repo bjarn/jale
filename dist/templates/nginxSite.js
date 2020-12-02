@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sheepdog_1 = require("../utils/sheepdog");
+const jale_1 = require("../utils/jale");
 const nginxSiteConfig = (hostname, docroot) => `server {
     listen 80;
     listen [::]:80;
@@ -16,13 +16,13 @@ const nginxSiteConfig = (hostname, docroot) => `server {
     }
 
     access_log off;
-    error_log ${sheepdog_1.sheepdogLogsPath}/nginx/${hostname}-error.log;
+    error_log ${jale_1.jaleLogsPath}/nginx/${hostname}-error.log;
 
     location ~ \\.php$ {
         try_files $uri /index.php =404;
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
         fastcgi_read_timeout 3600;
-        fastcgi_pass unix:${sheepdog_1.sheepdogHomeDir}/sheepdog.sock;
+        fastcgi_pass unix:${jale_1.jaleHomeDir}/jale.sock;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;

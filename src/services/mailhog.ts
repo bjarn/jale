@@ -1,10 +1,6 @@
 import * as fs from 'fs'
-import fastcgiParams from '../templates/fastcgiParams'
-import nginxConf from '../templates/nginx'
 import nginxMailhogConf from '../templates/nginxMailhog'
-import sheepdogNginxConf from '../templates/nginxSheepdog'
-import {ensureDirectoryExists} from '../utils/filesystem'
-import {getConfig, sheepdogLogsPath, sheepdogNginxAppsPath, sheepdogSitesPath} from '../utils/sheepdog'
+import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'
 import Service from './service'
 
@@ -12,7 +8,7 @@ class Mailhog extends Service {
     service = 'mailhog'
 
     // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    nginxConfigPath = `${sheepdogNginxAppsPath}/mailhog.conf`
+    nginxConfigPath = `${jaleNginxAppsPath}/mailhog.conf`
 
     configure = async (): Promise<boolean> => {
         try {

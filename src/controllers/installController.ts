@@ -12,7 +12,7 @@ import {ensureDirectoryExists} from '../utils/filesystem'
 import {getOptionalServiceByname} from '../utils/optionalService'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
-import {ensureHomeDirExists, sheepdogConfigPath, sheepdogLogsPath} from '../utils/sheepdog'
+import {ensureHomeDirExists, jaleConfigPath, jaleLogsPath} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
 
 class InstallController {
@@ -64,7 +64,7 @@ class InstallController {
      */
     execute = async (): Promise<boolean> => {
         clearConsole()
-        console.log(white('✨ Thanks for using Sheepdog! Let\'s get you started quickly.\n'))
+        console.log(white('✨ Thanks for using Jale! Let\'s get you started quickly.\n'))
 
         await requireSudo()
 
@@ -81,17 +81,17 @@ class InstallController {
     }
 
     /**
-     * Start the installation of Sheepdog.
+     * Start the installation of Jale.
      *
      * @param answers
      * @private
      */
     private async install(answers: any) {
         await ensureHomeDirExists()
-        await ensureDirectoryExists(sheepdogLogsPath)
+        await ensureDirectoryExists(jaleLogsPath)
 
         const tasks = new Listr([
-            this.configureSheepdog(answers),
+            this.configureJale(answers),
             this.installDnsMasq(),
             this.installNginx(),
             this.installMailhog(),
@@ -107,22 +107,22 @@ class InstallController {
         ])
 
         try {
-            // We're all set. Let's configure Sheepdog. Ruff.
+            // We're all set. Let's configure Jale.
             await tasks.run()
-            console.log(`\n✨ Successfully installed Sheepdog! ✅\n`)
+            console.log(`\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n`)
         } catch (e) {
             console.error(e)
         }
     }
 
     /**
-     * Configure Sheepdog by parsing the answers and creating a configuration file.
+     * Configure Jale by parsing the answers and creating a configuration file.
      *
      * @param answers
      * @private
      */
-    private configureSheepdog = (answers: any): ListrTask => ({
-        title: 'Configure Sheepdog',
+    private configureJale = (answers: any): ListrTask => ({
+        title: 'Configure Jale',
         task: (ctx, task): void => {
             let config = <Config>{
                 domain: answers.domain,
@@ -130,7 +130,7 @@ class InstallController {
                 services: null // TODO: Make services configurable.
             }
 
-            return fs.writeFileSync(sheepdogConfigPath, JSON.stringify(config, null, 2))
+            return fs.writeFileSync(jaleConfigPath, JSON.stringify(config, null, 2))
         }
     })
 

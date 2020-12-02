@@ -1,1 +1,1 @@
-{"version":3,"file":"myCnf.js","sourceRoot":"","sources":["../../src/templates/myCnf.ts"],"names":[],"mappings":";;AAAA,gDAAkD;AAElD,MAAM,KAAK,GAAG;;;;;;;;;;YAUF,2BAAgB;;;;;;;;;;;;;;;;;;;;;;CAsB3B,CAAA;AAED,kBAAe,KAAK,CAAA"}
+{"version":3,"file":"myCnf.js","sourceRoot":"","sources":["../../src/templates/myCnf.ts"],"names":[],"mappings":";;AAAA,wCAA0C;AAE1C,MAAM,KAAK,GAAG;;;;;;;;;;YAUF,mBAAY;;;;;;;;;;;;;;;;;;;;;;CAsBvB,CAAA;AAED,kBAAe,KAAK,CAAA"}

@@ -5,7 +5,7 @@ const installController_1 = tslib_1.__importDefault(require("../controllers/inst
 function installCommand(program) {
     return program
         .command('install')
-        .description('Run the initial setup of Sheepdog')
+        .description('Run the initial setup of Jale')
         .action(() => {
         (new installController_1.default()).execute().catch(err => console.log(err.message));
     });
