@@ -3,7 +3,7 @@ abstract class PackageManager {
     abstract path: string
     abstract alias: string
 
-    abstract install(pkg: string, cask: boolean = false): Promise<boolean>
+    abstract install(pkg: string, cask: boolean): Promise<boolean>
 
     abstract remove(pkg: string): Promise<boolean>
 
