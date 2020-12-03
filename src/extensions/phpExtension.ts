@@ -32,10 +32,10 @@ abstract class PhpExtension {
     /**
      * Install the extension.
      */
-    install = async (): Promise<void> => {
+    install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
             console.log(`Extension ${this.extension} is already installed.`)
-            return
+            return false
         }
 
         const {stdout} = await execa('pecl', ['install', this.extension])
@@ -56,6 +56,7 @@ abstract class PhpExtension {
             throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`)
 
         console.log(`Extension ${this.extension} has been installed.`)
+        return true
     }
 
     /**
@@ -87,7 +88,7 @@ abstract class PhpExtension {
     /**
      * Disable the extension.
      */
-    disable = async (): Promise<void> => {
+    disable = async (): Promise<boolean> => {
         const phpIniPath = await Pecl.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
@@ -97,6 +98,8 @@ abstract class PhpExtension {
         await fs.writeFileSync(phpIniPath, phpIni)
 
         console.log(`Extension ${this.extension} has been disabled`)
+
+        return true
     }
 }
 

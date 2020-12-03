@@ -31,7 +31,7 @@ class PhpExtension {
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.isInstalled()) {
                 console.log(`Extension ${this.extension} is already installed.`);
-                return;
+                return false;
             }
             const { stdout } = yield execa_1.default('pecl', ['install', this.extension]);
             const installRegex = new RegExp(`Installing '(.*${this.alias}.so)'`, 'g').test(stdout);
@@ -46,6 +46,7 @@ class PhpExtension {
             if (!extensionRegex)
                 throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`);
             console.log(`Extension ${this.extension} has been installed.`);
+            return true;
         });
         /**
          * Uninstall the extension.
@@ -78,6 +79,7 @@ class PhpExtension {
             phpIni = phpIni.replace(regex, '');
             yield fs.writeFileSync(phpIniPath, phpIni);
             console.log(`Extension ${this.extension} has been disabled`);
+            return true;
         });
     }
 }
