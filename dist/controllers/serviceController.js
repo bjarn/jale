@@ -39,33 +39,33 @@ class ServiceController {
                     try {
                         if (service instanceof mysql_1.default) {
                             const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
+                            if (linkedDatabase.service !== service.service)
+                                continue;
                         }
                         if (service instanceof phpFpm_1.default) {
                             const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
+                            if (linkedPhpVersion.service !== service.service)
+                                continue;
                         }
+                        console.log(`Starting ${service.service}...`);
                         yield service.start();
-                        return true;
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to start ${service.service}: ${e.message}`);
                     }
                 }
                 console.log(`Successfully started all Jale services.`);
             }
             for (const service of this.allServices) {
                 if (service.service === serviceName) {
+                    console.log(`Starting ${service.service}...`);
                     try {
                         yield service.start();
                         console.log(`Successfully started ${serviceName}.`);
                         return true;
                     }
                     catch (e) {
+                        console.log(`Failed to start ${service.service}: ${e.message}`);
                         return false; // TODO: Catch error.
                     }
                 }
@@ -79,34 +79,34 @@ class ServiceController {
                     try {
                         if (service instanceof mysql_1.default) {
                             const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
+                            if (linkedDatabase.service !== service.service)
+                                continue;
                         }
                         if (service instanceof phpFpm_1.default) {
                             const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
+                            if (linkedPhpVersion.service !== service.service)
+                                continue;
                         }
+                        console.log(`Stopping ${service.service}...`);
                         yield service.stop();
-                        return true;
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully stop all Jale services.`);
+                console.log(`Successfully stopped all Jale services.`);
+                return true;
             }
             for (const service of this.allServices) {
                 if (service.service === serviceName) {
+                    console.log(`Stopping ${service.service}...`);
                     try {
                         yield service.stop();
                         console.log(`Successfully stopped ${serviceName}.`);
                         return true;
                     }
                     catch (e) {
-                        return false; // TODO: Catch error.
+                        console.log(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
             }
