@@ -10,11 +10,33 @@ class Homebrew extends packageManager_1.default {
         this.name = 'Homebrew';
         this.path = '/usr/local/bin/brew';
     }
+    /**
+     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     *
+     * @param pkg
+     * @param cask
+     */
     install(pkg, cask = false) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let args = ['install', pkg];
             if (cask) {
                 args = ['cask', 'install', pkg];
+            }
+            const { stdout } = yield execa_1.default('brew', args);
+            return stdout.includes(pkg);
+        });
+    }
+    /**
+     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     *
+     * @param pkg
+     * @param cask
+     */
+    uninstall(pkg, cask = false) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            let args = ['remove', pkg];
+            if (cask) {
+                args = ['cask', 'remove', pkg];
             }
             const { stdout } = yield execa_1.default('brew', args);
             return stdout.includes(pkg);

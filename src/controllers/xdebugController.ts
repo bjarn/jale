@@ -1,4 +1,3 @@
-import Pecl from '../extensions/pecl'
 import Xdebug from '../extensions/php/xdebug'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 

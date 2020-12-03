@@ -28,6 +28,10 @@ abstract class Service {
         return client().packageManager.install(this.service, false)
     }
 
+    uninstall = (): Promise<boolean> => {
+        return client().packageManager.uninstall(this.service, false)
+    }
+
     abstract configure(): Promise<boolean>
 }
 

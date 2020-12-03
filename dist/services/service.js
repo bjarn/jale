@@ -28,6 +28,9 @@ class Service {
         this.install = () => {
             return os_1.client().packageManager.install(this.service, false);
         };
+        this.uninstall = () => {
+            return os_1.client().packageManager.uninstall(this.service, false);
+        };
     }
 }
 exports.default = Service;
