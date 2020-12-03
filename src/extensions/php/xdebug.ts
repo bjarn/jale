@@ -5,7 +5,7 @@ class Xdebug extends PhpExtension {
     alias = 'xdebug'
     extension = 'xdebug'
 
-    defaulft = false
+    default = false
     extensionType = ZEND_EXTENSION_TYPE
 }
 

@@ -8,7 +8,7 @@ class Xdebug extends phpExtension_1.default {
         super(...arguments);
         this.alias = 'xdebug';
         this.extension = 'xdebug';
-        this.defaulft = false;
+        this.default = false;
         this.extensionType = extensions_1.ZEND_EXTENSION_TYPE;
     }
 }
