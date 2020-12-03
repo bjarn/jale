@@ -8,6 +8,7 @@ const listr2_1 = require("listr2");
 const dnsmasq_1 = tslib_1.__importDefault(require("../services/dnsmasq"));
 const mailhog_1 = tslib_1.__importDefault(require("../services/mailhog"));
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
+const fallbackServer_1 = require("../templates/fallbackServer");
 const console_1 = require("../utils/console");
 const database_1 = require("../utils/database");
 const filesystem_1 = require("../utils/filesystem");
@@ -296,6 +297,7 @@ class InstallController {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield jale_1.ensureHomeDirExists();
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleLogsPath);
+            yield fs.writeFileSync(jale_1.jaleFallbackServer, fallbackServer_1.fallbackIndex);
             const tasks = new listr2_1.Listr([
                 this.configureJale(answers),
                 this.installDnsMasq(),
