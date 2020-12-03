@@ -1,15 +1,37 @@
 import execa from 'execa'
+import {existsSync} from 'fs'
 import * as fs from 'fs'
-import {NORMAL_EXTENSION_TYPE} from './extensions'
-import Pecl from './pecl'
 
 abstract class PhpExtension {
+    static NORMAL_EXTENSION_TYPE = 'extension'
+    static ZEND_EXTENSION_TYPE = 'zend_extension'
+
     abstract extension: string
     abstract alias: string
 
     // Extension settings
     default: boolean = true
-    extensionType: string = NORMAL_EXTENSION_TYPE
+    extensionType: string = PhpExtension.NORMAL_EXTENSION_TYPE
+
+    /**
+     * Get the path of the PHP ini currently used by PECL.
+     */
+    getPhpIni = async (): Promise<string> => {
+        const peclIni = await execa('pecl', ['config-get', 'php_ini'])
+        const peclIniPath = peclIni.stdout.replace('\n', '')
+
+        if (existsSync(peclIniPath))
+            return peclIniPath
+
+        const phpIni = await execa('php', ['-i', '|', 'grep', 'php.ini'])
+
+        const matches = phpIni.stdout.match(/Path => ([^\s]*)/)
+
+        if (!matches || matches.length <= 0)
+            throw new Error('Unable to find php.ini.')
+
+        return `${matches[1].trim()}/php.ini`
+    }
 
     /**
      * Check if the extension is enabled.
@@ -32,10 +54,10 @@ abstract class PhpExtension {
     /**
      * Install the extension.
      */
-    install = async (): Promise<void> => {
+    install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
             console.log(`Extension ${this.extension} is already installed.`)
-            return
+            return false
         }
 
         const {stdout} = await execa('pecl', ['install', this.extension])
@@ -47,7 +69,7 @@ abstract class PhpExtension {
         if (stdout.includes('Error:'))
             throw new Error(`Found installation path, but installation still failed: \n\n${stdout}`)
 
-        const phpIniPath = await Pecl.getPhpIni()
+        const phpIniPath = await this.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
         // TODO: Fix duplicate extension entires in php.ini
@@ -56,6 +78,7 @@ abstract class PhpExtension {
             throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`)
 
         console.log(`Extension ${this.extension} has been installed.`)
+        return true
     }
 
     /**
@@ -73,7 +96,7 @@ abstract class PhpExtension {
             console.log(`Extension ${this.extension} is already enabled.`)
         }
 
-        const phpIniPath = await Pecl.getPhpIni()
+        const phpIniPath = await this.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
         const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\/n`, 'g')
         phpIni = phpIni.replace(regex, '')
@@ -87,8 +110,8 @@ abstract class PhpExtension {
     /**
      * Disable the extension.
      */
-    disable = async (): Promise<void> => {
-        const phpIniPath = await Pecl.getPhpIni()
+    disable = async (): Promise<boolean> => {
+        const phpIniPath = await this.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
         const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"\n`, 'g')
@@ -97,6 +120,8 @@ abstract class PhpExtension {
         await fs.writeFileSync(phpIniPath, phpIni)
 
         console.log(`Extension ${this.extension} has been disabled`)
+
+        return true
     }
 }
 
