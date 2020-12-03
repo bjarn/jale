@@ -33,10 +33,10 @@ The following services are currently installed by Jale. Services marked with a *
 ### Dev tools
 The following development tools are included.
 - Mailhog
-- wp-cli (soon!)*
-- magerun (soon!)*
-- magerun2 (soon!)*
-- drush (soon!)*
+- wp-cli*
+- magerun*
+- magerun2*
+- drush*
 
 ## Migrating from...?
 Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.
