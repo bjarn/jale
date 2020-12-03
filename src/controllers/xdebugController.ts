@@ -14,20 +14,25 @@ class XdebugController {
         }
 
         const xdebug = new Xdebug()
+        let restart = false
 
         if (status === 'on') {
-            await this.enable(xdebug)
+            restart = await this.enable(xdebug)
         }
 
         if (status === 'off') {
-            await this.disable(xdebug)
+            restart = await this.disable(xdebug)
         }
 
-        const php = await getLinkedPhpVersion()
-        return php.restart()
+        if (restart) {
+            const php = await getLinkedPhpVersion()
+            await php.restart()
+        }
+
+        return true
     }
 
-    enable = async (xdebug: Xdebug): Promise<void> => {
+    enable = async (xdebug: Xdebug): Promise<boolean> => {
         if (!(await xdebug.isInstalled())) {
             console.log('Extension xdebug is not installed. Installing now...')
             await xdebug.install()
@@ -36,21 +41,25 @@ class XdebugController {
         // TODO: Enable auto start configuration for xdebug.
 
         console.log('Enabling xdebug...')
-        return xdebug.enable()
+        await xdebug.enable()
+
+        return true
     }
 
-    disable = async (xdebug: Xdebug): Promise<void> => {
+    disable = async (xdebug: Xdebug): Promise<boolean> => {
         if (!(await xdebug.isInstalled())) {
             console.log('Extension xdebug is not installed. We do not need to disable it then...')
-            return
+            return false
         }
 
         if (!(await xdebug.isEnabled())) {
             console.log('Extension xdebug is not enabled.')
-            return
+            return false
         }
 
-        return xdebug.disable()
+        await xdebug.disable()
+
+        return true
     }
 
 }

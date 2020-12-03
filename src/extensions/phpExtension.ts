@@ -91,7 +91,7 @@ abstract class PhpExtension {
         const phpIniPath = await Pecl.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
-        const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"`, 'g')
+        const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"\n`, 'g')
         phpIni = phpIni.replace(regex, '')
 
         await fs.writeFileSync(phpIniPath, phpIni)

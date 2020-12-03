@@ -74,7 +74,7 @@ class PhpExtension {
         this.disable = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const phpIniPath = yield pecl_1.default.getPhpIni();
             let phpIni = yield fs.readFileSync(phpIniPath, 'utf-8');
-            const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"`, 'g');
+            const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"\n`, 'g');
             phpIni = phpIni.replace(regex, '');
             yield fs.writeFileSync(phpIniPath, phpIni);
             console.log(`Extension ${this.extension} has been disabled`);

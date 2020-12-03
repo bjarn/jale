@@ -14,14 +14,18 @@ class XdebugController {
                 return false;
             }
             const xdebug = new xdebug_1.default();
+            let restart = false;
             if (status === 'on') {
-                yield this.enable(xdebug);
+                restart = yield this.enable(xdebug);
             }
             if (status === 'off') {
-                yield this.disable(xdebug);
+                restart = yield this.disable(xdebug);
             }
-            const php = yield phpFpm_1.getLinkedPhpVersion();
-            return php.restart();
+            if (restart) {
+                const php = yield phpFpm_1.getLinkedPhpVersion();
+                yield php.restart();
+            }
+            return true;
         });
         this.enable = (xdebug) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!(yield xdebug.isInstalled())) {
@@ -30,18 +34,20 @@ class XdebugController {
             }
             // TODO: Enable auto start configuration for xdebug.
             console.log('Enabling xdebug...');
-            return xdebug.enable();
+            yield xdebug.enable();
+            return true;
         });
         this.disable = (xdebug) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!(yield xdebug.isInstalled())) {
                 console.log('Extension xdebug is not installed. We do not need to disable it then...');
-                return;
+                return false;
             }
             if (!(yield xdebug.isEnabled())) {
                 console.log('Extension xdebug is not enabled.');
-                return;
+                return false;
             }
-            return xdebug.disable();
+            yield xdebug.disable();
+            return true;
         });
     }
 }
