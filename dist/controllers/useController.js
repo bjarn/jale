@@ -41,7 +41,7 @@ class UseController {
             const isVersionInstalled = yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service);
             if (!isVersionInstalled) {
                 console.log(`Installing PHP ${newPhpVersion.versionName}`);
-                yield os_1.client().packageManager.install(newPhpVersion.service);
+                yield os_1.client().packageManager.install(newPhpVersion.service, false);
                 console.log(`Configuring PHP ${newPhpVersion.versionName}`);
                 yield newPhpVersion.configure();
             }

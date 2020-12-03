@@ -6,11 +6,35 @@ class Homebrew extends PackageManager {
     name: string = 'Homebrew'
     path: string = '/usr/local/bin/brew'
 
+    /**
+     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     *
+     * @param pkg
+     * @param cask
+     */
     async install(pkg: string, cask: boolean = false): Promise<boolean> {
         let args: string[] = ['install', pkg]
 
         if (cask) {
             args = ['cask', 'install', pkg]
+        }
+
+        const {stdout} = await execa('brew', args)
+
+        return stdout.includes(pkg)
+    }
+
+    /**
+     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     *
+     * @param pkg
+     * @param cask
+     */
+    async uninstall(pkg: string, cask: boolean = false): Promise<boolean> {
+        let args: string[] = ['remove', pkg]
+
+        if (cask) {
+            args = ['cask', 'remove', pkg]
         }
 
         const {stdout} = await execa('brew', args)
