@@ -37,121 +37,127 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
-                        }
-                        yield service.start();
-                        return true;
+                        yield this.controlService(service, 'start');
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to start ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully started all Jale services.`);
+                console.log(`Successfully started all Jale services`);
+                return true;
             }
             for (const service of this.allServices) {
-                if (service.service === serviceName) {
+                if (service.service.includes(serviceName)) {
                     try {
-                        yield service.start();
-                        console.log(`Successfully started ${serviceName}.`);
+                        if (!(yield this.controlService(service, 'start'))) {
+                            continue;
+                        }
+                        console.log(`Successfully started ${serviceName}`);
                         return true;
                     }
                     catch (e) {
-                        return false; // TODO: Catch error.
+                        console.log(`Failed to start ${service.service}: ${e.message}`);
+                        return false;
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}.`);
+            console.warn(`Invalid service: ${serviceName}`);
             return false;
         });
         this.executeStop = (serviceName) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
-                        }
-                        yield service.stop();
-                        return true;
+                        yield this.controlService(service, 'stop');
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully stop all Jale services.`);
+                console.log(`Successfully stopped all Jale services`);
+                return true;
             }
             for (const service of this.allServices) {
-                if (service.service === serviceName) {
+                if (service.service.includes(serviceName)) {
                     try {
-                        yield service.stop();
-                        console.log(`Successfully stopped ${serviceName}.`);
+                        if (!(yield this.controlService(service, 'stop'))) {
+                            continue;
+                        }
+                        console.log(`Successfully stopped ${serviceName}`);
                         return true;
                     }
                     catch (e) {
-                        return false; // TODO: Catch error.
+                        console.log(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}.`);
+            console.warn(`Invalid service: ${serviceName}`);
             return false;
         });
         this.executeRestart = (serviceName) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
-                        }
-                        yield service.restart();
-                        return true;
+                        yield this.controlService(service, 'restart');
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully restarted all Jale services.`);
+                console.log(`Successfully restarted all Jale services`);
+                return true;
             }
             for (const service of this.allServices) {
-                if (service.service === serviceName) {
+                if (service.service.includes('restart')) {
                     try {
-                        yield service.restart();
-                        console.log(`Successfully restarted ${serviceName}.`);
+                        if (!(yield this.controlService(service, 'restart'))) {
+                            continue;
+                        }
+                        console.log(`Successfully restarted ${serviceName}`);
                         return true;
                     }
                     catch (e) {
-                        return false; // TODO: Catch error.
+                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
+                        return false;
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}.`);
+            console.warn(`Invalid service: ${serviceName}`);
             return false;
+        });
+        /**
+         * Convenience method to start, stop or restart a service. It also checks if you are restarting PHP or MySQL.
+         * @param service
+         * @param action
+         */
+        this.controlService = (service, action) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (service instanceof mysql_1.default) {
+                const linkedDatabase = yield database_1.getLinkedDatabase();
+                if (linkedDatabase.service !== service.service) {
+                    return false;
+                }
+            }
+            if (service instanceof phpFpm_1.default) {
+                const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
+                if (linkedPhpVersion.service !== service.service) {
+                    return false;
+                }
+            }
+            switch (action) {
+                case 'start':
+                    console.log(`Starting ${service.service}...`);
+                    yield service.start();
+                    break;
+                case 'stop':
+                    console.log(`Stopping ${service.service}...`);
+                    yield service.stop();
+                    break;
+                case 'restart':
+                    console.log(`Retarting ${service.service}...`);
+                    yield service.restart();
+                    break;
+            }
+            return true;
         });
     }
 }

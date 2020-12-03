@@ -21,8 +21,8 @@ class Elasticsearch extends service_1.default {
             try {
                 yield os_1.client().packageManager.install('java', true);
                 yield os_1.client().packageManager.install('homebrew/cask-versions/adoptopenjdk8', true);
-                yield os_1.client().packageManager.install('libyaml');
-                yield os_1.client().packageManager.install(this.service);
+                yield os_1.client().packageManager.install('libyaml', false);
+                yield os_1.client().packageManager.install(this.service, false);
                 return true;
             }
             catch (e) {

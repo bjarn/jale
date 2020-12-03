@@ -6,14 +6,16 @@ import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import Mailhog from '../services/mailhog'
 import Nginx from '../services/nginx'
+import {fallbackIndex} from '../templates/fallbackServer'
 import {clearConsole} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getOptionalServiceByname} from '../utils/optionalService'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
-import {ensureHomeDirExists, jaleConfigPath, jaleLogsPath} from '../utils/jale'
+import {ensureHomeDirExists, jaleConfigPath, jaleFallbackServer, jaleLogsPath} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
+import {getToolByName} from '../utils/tools'
 
 class InstallController {
 
@@ -90,6 +92,8 @@ class InstallController {
         await ensureHomeDirExists()
         await ensureDirectoryExists(jaleLogsPath)
 
+        await fs.writeFileSync(jaleFallbackServer, fallbackIndex)
+
         const tasks = new Listr([
             this.configureJale(answers),
             this.installDnsMasq(),
@@ -103,7 +107,8 @@ class InstallController {
                     )
             },
             this.installDatabase(answers.database),
-            this.installOptionalServices(answers)
+            this.installOptionalServices(answers),
+            this.installTools(answers)
         ])
 
         try {
@@ -320,6 +325,33 @@ class InstallController {
             title: 'Install Optional Services',
             task: (ctx, task): Listr =>
                 task.newListr(optionalServicesTasks)
+        }
+    }
+
+    private installTools = (answers: Answers): ListrTask => {
+        let toolsTasks: ListrTask[] = []
+
+        answers.apps.forEach((toolName: string) => {
+            const tool = getToolByName(toolName)
+            toolsTasks.push({
+                title: `Install ${tool.name}`,
+                // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                skip: async (ctx): Promise<string | boolean> => {
+                    const isInstalled = await tool.isInstalled()
+
+                    if (isInstalled) return `${tool.name} is already installed.`
+                },
+                task: tool.install
+            })
+        })
+
+        return {
+            title: 'Install Tools and Apps',
+            task: (ctx, task): Listr =>
+                task.newListr(
+                    toolsTasks,
+                    {concurrent: false}
+                )
         }
     }
 }

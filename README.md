@@ -1,8 +1,8 @@
-# Jale ![](https://img.shields.io/npm/dm/jale)
+# Jale [![](https://img.shields.io/npm/v/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/npm/dm/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/scrutinizer/quality/g/bjarn/jale/main)](https://scrutinizer-ci.com/g/bjarn/jale/)
 A blazing fast local development environment for MacOS* written in Typescript.<br />
 <sup><sub>*soon to be cross-platform!</sub></sup></center>
 
-![](https://i.imgur.com/mFfbIa5.png)
+![](https://i.imgur.com/oGwPWOX.png)
 
 ## What is Jale?
 Jale (Just Another Local Environment) allows you to setup a complete local development environment in just a couple of seconds.
@@ -36,7 +36,7 @@ The following development tools are included.
 - wp-cli (soon!)*
 - magerun (soon!)*
 - magerun2 (soon!)*
-- drush
+- drush (soon!)*
 
 ## Migrating from...?
 Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.
