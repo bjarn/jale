@@ -92,19 +92,19 @@ class InstallController {
         await ensureDirectoryExists(jaleLogsPath)
 
         const tasks = new Listr([
-            // this.configureJale(answers),
-            // this.installDnsMasq(),
-            // this.installNginx(),
-            // this.installMailhog(),
-            // {
-            //     title: 'Install PHP-FPM',
-            //     task: (ctx, task): Listr =>
-            //         task.newListr(
-            //             this.installPhpFpm(answers.phpVersions)
-            //         )
-            // },
-            // this.installDatabase(answers.database),
-            // this.installOptionalServices(answers),
+            this.configureJale(answers),
+            this.installDnsMasq(),
+            this.installNginx(),
+            this.installMailhog(),
+            {
+                title: 'Install PHP-FPM',
+                task: (ctx, task): Listr =>
+                    task.newListr(
+                        this.installPhpFpm(answers.phpVersions)
+                    )
+            },
+            this.installDatabase(answers.database),
+            this.installOptionalServices(answers),
             this.installTools(answers)
         ])
 

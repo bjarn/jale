@@ -4,7 +4,6 @@ const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs = tslib_1.__importStar(require("fs"));
 const fs_1 = require("fs");
-const https = tslib_1.__importStar(require("https"));
 const tool_1 = tslib_1.__importDefault(require("./tool"));
 class CustomTool extends tool_1.default {
     constructor() {
@@ -14,12 +13,13 @@ class CustomTool extends tool_1.default {
          * Install the binary.
          */
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (yield this.isInstalled()) {
+                console.log(`${this.name} already is installed. Execute it by running ${this.alias}`);
+                return false;
+            }
             const fileName = this.url.substring(this.url.lastIndexOf('/') + 1);
-            const file = fs.createWriteStream(`/tmp/${fileName}`);
             console.log(`Downloading binary for ${this.name}...`);
-            const res = yield https.get(this.url);
-            yield res.pipe(file);
-            file.close();
+            yield execa_1.default('curl', ['-OL', this.url], { cwd: `/tmp/` });
             if (!(yield this.isValidShasum(`/tmp/${fileName}`))) {
                 console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`);
                 yield fs_1.unlinkSync(`/tmp/${fileName}`);

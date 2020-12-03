@@ -1,7 +1,6 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {chmodSync, existsSync, unlinkSync} from 'fs'
-import * as https from 'https'
 import Tool from './tool'
 
 abstract class CustomTool extends Tool {
@@ -18,15 +17,16 @@ abstract class CustomTool extends Tool {
      * Install the binary.
      */
     install = async (): Promise<boolean> => {
+        if (await this.isInstalled()) {
+            console.log(`${this.name} already is installed. Execute it by running ${this.alias}`)
+            return false
+        }
+
         const fileName = this.url.substring(this.url.lastIndexOf('/') + 1)
-        const file = fs.createWriteStream(`/tmp/${fileName}`)
 
         console.log(`Downloading binary for ${this.name}...`)
 
-        const res = await https.get(this.url)
-        await res.pipe(file)
-
-        file.close()
+        await execa('curl', ['-OL', this.url], {cwd: `/tmp/`})
 
         if (!(await this.isValidShasum(`/tmp/${fileName}`))) {
             console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`)

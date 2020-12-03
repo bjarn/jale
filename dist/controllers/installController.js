@@ -297,19 +297,16 @@ class InstallController {
             yield jale_1.ensureHomeDirExists();
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleLogsPath);
             const tasks = new listr2_1.Listr([
-                // this.configureJale(answers),
-                // this.installDnsMasq(),
-                // this.installNginx(),
-                // this.installMailhog(),
-                // {
-                //     title: 'Install PHP-FPM',
-                //     task: (ctx, task): Listr =>
-                //         task.newListr(
-                //             this.installPhpFpm(answers.phpVersions)
-                //         )
-                // },
-                // this.installDatabase(answers.database),
-                // this.installOptionalServices(answers),
+                this.configureJale(answers),
+                this.installDnsMasq(),
+                this.installNginx(),
+                this.installMailhog(),
+                {
+                    title: 'Install PHP-FPM',
+                    task: (ctx, task) => task.newListr(this.installPhpFpm(answers.phpVersions))
+                },
+                this.installDatabase(answers.database),
+                this.installOptionalServices(answers),
                 this.installTools(answers)
             ]);
             try {
