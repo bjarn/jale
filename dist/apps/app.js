@@ -5,7 +5,7 @@ const os_1 = require("../utils/os");
 class App {
     constructor() {
         /**
-         * Install the binary.
+         * Install the app.
          */
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.isInstalled()) {
@@ -17,7 +17,7 @@ class App {
             return true;
         });
         /**
-         * Uninstall the binary
+         * Uninstall the app.
          */
         this.uninstall = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!(yield this.isInstalled())) {
@@ -29,7 +29,7 @@ class App {
             return true;
         });
         /**
-         * Check if the binary of the app exists.
+         * Check if the is already installed..
          */
         this.isInstalled = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             return os_1.client().packageManager.packageIsInstalled(this.alias);

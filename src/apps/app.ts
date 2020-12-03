@@ -6,7 +6,7 @@ abstract class App {
     abstract alias: string
 
     /**
-     * Install the binary.
+     * Install the app.
      */
     install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
@@ -20,7 +20,7 @@ abstract class App {
     }
 
     /**
-     * Uninstall the binary
+     * Uninstall the app.
      */
     uninstall = async (): Promise<boolean> => {
         if (!(await this.isInstalled())) {
@@ -37,7 +37,7 @@ abstract class App {
     }
 
     /**
-     * Check if the binary of the app exists.
+     * Check if the is already installed..
      */
     isInstalled = async (): Promise<boolean> => {
         return client().packageManager.packageIsInstalled(this.alias)
