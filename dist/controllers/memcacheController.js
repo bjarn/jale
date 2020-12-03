@@ -41,6 +41,7 @@ class MemcacheController {
                 yield memcache.install();
                 console.log(`${memcache.service} has been installed`);
             }
+            console.log('Install Memcached PHP extension...');
             // Memcache is ready, now install the PHP extension.
             const phpExtensionInstalled = yield phpMemcached.install();
             return restart || phpExtensionInstalled;

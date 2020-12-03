@@ -46,6 +46,8 @@ class MemcacheController {
             console.log(`${memcache.service} has been installed`)
         }
 
+        console.log('Install Memcached PHP extension...')
+
         // Memcache is ready, now install the PHP extension.
         const phpExtensionInstalled = await phpMemcached.install()
 
