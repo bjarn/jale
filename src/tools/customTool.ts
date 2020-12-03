@@ -1,10 +1,10 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {chmodSync, existsSync, unlinkSync} from 'fs'
-import * as http from 'http'
-import App from './app'
+import * as https from 'https'
+import Tool from './tool'
 
-abstract class CustomApp extends App {
+abstract class CustomTool extends Tool {
 
     abstract name: string
     abstract alias: string
@@ -23,8 +23,10 @@ abstract class CustomApp extends App {
 
         console.log(`Downloading binary for ${this.name}...`)
 
-        const res = await http.get(this.url)
+        const res = await https.get(this.url)
         await res.pipe(file)
+
+        file.close()
 
         if (!(await this.isValidShasum(`/tmp/${fileName}`))) {
             console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`)
@@ -82,4 +84,4 @@ abstract class CustomApp extends App {
 
 }
 
-export default CustomApp
+export default CustomTool

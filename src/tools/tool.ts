@@ -1,6 +1,6 @@
 import {client} from '../utils/os'
 
-abstract class App {
+abstract class Tool {
 
     abstract name: string
     abstract alias: string
@@ -45,4 +45,4 @@ abstract class App {
 
 }
 
-export default App
+export default Tool

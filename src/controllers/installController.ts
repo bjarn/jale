@@ -14,6 +14,7 @@ import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
 import {ensureHomeDirExists, jaleConfigPath, jaleLogsPath} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
+import {getToolByName} from '../utils/tools'
 
 class InstallController {
 
@@ -91,19 +92,20 @@ class InstallController {
         await ensureDirectoryExists(jaleLogsPath)
 
         const tasks = new Listr([
-            this.configureJale(answers),
-            this.installDnsMasq(),
-            this.installNginx(),
-            this.installMailhog(),
-            {
-                title: 'Install PHP-FPM',
-                task: (ctx, task): Listr =>
-                    task.newListr(
-                        this.installPhpFpm(answers.phpVersions)
-                    )
-            },
-            this.installDatabase(answers.database),
-            this.installOptionalServices(answers)
+            // this.configureJale(answers),
+            // this.installDnsMasq(),
+            // this.installNginx(),
+            // this.installMailhog(),
+            // {
+            //     title: 'Install PHP-FPM',
+            //     task: (ctx, task): Listr =>
+            //         task.newListr(
+            //             this.installPhpFpm(answers.phpVersions)
+            //         )
+            // },
+            // this.installDatabase(answers.database),
+            // this.installOptionalServices(answers),
+            this.installTools(answers)
         ])
 
         try {
@@ -320,6 +322,33 @@ class InstallController {
             title: 'Install Optional Services',
             task: (ctx, task): Listr =>
                 task.newListr(optionalServicesTasks)
+        }
+    }
+
+    private installTools = (answers: Answers): ListrTask => {
+        let toolsTasks: ListrTask[] = []
+
+        answers.apps.forEach((toolName: string) => {
+            const tool = getToolByName(toolName)
+            toolsTasks.push({
+                title: `Install ${tool.name}`,
+                // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                skip: async (ctx): Promise<string | boolean> => {
+                    const isInstalled = await tool.isInstalled()
+
+                    if (isInstalled) return `${tool.name} is already installed.`
+                },
+                task: tool.install
+            })
+        })
+
+        return {
+            title: 'Install Tools and Apps',
+            task: (ctx, task): Listr =>
+                task.newListr(
+                    toolsTasks,
+                    {concurrent: false}
+                )
         }
     }
 }
