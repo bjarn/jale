@@ -36,18 +36,7 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
-                    if (service instanceof Mysql) {
-                        const linkedDatabase = await getLinkedDatabase()
-                        if (linkedDatabase.service !== service.service)
-                            continue
-                    }
-                    if (service instanceof PhpFpm) {
-                        const linkedPhpVersion = await getLinkedPhpVersion()
-                        if (linkedPhpVersion.service !== service.service)
-                            continue
-                    }
-                    console.log(`Starting ${service.service}...`)
-                    await service.start()
+                    await this.controlService(service, 'start')
                 } catch (e) {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
                 }
@@ -65,12 +54,12 @@ class ServiceController {
                     return true
                 } catch (e) {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
+                    return false
                 }
             }
         }
 
         console.warn(`Invalid service: ${serviceName}.`)
-
         return false
     }
 
@@ -78,18 +67,7 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
-                    if (service instanceof Mysql) {
-                        const linkedDatabase = await getLinkedDatabase()
-                        if (linkedDatabase.service !== service.service)
-                            continue
-                    }
-                    if (service instanceof PhpFpm) {
-                        const linkedPhpVersion = await getLinkedPhpVersion()
-                        if (linkedPhpVersion.service !== service.service)
-                            continue
-                    }
-                    console.log(`Stopping ${service.service}...`)
-                    await service.stop()
+                    await this.controlService(service, 'stop')
                 } catch (e) {
                     console.log(`Failed to stop ${service.service}: ${e.message}`)
                 }
@@ -121,18 +99,7 @@ class ServiceController {
         if (!serviceName) {
             for (const service of this.allServices) {
                 try {
-                    if (service instanceof Mysql) {
-                        const linkedDatabase = await getLinkedDatabase()
-                        if (linkedDatabase.service !== service.service)
-                            continue
-                    }
-                    if (service instanceof PhpFpm) {
-                        const linkedPhpVersion = await getLinkedPhpVersion()
-                        if (linkedPhpVersion.service !== service.service)
-                            continue
-                    }
-                    console.log(`Restarting ${service.service}...`)
-                    await service.restart()
+                    await this.controlService(service, 'restart')
                 } catch (e) {
                     console.log(`Failed to restarted ${service.service}: ${e.message}`)
                 }
@@ -150,13 +117,49 @@ class ServiceController {
                     return true
                 } catch (e) {
                     console.log(`Failed to restarted ${service.service}: ${e.message}`)
+                    return false
                 }
             }
         }
 
         console.warn(`Invalid service: ${serviceName}.`)
-
         return false
+    }
+
+    /**
+     * Convenience method to start, stop or restart a service. It also checks if you are restarting PHP or MySQL.
+     * @param service
+     * @param action
+     */
+    controlService = async (service: Service, action: 'start' | 'stop' | 'restart'): Promise<void> => {
+        if (service instanceof Mysql) {
+            const linkedDatabase = await getLinkedDatabase()
+            if (linkedDatabase.service !== service.service) {
+                return
+            }
+        }
+
+        if (service instanceof PhpFpm) {
+            const linkedPhpVersion = await getLinkedPhpVersion()
+            if (linkedPhpVersion.service !== service.service) {
+                return
+            }
+        }
+
+        switch (action) {
+            case 'start':
+                console.log(`Starting ${service.service}...`)
+                await service.start()
+                break
+            case 'stop':
+                console.log(`Stopping ${service.service}...`)
+                await service.stop()
+                break
+            case 'restart':
+                console.log(`Retarting ${service.service}...`)
+                await service.restart()
+                break
+        }
     }
 
 }

@@ -37,18 +37,7 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase.service !== service.service)
-                                continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion.service !== service.service)
-                                continue;
-                        }
-                        console.log(`Starting ${service.service}...`);
-                        yield service.start();
+                        yield this.controlService(service, 'start');
                     }
                     catch (e) {
                         console.log(`Failed to start ${service.service}: ${e.message}`);
@@ -67,6 +56,7 @@ class ServiceController {
                     }
                     catch (e) {
                         console.log(`Failed to start ${service.service}: ${e.message}`);
+                        return false;
                     }
                 }
             }
@@ -77,18 +67,7 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase.service !== service.service)
-                                continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion.service !== service.service)
-                                continue;
-                        }
-                        console.log(`Stopping ${service.service}...`);
-                        yield service.stop();
+                        yield this.controlService(service, 'stop');
                     }
                     catch (e) {
                         console.log(`Failed to stop ${service.service}: ${e.message}`);
@@ -117,18 +96,7 @@ class ServiceController {
             if (!serviceName) {
                 for (const service of this.allServices) {
                     try {
-                        if (service instanceof mysql_1.default) {
-                            const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase.service !== service.service)
-                                continue;
-                        }
-                        if (service instanceof phpFpm_1.default) {
-                            const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion.service !== service.service)
-                                continue;
-                        }
-                        console.log(`Restarting ${service.service}...`);
-                        yield service.restart();
+                        yield this.controlService(service, 'restart');
                     }
                     catch (e) {
                         console.log(`Failed to restarted ${service.service}: ${e.message}`);
@@ -147,11 +115,45 @@ class ServiceController {
                     }
                     catch (e) {
                         console.log(`Failed to restarted ${service.service}: ${e.message}`);
+                        return false;
                     }
                 }
             }
             console.warn(`Invalid service: ${serviceName}.`);
             return false;
+        });
+        /**
+         * Convenience method to start, stop or restart a service. It also checks if you are restarting PHP or MySQL.
+         * @param service
+         * @param action
+         */
+        this.controlService = (service, action) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (service instanceof mysql_1.default) {
+                const linkedDatabase = yield database_1.getLinkedDatabase();
+                if (linkedDatabase.service !== service.service) {
+                    return;
+                }
+            }
+            if (service instanceof phpFpm_1.default) {
+                const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
+                if (linkedPhpVersion.service !== service.service) {
+                    return;
+                }
+            }
+            switch (action) {
+                case 'start':
+                    console.log(`Starting ${service.service}...`);
+                    yield service.start();
+                    break;
+                case 'stop':
+                    console.log(`Stopping ${service.service}...`);
+                    yield service.stop();
+                    break;
+                case 'restart':
+                    console.log(`Retarting ${service.service}...`);
+                    yield service.restart();
+                    break;
+            }
         });
     }
 }
