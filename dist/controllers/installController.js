@@ -16,6 +16,7 @@ const os_1 = require("../utils/os");
 const phpFpm_1 = require("../utils/phpFpm");
 const jale_1 = require("../utils/jale");
 const sudo_1 = require("../utils/sudo");
+const tools_1 = require("../utils/tools");
 class InstallController {
     constructor() {
         this.questions = [
@@ -264,6 +265,26 @@ class InstallController {
                 task: (ctx, task) => task.newListr(optionalServicesTasks)
             };
         };
+        this.installTools = (answers) => {
+            let toolsTasks = [];
+            answers.apps.forEach((toolName) => {
+                const tool = tools_1.getToolByName(toolName);
+                toolsTasks.push({
+                    title: `Install ${tool.name}`,
+                    // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
+                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                        const isInstalled = yield tool.isInstalled();
+                        if (isInstalled)
+                            return `${tool.name} is already installed.`;
+                    }),
+                    task: tool.install
+                });
+            });
+            return {
+                title: 'Install Tools and Apps',
+                task: (ctx, task) => task.newListr(toolsTasks, { concurrent: false })
+            };
+        };
     }
     /**
      * Start the installation of Jale.
@@ -285,7 +306,8 @@ class InstallController {
                     task: (ctx, task) => task.newListr(this.installPhpFpm(answers.phpVersions))
                 },
                 this.installDatabase(answers.database),
-                this.installOptionalServices(answers)
+                this.installOptionalServices(answers),
+                this.installTools(answers)
             ]);
             try {
                 // We're all set. Let's configure Jale.
