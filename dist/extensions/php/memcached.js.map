@@ -1,0 +1,1 @@
+{"version":3,"file":"memcached.js","sourceRoot":"","sources":["../../../src/extensions/php/memcached.ts"],"names":[],"mappings":";;;AAAA,2EAA0C;AAE1C,MAAM,SAAU,SAAQ,sBAAY;IAApC;;QACI,UAAK,GAAG,WAAW,CAAA;QACnB,cAAS,GAAG,WAAW,CAAA;QAEvB,YAAO,GAAG,KAAK,CAAA;IACnB,CAAC;CAAA;AAED,kBAAe,SAAS,CAAA"}

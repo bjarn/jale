@@ -1,8 +1,7 @@
 import commander from 'commander'
 import SitesController from '../controllers/sitesController'
-import UseController from '../controllers/useController'
 
-export default function installCommand(program: typeof commander) {
+export default function linkCommand(program: typeof commander) {
     return program
         .command('link')
         .description('Create a new Nginx vhost config for your current project.')

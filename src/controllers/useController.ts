@@ -46,7 +46,7 @@ class UseController {
 
         if (!isVersionInstalled) {
             console.log(`Installing PHP ${newPhpVersion.versionName}`)
-            await client().packageManager.install(newPhpVersion.service)
+            await client().packageManager.install(newPhpVersion.service, false)
             console.log(`Configuring PHP ${newPhpVersion.versionName}`)
             await newPhpVersion.configure()
         }

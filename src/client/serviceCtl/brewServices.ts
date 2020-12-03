@@ -17,8 +17,7 @@ class BrewServices extends ServiceCtl {
 
     async restart(pkg: string): Promise<boolean> {
         try {
-            await this.stop(pkg)
-            await this.start(pkg)
+            await execa('brew', ['services', 'restart', pkg], {shell: true})
             return true
         } catch (e) {
             return false
@@ -54,8 +53,7 @@ class BrewServices extends ServiceCtl {
 
     async restartAsRoot(pkg: string): Promise<boolean> {
         try {
-            await this.stopAsRoot(pkg)
-            await this.startAsRoot(pkg)
+            await execa('sudo', ['brew', 'services', 'restart', pkg], {shell: true})
             return true
         } catch (e) {
             return false

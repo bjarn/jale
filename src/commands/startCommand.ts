@@ -1,7 +1,7 @@
 import commander from 'commander'
 import ServiceController from '../controllers/serviceController'
 
-export default function installCommand(program: typeof commander) {
+export default function startCommand(program: typeof commander) {
     return program
         .command('start [service]')
         .description('Start all or a specific service.')

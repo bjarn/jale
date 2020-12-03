@@ -24,8 +24,7 @@ class BrewServices extends serviceCtl_1.default {
     restart(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.stop(pkg);
-                yield this.start(pkg);
+                yield execa_1.default('brew', ['services', 'restart', pkg], { shell: true });
                 return true;
             }
             catch (e) {
@@ -69,8 +68,7 @@ class BrewServices extends serviceCtl_1.default {
     restartAsRoot(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.stopAsRoot(pkg);
-                yield this.startAsRoot(pkg);
+                yield execa_1.default('sudo', ['brew', 'services', 'restart', pkg], { shell: true });
                 return true;
             }
             catch (e) {

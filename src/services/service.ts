@@ -25,7 +25,11 @@ abstract class Service {
             client().serviceCtl.reload(this.service)
 
     install = (): Promise<boolean> => {
-        return client().packageManager.install(this.service)
+        return client().packageManager.install(this.service, false)
+    }
+
+    uninstall = (): Promise<boolean> => {
+        return client().packageManager.uninstall(this.service, false)
     }
 
     abstract configure(): Promise<boolean>
