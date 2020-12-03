@@ -53,6 +53,7 @@ class ServiceController {
                 }
             }
             console.log(`Successfully started all Jale services.`)
+            return true
         }
 
         for (const service of this.allServices) {
@@ -64,7 +65,6 @@ class ServiceController {
                     return true
                 } catch (e) {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
-                    return false // TODO: Catch error.
                 }
             }
         }
@@ -123,33 +123,33 @@ class ServiceController {
                 try {
                     if (service instanceof Mysql) {
                         const linkedDatabase = await getLinkedDatabase()
-                        if (linkedDatabase === service)
-                            await service.start()
-                        continue
+                        if (linkedDatabase.service !== service.service)
+                            continue
                     }
                     if (service instanceof PhpFpm) {
                         const linkedPhpVersion = await getLinkedPhpVersion()
-                        if (linkedPhpVersion === service)
-                            await service.start()
-                        continue
+                        if (linkedPhpVersion.service !== service.service)
+                            continue
                     }
+                    console.log(`Restarting ${service.service}...`)
                     await service.restart()
-                    return true
                 } catch (e) {
-                    return false // TODO: Silently fail for now. Add error logging.
+                    console.log(`Failed to restarted ${service.service}: ${e.message}`)
                 }
             }
             console.log(`Successfully restarted all Jale services.`)
+            return true
         }
 
         for (const service of this.allServices) {
             if (service.service === serviceName) {
+                console.log(`Restarting ${service.service}...`)
                 try {
                     await service.restart()
                     console.log(`Successfully restarted ${serviceName}.`)
                     return true
                 } catch (e) {
-                    return false // TODO: Catch error.
+                    console.log(`Failed to restarted ${service.service}: ${e.message}`)
                 }
             }
         }

@@ -55,6 +55,7 @@ class ServiceController {
                     }
                 }
                 console.log(`Successfully started all Jale services.`);
+                return true;
             }
             for (const service of this.allServices) {
                 if (service.service === serviceName) {
@@ -66,7 +67,6 @@ class ServiceController {
                     }
                     catch (e) {
                         console.log(`Failed to start ${service.service}: ${e.message}`);
-                        return false; // TODO: Catch error.
                     }
                 }
             }
@@ -119,34 +119,34 @@ class ServiceController {
                     try {
                         if (service instanceof mysql_1.default) {
                             const linkedDatabase = yield database_1.getLinkedDatabase();
-                            if (linkedDatabase === service)
-                                yield service.start();
-                            continue;
+                            if (linkedDatabase.service !== service.service)
+                                continue;
                         }
                         if (service instanceof phpFpm_1.default) {
                             const linkedPhpVersion = yield phpFpm_2.getLinkedPhpVersion();
-                            if (linkedPhpVersion === service)
-                                yield service.start();
-                            continue;
+                            if (linkedPhpVersion.service !== service.service)
+                                continue;
                         }
+                        console.log(`Restarting ${service.service}...`);
                         yield service.restart();
-                        return true;
                     }
                     catch (e) {
-                        return false; // TODO: Silently fail for now. Add error logging.
+                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
                     }
                 }
                 console.log(`Successfully restarted all Jale services.`);
+                return true;
             }
             for (const service of this.allServices) {
                 if (service.service === serviceName) {
+                    console.log(`Restarting ${service.service}...`);
                     try {
                         yield service.restart();
                         console.log(`Successfully restarted ${serviceName}.`);
                         return true;
                     }
                     catch (e) {
-                        return false; // TODO: Catch error.
+                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
                     }
                 }
             }
