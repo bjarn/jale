@@ -41,16 +41,17 @@ class ServiceController {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
                 }
             }
-            console.log(`Successfully started all Jale services.`)
+            console.log(`Successfully started all Jale services`)
             return true
         }
 
         for (const service of this.allServices) {
-            if (service.service === serviceName) {
-                console.log(`Starting ${service.service}...`)
+            if (service.service.includes(serviceName)) {
                 try {
-                    await service.start()
-                    console.log(`Successfully started ${serviceName}.`)
+                    if (!(await this.controlService(service, 'start'))) {
+                        continue
+                    }
+                    console.log(`Successfully started ${serviceName}`)
                     return true
                 } catch (e) {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
@@ -59,7 +60,7 @@ class ServiceController {
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}.`)
+        console.warn(`Invalid service: ${serviceName}`)
         return false
     }
 
@@ -73,16 +74,17 @@ class ServiceController {
                 }
             }
 
-            console.log(`Successfully stopped all Jale services.`)
+            console.log(`Successfully stopped all Jale services`)
             return true
         }
 
         for (const service of this.allServices) {
-            if (service.service === serviceName) {
-                console.log(`Stopping ${service.service}...`)
+            if (service.service.includes(serviceName)) {
                 try {
-                    await service.stop()
-                    console.log(`Successfully stopped ${serviceName}.`)
+                    if (!(await this.controlService(service, 'stop'))) {
+                        continue
+                    }
+                    console.log(`Successfully stopped ${serviceName}`)
                     return true
                 } catch (e) {
                     console.log(`Failed to stop ${service.service}: ${e.message}`)
@@ -90,7 +92,7 @@ class ServiceController {
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}.`)
+        console.warn(`Invalid service: ${serviceName}`)
 
         return false
     }
@@ -104,16 +106,17 @@ class ServiceController {
                     console.log(`Failed to restarted ${service.service}: ${e.message}`)
                 }
             }
-            console.log(`Successfully restarted all Jale services.`)
+            console.log(`Successfully restarted all Jale services`)
             return true
         }
 
         for (const service of this.allServices) {
-            if (service.service === serviceName) {
-                console.log(`Restarting ${service.service}...`)
+            if (service.service.includes('restart')) {
                 try {
-                    await service.restart()
-                    console.log(`Successfully restarted ${serviceName}.`)
+                    if (!(await this.controlService(service, 'restart'))) {
+                        continue
+                    }
+                    console.log(`Successfully restarted ${serviceName}`)
                     return true
                 } catch (e) {
                     console.log(`Failed to restarted ${service.service}: ${e.message}`)
@@ -122,7 +125,7 @@ class ServiceController {
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}.`)
+        console.warn(`Invalid service: ${serviceName}`)
         return false
     }
 
@@ -131,18 +134,18 @@ class ServiceController {
      * @param service
      * @param action
      */
-    controlService = async (service: Service, action: 'start' | 'stop' | 'restart'): Promise<void> => {
+    controlService = async (service: Service, action: 'start' | 'stop' | 'restart'): Promise<boolean> => {
         if (service instanceof Mysql) {
             const linkedDatabase = await getLinkedDatabase()
             if (linkedDatabase.service !== service.service) {
-                return
+                return false
             }
         }
 
         if (service instanceof PhpFpm) {
             const linkedPhpVersion = await getLinkedPhpVersion()
             if (linkedPhpVersion.service !== service.service) {
-                return
+                return false
             }
         }
 
@@ -160,6 +163,8 @@ class ServiceController {
                 await service.restart()
                 break
         }
+
+        return true
     }
 
 }
