@@ -32,7 +32,7 @@ class App {
          * Check if the binary of the app exists.
          */
         this.isInstalled = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return os_1.client().packageManager.packageIsInstalled(this.name);
+            return os_1.client().packageManager.packageIsInstalled(this.alias);
         });
     }
 }
