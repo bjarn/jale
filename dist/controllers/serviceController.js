@@ -88,6 +88,7 @@ class ServiceController {
                     }
                     catch (e) {
                         console.log(`Failed to stop ${service.service}: ${e.message}`);
+                        return false;
                     }
                 }
             }
@@ -108,7 +109,7 @@ class ServiceController {
                 return true;
             }
             for (const service of this.allServices) {
-                if (service.service.includes('restart')) {
+                if (service.service.includes(serviceName)) {
                     try {
                         if (!(yield this.controlService(service, 'restart'))) {
                             continue;
