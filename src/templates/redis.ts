@@ -1,4 +1,4 @@
-const redisConf: string = `# Redis configuration file example.
+const redisConf = `# Redis configuration file example.
 #
 # Note that in order to read the configuration file, Redis must be
 # started with the file path as first argument:

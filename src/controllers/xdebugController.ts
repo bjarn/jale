@@ -8,7 +8,7 @@ class XdebugController {
      */
     execute = async (status: string): Promise<boolean> => {
         if (status !== 'on' && status !== 'off') {
-            console.log(`Invalid status. Please provide status 'on' or 'off'.`)
+            console.log('Invalid status. Please provide status \'on\' or \'off\'.')
             return false
         }
 

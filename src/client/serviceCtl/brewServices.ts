@@ -2,9 +2,9 @@ import execa from 'execa'
 import ServiceCtl from '../serviceCtl'
 
 class BrewServices extends ServiceCtl {
-    alias: string = 'brew'
-    name: string = 'Homebrew'
-    path: string = '/usr/local/bin/brew'
+    alias = 'brew'
+    name = 'Homebrew'
+    path = '/usr/local/bin/brew'
 
     async reload(pkg: string): Promise<boolean> {
         try {
@@ -25,12 +25,8 @@ class BrewServices extends ServiceCtl {
     }
 
     async start(pkg: string): Promise<boolean> {
-        try {
-            await execa('brew', ['services', 'start', pkg], {shell: true})
-            return true
-        } catch (e) {
-            throw e
-        }
+        await execa('brew', ['services', 'start', pkg], {shell: true})
+        return true
     }
 
     async stop(pkg: string): Promise<boolean> {

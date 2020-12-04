@@ -16,14 +16,9 @@ class PhpFpm extends service_1.default {
         // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
         this.configRootPath = '/usr/local/etc/php';
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.updateConfiguration();
-                yield this.addPerformanceConfiguration();
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            yield this.updateConfiguration();
+            yield this.addPerformanceConfiguration();
+            return true;
         });
         /**
          * Update Php's www.conf configuration.
@@ -31,11 +26,11 @@ class PhpFpm extends service_1.default {
         this.updateConfiguration = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             let config = yield fs.readFileSync(this.configPath, 'utf-8');
             config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`);
-            config = config.replace(/^group = .+$/m, `group = staff`); // TODO: Make this dynamic. GIDs dont work.
+            config = config.replace(/^group = .+$/m, 'group = staff'); // TODO: Make this dynamic. GIDs dont work.
             config = config.replace(/^listen = .+$/m, `listen = ${jale_1.jaleHomeDir}/jale.sock`);
             config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`);
-            config = config.replace(/^;?listen\.group = .+$/m, `listen.group = staff`); // TODO: Make this dynamic. GIDs dont work.
-            config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`);
+            config = config.replace(/^;?listen\.group = .+$/m, 'listen.group = staff'); // TODO: Make this dynamic. GIDs dont work.
+            config = config.replace(/^;?listen\.mode = .+$/m, 'listen.mode = 0777');
             config = config.replace(/^;?php_admin_value\[error_log\] = .+$/m, `php_admin_value[error_log] = ${jale_1.jaleLogsPath}/php.log`);
             return fs.writeFileSync(this.configPath, config);
         });
@@ -44,7 +39,7 @@ class PhpFpm extends service_1.default {
          */
         this.addPerformanceConfiguration = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield filesystem_1.ensureDirectoryExists(this.iniDirectoryPath);
-            let path = `${this.iniDirectoryPath}/z-performance.ini`;
+            const path = `${this.iniDirectoryPath}/z-performance.ini`;
             if (fs.existsSync(path)) {
                 return;
             }

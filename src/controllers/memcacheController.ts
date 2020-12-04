@@ -10,7 +10,7 @@ class MemcacheController {
      */
     execute = async (status: string): Promise<boolean> => {
         if (status !== 'on' && status !== 'off') {
-            console.log(`Invalid status. Please provide status 'on' or 'off'.`)
+            console.log('Invalid status. Please provide status \'on\' or \'off\'.')
             return false
         }
 
@@ -58,9 +58,9 @@ class MemcacheController {
         const phpExtensionDisabled = await phpMemcached.disable()
 
         if (phpExtensionDisabled) {
-            console.log(`Disabled memcache's PHP extension`)
+            console.log('Disabled memcache\'s PHP extension')
         } else {
-            console.log(`Memcache's PHP extension was not enabled.`)
+            console.log('Memcache\'s PHP extension was not enabled.')
         }
 
         if (!(await client().packageManager.packageIsInstalled(memcache.service))) {

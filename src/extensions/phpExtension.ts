@@ -10,7 +10,7 @@ abstract class PhpExtension {
     abstract alias: string
 
     // Extension settings
-    default: boolean = true
+    default = true
     extensionType: string = PhpExtension.NORMAL_EXTENSION_TYPE
 
     /**
@@ -70,7 +70,7 @@ abstract class PhpExtension {
             throw new Error(`Found installation path, but installation still failed: \n\n${stdout}`)
 
         const phpIniPath = await this.getPhpIni()
-        let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
+        const phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
 
         // TODO: Fix duplicate extension entires in php.ini
         const extensionRegex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"`, 'g').test(phpIni)
@@ -98,7 +98,7 @@ abstract class PhpExtension {
 
         const phpIniPath = await this.getPhpIni()
         let phpIni = await fs.readFileSync(phpIniPath, 'utf-8')
-        const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\/n`, 'g')
+        const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\\n`, 'g')
         phpIni = phpIni.replace(regex, '')
         phpIni = `${this.extensionType}="${this.alias}.so"\n${phpIni}`
 

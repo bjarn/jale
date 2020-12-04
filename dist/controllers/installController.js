@@ -73,7 +73,7 @@ class InstallController {
                 .then(answers => {
                 this.install(answers);
             })
-                .catch(error => {
+                .catch(() => {
                 console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.');
             });
             return true;
@@ -86,8 +86,8 @@ class InstallController {
          */
         this.configureJale = (answers) => ({
             title: 'Configure Jale',
-            task: (ctx, task) => {
-                let config = {
+            task: () => {
+                const config = {
                     domain: answers.domain,
                     database: { password: 'root' },
                     services: null // TODO: Make services configurable.
@@ -103,8 +103,9 @@ class InstallController {
             task: (ctx, task) => task.newListr([
                 {
                     title: 'Installing DnsMasq',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                         const isInstalled = yield os_1.client().packageManager.packageIsInstalled('dnsmasq');
                         if (isInstalled)
                             return 'Dnsmasq is already installed.';
@@ -126,8 +127,9 @@ class InstallController {
             task: (ctx, task) => task.newListr([
                 {
                     title: 'Installing Nginx',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                         const isInstalled = yield os_1.client().packageManager.packageIsInstalled('nginx');
                         if (isInstalled)
                             return 'Nginx is already installed.';
@@ -145,15 +147,16 @@ class InstallController {
             ])
         });
         this.installPhpFpm = (phpVersions) => {
-            let phpInstallTasks = [];
+            const phpInstallTasks = [];
             phpVersions.forEach((phpVersion, index) => {
                 phpInstallTasks.push({
                     title: `Install ${phpVersion}`,
                     task: (ctx, task) => task.newListr([
                         {
                             title: `Installing ${phpVersion}`,
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                            skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                            skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                                 if (phpVersion == 'php@8.0')
                                     phpVersion = 'php';
                                 const isInstalled = yield os_1.client().packageManager.packageIsInstalled(phpVersion);
@@ -191,8 +194,9 @@ class InstallController {
             task: (ctx, task) => task.newListr([
                 {
                     title: `Installing ${database}`,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                         const isInstalled = yield os_1.client().packageManager.packageIsInstalled(database);
                         if (isInstalled)
                             return `${database} is already installed.`;
@@ -214,12 +218,13 @@ class InstallController {
             title: 'Install Mailhog',
             task: (ctx, task) => task.newListr([
                 {
-                    title: `Installing Mailhog`,
+                    title: 'Installing Mailhog',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                         const isInstalled = yield os_1.client().packageManager.packageIsInstalled('mailhog');
                         if (isInstalled)
-                            return `Mailhog is already installed.`;
+                            return 'Mailhog is already installed.';
                     }),
                     task: (new mailhog_1.default).install
                 },
@@ -234,7 +239,7 @@ class InstallController {
             ])
         });
         this.installOptionalServices = (answers) => {
-            let optionalServicesTasks = [];
+            const optionalServicesTasks = [];
             answers.optionalServices.forEach((serviceName) => {
                 const service = optionalService_1.getOptionalServiceByname(serviceName);
                 optionalServicesTasks.push({
@@ -242,8 +247,9 @@ class InstallController {
                     task: (ctx, task) => task.newListr([
                         {
                             title: `Installing ${service.service}`,
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                            skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                            skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                                 const isInstalled = yield os_1.client().packageManager.packageIsInstalled(service.service);
                                 if (isInstalled)
                                     return `${service.service} is already installed.`;
@@ -267,13 +273,14 @@ class InstallController {
             };
         };
         this.installTools = (answers) => {
-            let toolsTasks = [];
+            const toolsTasks = [];
             answers.apps.forEach((toolName) => {
                 const tool = tools_1.getToolByName(toolName);
                 toolsTasks.push({
                     title: `Install ${tool.name}`,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: (ctx) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                         const isInstalled = yield tool.isInstalled();
                         if (isInstalled)
                             return `${tool.name} is already installed.`;
@@ -314,7 +321,7 @@ class InstallController {
             try {
                 // We're all set. Let's configure Jale.
                 yield tasks.run();
-                console.log(`\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n`);
+                console.log('\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n');
             }
             catch (e) {
                 console.error(e);

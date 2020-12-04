@@ -10,15 +10,10 @@ class Redis extends service_1.default {
         this.requireRoot = false;
         this.service = 'redis';
         // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-        this.configPath = `/usr/local/etc/redis.conf`;
+        this.configPath = '/usr/local/etc/redis.conf';
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield fs_1.writeFileSync(this.configPath, redis_1.default);
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            yield fs_1.writeFileSync(this.configPath, redis_1.default);
+            return true;
         });
     }
 }

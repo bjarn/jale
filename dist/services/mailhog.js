@@ -13,14 +13,9 @@ class Mailhog extends service_1.default {
         // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
         this.nginxConfigPath = `${jale_1.jaleNginxAppsPath}/mailhog.conf`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.addNginxConfiguration();
-                yield (new nginx_1.default).restart();
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            yield this.addNginxConfiguration();
+            yield (new nginx_1.default).restart();
+            return true;
         });
         /**
          * Install the Mailhog Nginx configuration.

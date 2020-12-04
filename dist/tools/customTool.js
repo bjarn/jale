@@ -19,7 +19,7 @@ class CustomTool extends tool_1.default {
             }
             const fileName = this.url.substring(this.url.lastIndexOf('/') + 1);
             console.log(`Downloading binary for ${this.name}...`);
-            yield execa_1.default('curl', ['-OL', this.url], { cwd: `/tmp/` });
+            yield execa_1.default('curl', ['-OL', this.url], { cwd: '/tmp/' });
             if (!(yield this.isValidShasum(`/tmp/${fileName}`))) {
                 console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`);
                 yield fs_1.unlinkSync(`/tmp/${fileName}`);

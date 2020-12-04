@@ -41,7 +41,7 @@ exports.getPhpFpmByName = getPhpFpmByName;
 const getLinkedPhpVersion = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const phpLink = yield fs.lstatSync('/usr/local/bin/php');
     if (!phpLink.isSymbolicLink()) {
-        throw Error(`Php executable is not found.`);
+        throw Error('Php executable is not found.');
     }
     const phpBinary = yield fs.realpathSync('/usr/local/bin/php');
     let linkedPhpVersion;

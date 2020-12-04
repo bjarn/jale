@@ -16,20 +16,20 @@ const getPhpFpmByName = (phpVersion: string): PhpFpm => {
     let phpService: PhpFpm
 
     switch (phpVersion) {
-        case (new PhpFpm72).service:
-            phpService = new PhpFpm72()
-            break
-        case (new PhpFpm73).service:
-            phpService = new PhpFpm73()
-            break
-        case (new PhpFpm74).service:
-            phpService = new PhpFpm74()
-            break
-        case (new PhpFpm80).service:
-            phpService = new PhpFpm80()
-            break
-        default:
-            throw Error('Invalid PHP version: ' + phpVersion)
+    case (new PhpFpm72).service:
+        phpService = new PhpFpm72()
+        break
+    case (new PhpFpm73).service:
+        phpService = new PhpFpm73()
+        break
+    case (new PhpFpm74).service:
+        phpService = new PhpFpm74()
+        break
+    case (new PhpFpm80).service:
+        phpService = new PhpFpm80()
+        break
+    default:
+        throw Error('Invalid PHP version: ' + phpVersion)
     }
 
     return phpService
@@ -42,7 +42,7 @@ const getLinkedPhpVersion = async (): Promise<PhpFpm> => {
     const phpLink = await fs.lstatSync('/usr/local/bin/php')
 
     if (!phpLink.isSymbolicLink()) {
-        throw Error(`Php executable is not found.`)
+        throw Error('Php executable is not found.')
     }
 
     const phpBinary = await fs.realpathSync('/usr/local/bin/php')

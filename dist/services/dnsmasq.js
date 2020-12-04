@@ -16,16 +16,11 @@ class Dnsmasq extends service_1.default {
         this.configPath = '/usr/local/etc/dnsmasq.conf';
         this.customConfigPath = `${jale_1.jaleHomeDir}/dnsmasq.conf`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            let config = yield jale_1.getConfig();
-            try {
-                yield this.appendCustomConfig;
-                yield this.setDomain(config.domain);
-                yield this.addDomainResolver(config.domain);
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            const config = yield jale_1.getConfig();
+            yield this.appendCustomConfig;
+            yield this.setDomain(config.domain);
+            yield this.addDomainResolver(config.domain);
+            return true;
         });
         /**
          * Append our custom configuration file to the dnsmasq.conf.
@@ -45,19 +40,14 @@ class Dnsmasq extends service_1.default {
          * @param domain
          */
         this.addDomainResolver = (domain) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
-                yield sudo_1.requireSudo();
-                yield execa_1.default('sudo', ['mkdir', '-p', this.resolverPath], { shell: true, stdio: 'inherit' });
-                yield execa_1.default('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
-                    shell: true,
-                    stdio: 'inherit'
-                });
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
+            yield sudo_1.requireSudo();
+            yield execa_1.default('sudo', ['mkdir', '-p', this.resolverPath], { shell: true, stdio: 'inherit' });
+            yield execa_1.default('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
+                shell: true,
+                stdio: 'inherit'
+            });
+            return true;
         });
     }
 }

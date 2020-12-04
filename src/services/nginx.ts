@@ -17,19 +17,15 @@ class Nginx extends Service {
     fastCgiParamsConfigPath = '/usr/local/etc/nginx/fastcgi_params'
 
     configure = async (): Promise<boolean> => {
-        try {
-            await ensureDirectoryExists(this.jaleNginxFolderPath)
-            await ensureDirectoryExists(`${this.jaleNginxFolderPath}/apps`)
-            await ensureDirectoryExists(jaleSitesPath)
-            await ensureDirectoryExists(`${jaleLogsPath}/nginx`)
-            await this.addConfiguration()
-            await this.addFallbackConfiguration()
-            await this.addFastCgiParams()
+        await ensureDirectoryExists(this.jaleNginxFolderPath)
+        await ensureDirectoryExists(`${this.jaleNginxFolderPath}/apps`)
+        await ensureDirectoryExists(jaleSitesPath)
+        await ensureDirectoryExists(`${jaleLogsPath}/nginx`)
+        await this.addConfiguration()
+        await this.addFallbackConfiguration()
+        await this.addFastCgiParams()
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
 
     /**

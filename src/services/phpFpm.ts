@@ -7,8 +7,8 @@ import {jaleHomeDir, jaleLogsPath} from '../utils/jale'
 import Service from './service'
 
 abstract class PhpFpm extends Service {
-    requireRoot: boolean = true
-    isEndOfLife: boolean = false
+    requireRoot = true
+    isEndOfLife = false
 
     abstract versionName: string
 
@@ -19,15 +19,12 @@ abstract class PhpFpm extends Service {
     configRootPath = '/usr/local/etc/php'
 
     configure = async (): Promise<boolean> => {
-        try {
-            await this.updateConfiguration()
-            await this.addPerformanceConfiguration()
+        await this.updateConfiguration()
+        await this.addPerformanceConfiguration()
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
+
 
     /**
      * Update Php's www.conf configuration.
@@ -36,11 +33,11 @@ abstract class PhpFpm extends Service {
         let config: string = await fs.readFileSync(this.configPath, 'utf-8')
 
         config = config.replace(/^user = .+$/m, `user = ${os.userInfo().username}`)
-        config = config.replace(/^group = .+$/m, `group = staff`) // TODO: Make this dynamic. GIDs dont work.
+        config = config.replace(/^group = .+$/m, 'group = staff') // TODO: Make this dynamic. GIDs dont work.
         config = config.replace(/^listen = .+$/m, `listen = ${jaleHomeDir}/jale.sock`)
         config = config.replace(/^;?listen\.owner = .+$/m, `listen.owner = ${os.userInfo().username}`)
-        config = config.replace(/^;?listen\.group = .+$/m, `listen.group = staff`) // TODO: Make this dynamic. GIDs dont work.
-        config = config.replace(/^;?listen\.mode = .+$/m, `listen.mode = 0777`)
+        config = config.replace(/^;?listen\.group = .+$/m, 'listen.group = staff') // TODO: Make this dynamic. GIDs dont work.
+        config = config.replace(/^;?listen\.mode = .+$/m, 'listen.mode = 0777')
         config = config.replace(
             /^;?php_admin_value\[error_log\] = .+$/m,
             `php_admin_value[error_log] = ${jaleLogsPath}/php.log`
@@ -55,7 +52,7 @@ abstract class PhpFpm extends Service {
     addPerformanceConfiguration = async (): Promise<void> => {
         await ensureDirectoryExists(this.iniDirectoryPath)
 
-        let path = `${this.iniDirectoryPath}/z-performance.ini`
+        const path = `${this.iniDirectoryPath}/z-performance.ini`
 
         if (fs.existsSync(path)) {
             return

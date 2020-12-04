@@ -43,7 +43,7 @@ class ServiceController {
                         console.log(`Failed to start ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully started all Jale services`);
+                console.log('Successfully started all Jale services');
                 return true;
             }
             for (const service of this.allServices) {
@@ -74,7 +74,7 @@ class ServiceController {
                         console.log(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully stopped all Jale services`);
+                console.log('Successfully stopped all Jale services');
                 return true;
             }
             for (const service of this.allServices) {
@@ -105,7 +105,7 @@ class ServiceController {
                         console.log(`Failed to restarted ${service.service}: ${e.message}`);
                     }
                 }
-                console.log(`Successfully restarted all Jale services`);
+                console.log('Successfully restarted all Jale services');
                 return true;
             }
             for (const service of this.allServices) {

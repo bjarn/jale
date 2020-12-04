@@ -41,7 +41,7 @@ class ServiceController {
                     console.log(`Failed to start ${service.service}: ${e.message}`)
                 }
             }
-            console.log(`Successfully started all Jale services`)
+            console.log('Successfully started all Jale services')
             return true
         }
 
@@ -74,7 +74,7 @@ class ServiceController {
                 }
             }
 
-            console.log(`Successfully stopped all Jale services`)
+            console.log('Successfully stopped all Jale services')
             return true
         }
 
@@ -106,7 +106,7 @@ class ServiceController {
                     console.log(`Failed to restarted ${service.service}: ${e.message}`)
                 }
             }
-            console.log(`Successfully restarted all Jale services`)
+            console.log('Successfully restarted all Jale services')
             return true
         }
 
@@ -150,18 +150,18 @@ class ServiceController {
         }
 
         switch (action) {
-            case 'start':
-                console.log(`Starting ${service.service}...`)
-                await service.start()
-                break
-            case 'stop':
-                console.log(`Stopping ${service.service}...`)
-                await service.stop()
-                break
-            case 'restart':
-                console.log(`Retarting ${service.service}...`)
-                await service.restart()
-                break
+        case 'start':
+            console.log(`Starting ${service.service}...`)
+            await service.start()
+            break
+        case 'stop':
+            console.log(`Stopping ${service.service}...`)
+            await service.stop()
+            break
+        case 'restart':
+            console.log(`Retarting ${service.service}...`)
+            await service.restart()
+            break
         }
 
         return true

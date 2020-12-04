@@ -10,7 +10,7 @@ class XdebugController {
          */
         this.execute = (status) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (status !== 'on' && status !== 'off') {
-                console.log(`Invalid status. Please provide status 'on' or 'off'.`);
+                console.log('Invalid status. Please provide status \'on\' or \'off\'.');
                 return false;
             }
             const xdebug = new xdebug_1.default();
