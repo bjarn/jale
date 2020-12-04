@@ -1,7 +1,9 @@
 import {writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
+import nginxMagento1Template from '../templates/nginx/apps/magento1'
 import nginxMagento2Template from '../templates/nginx/apps/magento2'
+import nginxMagento1Conf from '../templates/nginx/magento1'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getConfig, jaleSitesPath} from '../utils/jale'
 
@@ -43,7 +45,7 @@ class SitesController {
             writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxMagento2Template(hostname, process.cwd()))
             break
         case 'magento1':
-            writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxMagento2Template(hostname, process.cwd()))
+            writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxMagento1Template(hostname, process.cwd()))
             break
         default:
             writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxLaravelTemplate(hostname, process.cwd()))

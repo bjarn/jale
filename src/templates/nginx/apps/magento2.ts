@@ -1,6 +1,6 @@
 import {jaleLogsPath, jaleNginxAppTemplatesPath} from '../../../utils/jale'
 
-const nginxMagento2SiteConf = (hostname: string, docroot: string): string => `
+const nginxMagento2Template = (hostname: string, docroot: string): string => `
     map $http_host $MAGE_RUN_CODE {
         hostnames;
         default default;
@@ -21,4 +21,4 @@ const nginxMagento2SiteConf = (hostname: string, docroot: string): string => `
 }
 `
 
-export default nginxMagento2SiteConf
+export default nginxMagento2Template

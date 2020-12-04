@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const jale_1 = require("../../../utils/jale");
-const nginxMagento2SiteConf = (hostname, docroot) => `
+const nginxMagento2Template = (hostname, docroot) => `
     map $http_host $MAGE_RUN_CODE {
         hostnames;
         default default;
@@ -21,5 +21,5 @@ const nginxMagento2SiteConf = (hostname, docroot) => `
     include ${jale_1.jaleNginxAppTemplatesPath}/magento2.conf;
 }
 `;
-exports.default = nginxMagento2SiteConf;
+exports.default = nginxMagento2Template;
 //# sourceMappingURL=magento2.js.map

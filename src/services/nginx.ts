@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import fastcgiParams from '../templates/fastcgiParams'
 import nginxConf from '../templates/nginx'
 import jaleNginxConf from '../templates/nginx/jale'
+import nginxMagento1Conf from '../templates/nginx/magento1'
 import nginxMagento2Conf from '../templates/nginx/magento2'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {jaleLogsPath, jaleNginxAppTemplatesPath, jaleSitesPath} from '../utils/jale'
@@ -56,6 +57,7 @@ class Nginx extends Service {
      * Install the customized Nginx app templates..
      */
     addTemplates = async (): Promise<void> => {
+        fs.writeFileSync(`${jaleNginxAppTemplatesPath}/magento1.conf`, nginxMagento1Conf)
         fs.writeFileSync(`${jaleNginxAppTemplatesPath}/magento2.conf`, nginxMagento2Conf)
     }
 
