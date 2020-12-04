@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import nginxMailhogConf from '../templates/nginxMailhog'
+import nginxMailhogConf from '../templates/nginx/mailhog'
 import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'
 import Service from './service'

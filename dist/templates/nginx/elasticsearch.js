@@ -1,6 +1,8 @@
-const nginxMailhogConf = (domain: string): string => `server {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const nginxElasticsearchConf = (domain) => `server {
     listen 80;
-    server_name mailhog.${domain} www.mailhog.${domain};
+    server_name elasticsearch.${domain} www.elasticsearch.${domain};
     charset utf-8;
     client_max_body_size 128M;
 
@@ -12,9 +14,9 @@ const nginxMailhogConf = (domain: string): string => `server {
         proxy_http_version 1.1;
         proxy_redirect off;
         proxy_buffering off;
-        proxy_pass http://localhost:8025;
+        proxy_pass http://localhost:9200;
     }
 }
-`
-
-export default nginxMailhogConf
+`;
+exports.default = nginxElasticsearchConf;
+//# sourceMappingURL=elasticsearch.js.map

@@ -1,4 +1,4 @@
-import {jaleFallbackServer, jaleHomeDir, jaleLogsPath} from '../utils/jale'
+import {jaleFallbackServer, jaleHomeDir, jaleLogsPath} from '../../utils/jale'
 
 const jaleNginxConf = `server {
     listen 80 default_server;

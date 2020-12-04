@@ -34,6 +34,11 @@ const jaleFallbackServer = `${jaleHomeDir}/server/index.php`
 const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps'
 
 /**
+ * Get the location of the Nginx app templates vhost directory.
+ */
+const jaleNginxAppTemplatesPath = '/usr/local/etc/nginx/jale/templates'
+
+/**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.
  *
  * Returns the current location of the Jale home directory.
@@ -54,6 +59,7 @@ export {
     jaleSitesPath,
     jaleFallbackServer,
     jaleNginxAppsPath,
+    jaleNginxAppTemplatesPath,
     ensureHomeDirExists,
     getConfig
 }

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = require("fs");
-const nginxElasticsearch_1 = tslib_1.__importDefault(require("../templates/nginxElasticsearch"));
+const elasticsearch_1 = tslib_1.__importDefault(require("../templates/nginx/elasticsearch"));
 const os_1 = require("../utils/os");
 const jale_1 = require("../utils/jale");
 const nginx_1 = tslib_1.__importDefault(require("./nginx"));
@@ -26,7 +26,7 @@ class Elasticsearch extends service_1.default {
         });
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
-            yield fs_1.writeFileSync(this.nginxConfigPath, nginxElasticsearch_1.default(config.domain));
+            yield fs_1.writeFileSync(this.nginxConfigPath, elasticsearch_1.default(config.domain));
             yield (new nginx_1.default).restart();
             return true;
         });
