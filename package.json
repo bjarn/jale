@@ -2,10 +2,22 @@
   "name": "jale",
   "version": "0.2.0",
   "description": "Jale is a blazing fast local development environment for MacOS written in Typescript.",
-  "author": "Bjarn Bronsveld",
+  "author": {
+    "name": "Bjarn Bronsveld",
+    "email": "bjarn@bronsveld.me",
+    "url": "https://bjarn.dev/"
+  },
   "main": "./src/jale.js",
   "bin": {
     "jale": "bin/jale.js"
+  },
+  "funding": {
+    "type": "github-sponsors",
+    "url": "https://github.com/sponsors/bjarn"
+  },
+  "homepage": "https://github.com/bjarn/jale#readme",
+  "bugs": {
+    "url": "https://github.com/bjarn/jale/issues"
   },
   "keywords": [
     "local",
@@ -16,7 +28,7 @@
     "just another local environment"
   ],
   "repository": "https://github.com/bjarn/jale",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "preferGlobal": true,
   "devDependencies": {
     "@types/commander": "^2.12.2",
