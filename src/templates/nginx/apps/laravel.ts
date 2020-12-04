@@ -4,7 +4,7 @@ const nginxLaravelTemplate = (hostname: string, docroot: string): string => `ser
     listen 80;
     listen [::]:80;
     server_name www.${hostname} ${hostname};
-    root ${docroot};
+    root ${docroot}/public;
     charset utf-8;
     client_max_body_size 128M;
 
