@@ -1,4 +1,4 @@
-# Jale [![](https://img.shields.io/npm/v/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/npm/dm/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/scrutinizer/quality/g/bjarn/jale/main)](https://scrutinizer-ci.com/g/bjarn/jale/)
+# Jale [![](https://img.shields.io/npm/v/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/npm/dm/jale)](https://npmjs.com/package/jale) [![](https://img.shields.io/scrutinizer/quality/g/bjarn/jale/main)](https://scrutinizer-ci.com/g/bjarn/jale/) [![Build Status](https://scrutinizer-ci.com/g/bjarn/jale/badges/build.png?b=main)](https://scrutinizer-ci.com/g/bjarn/jale/build-status/main)
 A blazing fast local development environment for MacOS* written in Typescript.<br />
 <sup><sub>*soon to be cross-platform!</sub></sup></center>
 
