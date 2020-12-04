@@ -8,13 +8,13 @@ class UseController {
      */
     execute = async (service: string, version: string): Promise<boolean> => {
         switch (service) {
-            case 'php':
-                console.log(`Switching to PHP ${version}`)
-                await this.switchPhpVersionTo(version)
-                return true
-            default:
-                console.log('Invalid service.')
-                return false
+        case 'php':
+            console.log(`Switching to PHP ${version}`)
+            await this.switchPhpVersionTo(version)
+            return true
+        default:
+            console.log('Invalid service.')
+            return false
         }
     }
 

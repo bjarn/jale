@@ -1,4 +1,4 @@
-const nginxElasticsearchConf = (domain: string) => `server {
+const nginxElasticsearchConf = (domain: string): string => `server {
     listen 80;
     server_name elasticsearch.${domain} www.elasticsearch.${domain};
     charset utf-8;

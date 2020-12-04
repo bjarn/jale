@@ -75,7 +75,7 @@ class InstallController {
             .then(answers => {
                 this.install(answers)
             })
-            .catch(error => {
+            .catch(() => {
                 console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.')
             })
 
@@ -88,7 +88,7 @@ class InstallController {
      * @param answers
      * @private
      */
-    private async install(answers: any) {
+    private async install(answers: Answers) {
         await ensureHomeDirExists()
         await ensureDirectoryExists(jaleLogsPath)
 
@@ -114,7 +114,7 @@ class InstallController {
         try {
             // We're all set. Let's configure Jale.
             await tasks.run()
-            console.log(`\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n`)
+            console.log('\n✨ Successfully installed Jale, Just Another Local Environment! ✅\n')
         } catch (e) {
             console.error(e)
         }
@@ -126,10 +126,10 @@ class InstallController {
      * @param answers
      * @private
      */
-    private configureJale = (answers: any): ListrTask => ({
+    private configureJale = (answers: Answers): ListrTask => ({
         title: 'Configure Jale',
-        task: (ctx, task): void => {
-            let config = <Config>{
+        task: (): void => {
+            const config = <Config>{
                 domain: answers.domain,
                 database: <Database>{password: 'root'},
                 services: null // TODO: Make services configurable.
@@ -150,8 +150,9 @@ class InstallController {
             task.newListr([
                 {
                     title: 'Installing DnsMasq',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: async (ctx): Promise<string | boolean> => {
+                    skip: async (): Promise<string | boolean> => {
                         const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
 
                         if (isInstalled) return 'Dnsmasq is already installed.'
@@ -175,8 +176,9 @@ class InstallController {
             task.newListr([
                 {
                     title: 'Installing Nginx',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: async (ctx): Promise<string | boolean> => {
+                    skip: async (): Promise<string | boolean> => {
                         const isInstalled = await client().packageManager.packageIsInstalled('nginx')
 
                         if (isInstalled) return 'Nginx is already installed.'
@@ -195,7 +197,7 @@ class InstallController {
     })
 
     private installPhpFpm = (phpVersions: string[]): ListrTask[] => {
-        let phpInstallTasks: ListrTask[] = []
+        const phpInstallTasks: ListrTask[] = []
 
         phpVersions.forEach((phpVersion: string, index) => {
             phpInstallTasks.push({
@@ -204,8 +206,9 @@ class InstallController {
                     task.newListr([
                         {
                             title: `Installing ${phpVersion}`,
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                            skip: async (ctx): Promise<string | boolean> => {
+                            skip: async (): Promise<string | boolean> => {
                                 if (phpVersion == 'php@8.0') phpVersion = 'php'
                                 const isInstalled = await client().packageManager.packageIsInstalled(phpVersion)
 
@@ -245,8 +248,9 @@ class InstallController {
             task.newListr([
                 {
                     title: `Installing ${database}`,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: async (ctx): Promise<string | boolean> => {
+                    skip: async (): Promise<string | boolean> => {
                         const isInstalled = await client().packageManager.packageIsInstalled(database)
 
                         if (isInstalled) return `${database} is already installed.`
@@ -270,12 +274,13 @@ class InstallController {
         task: (ctx, task): Listr =>
             task.newListr([
                 {
-                    title: `Installing Mailhog`,
+                    title: 'Installing Mailhog',
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                    skip: async (ctx): Promise<string | boolean> => {
+                    skip: async (): Promise<string | boolean> => {
                         const isInstalled = await client().packageManager.packageIsInstalled('mailhog')
 
-                        if (isInstalled) return `Mailhog is already installed.`
+                        if (isInstalled) return 'Mailhog is already installed.'
                     },
                     task: (new Mailhog).install
                 },
@@ -291,7 +296,7 @@ class InstallController {
     })
 
     private installOptionalServices = (answers: Answers): ListrTask => {
-        let optionalServicesTasks: ListrTask[] = []
+        const optionalServicesTasks: ListrTask[] = []
 
         answers.optionalServices.forEach((serviceName: string) => {
             const service = getOptionalServiceByname(serviceName)
@@ -301,8 +306,9 @@ class InstallController {
                     task.newListr([
                         {
                             title: `Installing ${service.service}`,
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                            skip: async (ctx): Promise<string | boolean> => {
+                            skip: async (): Promise<string | boolean> => {
                                 const isInstalled = await client().packageManager.packageIsInstalled(service.service)
 
                                 if (isInstalled) return `${service.service} is already installed.`
@@ -329,14 +335,15 @@ class InstallController {
     }
 
     private installTools = (answers: Answers): ListrTask => {
-        let toolsTasks: ListrTask[] = []
+        const toolsTasks: ListrTask[] = []
 
         answers.apps.forEach((toolName: string) => {
             const tool = getToolByName(toolName)
             toolsTasks.push({
                 title: `Install ${tool.name}`,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
-                skip: async (ctx): Promise<string | boolean> => {
+                skip: async (): Promise<string | boolean> => {
                     const isInstalled = await tool.isInstalled()
 
                     if (isInstalled) return `${tool.name} is already installed.`

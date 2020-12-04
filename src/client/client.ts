@@ -6,7 +6,7 @@ interface Client {
     operatingSystem: string
     packageManager: PackageManager,
     serviceCtl: ServiceCtl,
-    services: any // when services are ready, add them.
+    services: null // TODO when services are managable, add them.
 }
 
 export default Client

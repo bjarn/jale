@@ -53,12 +53,14 @@ class Homebrew extends packageManager_1.default {
             return stdout.includes(pkg);
         });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     remove(pkg) {
         return Promise.resolve(false);
     }
     update() {
         return Promise.resolve(false);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     upgrade(pkg) {
         return Promise.resolve(false);
     }

@@ -18,17 +18,17 @@ const getDatabaseByName = (databaseType: string): Mysql => {
     let database: Mysql
 
     switch (databaseType) {
-        case (new Mysql80).service:
-            database = new Mysql80()
-            break
-        case (new Mysql57).service:
-            database = new Mysql57()
-            break
-        case (new Mariadb).service:
-            database = new Mariadb()
-            break
-        default:
-            throw Error('Invalid database type version: ' + databaseType)
+    case (new Mysql80).service:
+        database = new Mysql80()
+        break
+    case (new Mysql57).service:
+        database = new Mysql57()
+        break
+    case (new Mariadb).service:
+        database = new Mariadb()
+        break
+    default:
+        throw Error('Invalid database type version: ' + databaseType)
     }
 
     return database
@@ -41,7 +41,7 @@ const getLinkedDatabase = async (): Promise<Mysql> => {
     const mysqlLink = await fs.lstatSync('/usr/local/bin/mysql')
 
     if (!mysqlLink.isSymbolicLink()) {
-        throw Error(`Mysql executable is not found.`)
+        throw Error('Mysql executable is not found.')
     }
 
     const mysqlBinary = await fs.realpathSync('/usr/local/bin/mysql')

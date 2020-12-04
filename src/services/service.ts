@@ -2,7 +2,7 @@ import {client} from '../utils/os'
 
 abstract class Service {
     abstract service: string
-    requireRoot: boolean = false
+    requireRoot = false
 
     start = async (): Promise<boolean> =>
         this.requireRoot ?

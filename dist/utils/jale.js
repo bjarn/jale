@@ -33,7 +33,7 @@ exports.jaleFallbackServer = jaleFallbackServer;
 /**
  * Get the location of the Nginx apps vhost directory.
  */
-const jaleNginxAppsPath = `/usr/local/etc/nginx/jale/apps`;
+const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps';
 exports.jaleNginxAppsPath = jaleNginxAppsPath;
 /**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.
@@ -48,7 +48,7 @@ function ensureHomeDirExists() {
 exports.ensureHomeDirExists = ensureHomeDirExists;
 function getConfig() {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        let rawConfig = yield fs.readFileSync(jaleConfigPath, 'utf-8');
+        const rawConfig = yield fs.readFileSync(jaleConfigPath, 'utf-8');
         return JSON.parse(rawConfig);
     });
 }

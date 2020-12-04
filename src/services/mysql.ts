@@ -1,13 +1,13 @@
 import execa from 'execa'
-import {chmodSync, copyFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync, writeSync} from 'fs'
+import {chmodSync, existsSync, mkdirSync, unlinkSync, writeFileSync} from 'fs'
 import limitMaxFilesPlist from '../templates/limitMaxFilesPlist'
 import myCnf from '../templates/myCnf'
 import {client} from '../utils/os'
 import Service from './service'
 
 abstract class Mysql extends Service {
-    requireRoot: boolean = false
-    isEndOfLife: boolean = false
+    requireRoot = false
+    isEndOfLife = false
 
     abstract versionName: string
 
@@ -22,17 +22,13 @@ abstract class Mysql extends Service {
     systemDatabases = ['sys', 'performance_schema', 'information_schema']
 
     configure = async (): Promise<boolean> => {
-        try {
-            await this.removeConfiguration()
-            // await this.setMaxFilesConfig() // TODO: Fix permission
-            await this.linkDatabase()
-            await this.installConfiguration()
-            await this.setRootPassword()
+        await this.removeConfiguration()
+        // await this.setMaxFilesConfig() // TODO: Fix permission
+        await this.linkDatabase()
+        await this.installConfiguration()
+        await this.setRootPassword()
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
 
     removeConfiguration = async (): Promise<void> => {
@@ -69,7 +65,7 @@ abstract class Mysql extends Service {
     }
 
     // TODO: We should get the current password from the Jale config instead.
-    setRootPassword = async (oldPassword: string = '', password: string = 'root'): Promise<boolean> => {
+    setRootPassword = async (oldPassword = '', password = 'root'): Promise<boolean> => {
         try {
             await execa('mysqladmin', ['-u', 'root', `--password='${oldPassword}'`, 'password', password], {
                 stdio: 'inherit'

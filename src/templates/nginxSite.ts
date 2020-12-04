@@ -1,6 +1,6 @@
 import {jaleHomeDir, jaleLogsPath} from '../utils/jale'
 
-const nginxSiteConfig = (hostname: string, docroot: string) => `server {
+const nginxSiteConfig = (hostname: string, docroot: string): string => `server {
     listen 80;
     listen [::]:80;
     server_name www.${hostname} ${hostname};

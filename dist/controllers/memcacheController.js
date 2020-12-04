@@ -12,7 +12,7 @@ class MemcacheController {
          */
         this.execute = (status) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (status !== 'on' && status !== 'off') {
-                console.log(`Invalid status. Please provide status 'on' or 'off'.`);
+                console.log('Invalid status. Please provide status \'on\' or \'off\'.');
                 return false;
             }
             const memcache = new memcache_1.default();
@@ -49,10 +49,10 @@ class MemcacheController {
         this.disable = (memcache, phpMemcached) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const phpExtensionDisabled = yield phpMemcached.disable();
             if (phpExtensionDisabled) {
-                console.log(`Disabled memcache's PHP extension`);
+                console.log('Disabled memcache\'s PHP extension');
             }
             else {
-                console.log(`Memcache's PHP extension was not enabled.`);
+                console.log('Memcache\'s PHP extension was not enabled.');
             }
             if (!(yield os_1.client().packageManager.packageIsInstalled(memcache.service))) {
                 console.log(`${memcache.service} was not installed.`);

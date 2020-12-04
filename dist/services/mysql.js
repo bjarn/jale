@@ -20,17 +20,12 @@ class Mysql extends service_1.default {
         this.rootPassword = 'root';
         this.systemDatabases = ['sys', 'performance_schema', 'information_schema'];
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.removeConfiguration();
-                // await this.setMaxFilesConfig() // TODO: Fix permission
-                yield this.linkDatabase();
-                yield this.installConfiguration();
-                yield this.setRootPassword();
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            yield this.removeConfiguration();
+            // await this.setMaxFilesConfig() // TODO: Fix permission
+            yield this.linkDatabase();
+            yield this.installConfiguration();
+            yield this.setRootPassword();
+            return true;
         });
         this.removeConfiguration = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (fs_1.existsSync(this.configPath))

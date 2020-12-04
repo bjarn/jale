@@ -39,7 +39,7 @@ exports.getDatabaseByName = getDatabaseByName;
 const getLinkedDatabase = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const mysqlLink = yield fs_1.default.lstatSync('/usr/local/bin/mysql');
     if (!mysqlLink.isSymbolicLink()) {
-        throw Error(`Mysql executable is not found.`);
+        throw Error('Mysql executable is not found.');
     }
     const mysqlBinary = yield fs_1.default.realpathSync('/usr/local/bin/mysql');
     let linkedDatabase;

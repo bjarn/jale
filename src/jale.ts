@@ -1,8 +1,9 @@
 import program from 'commander'
 import commandLoader from './commands/index'
 
-const commands = commandLoader(program)
+commandLoader(program)
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
 program
