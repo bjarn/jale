@@ -1,5 +1,5 @@
 import {writeFileSync} from 'fs'
-import nginxElasticsearchConf from '../templates/nginxElasticsearch'
+import nginxElasticsearchConf from '../templates/nginx/elasticsearch'
 import {client} from '../utils/os'
 import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'

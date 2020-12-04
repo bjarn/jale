@@ -30,6 +30,16 @@ class InstallController {
             }
         },
         {
+            type: 'list',
+            name: 'template',
+            message: 'Default Nginx Template',
+            choices: ['laravel', 'magento2', 'magento1'],
+            default: 'laravel',
+            validate: (input: string) => {
+                return input !== ''
+            }
+        },
+        {
             type: 'checkbox',
             name: 'phpVersions',
             message: 'Choose one or more PHP versions',
@@ -73,6 +83,7 @@ class InstallController {
         inquirer
             .prompt(this.questions)
             .then(answers => {
+                console.log('')
                 this.install(answers)
             })
             .catch(() => {
@@ -131,6 +142,7 @@ class InstallController {
         task: (): void => {
             const config = <Config>{
                 domain: answers.domain,
+                defaultTemplate: answers.template,
                 database: <Database>{password: 'root'},
                 services: null // TODO: Make services configurable.
             }
@@ -258,11 +270,11 @@ class InstallController {
                     task: (getDatabaseByName(database)).install
                 },
                 {
-                    title: 'Configure ${database}',
+                    title: `Configure ${database}`,
                     task: (getDatabaseByName(database)).configure
                 },
                 {
-                    title: 'Restart ${database}',
+                    title: `Restart ${database}`,
                     task: (getDatabaseByName(database)).restart
                 }
             ])

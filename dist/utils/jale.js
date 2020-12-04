@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getConfig = exports.ensureHomeDirExists = exports.jaleNginxAppsPath = exports.jaleFallbackServer = exports.jaleSitesPath = exports.jaleLogsPath = exports.jaleConfigPath = exports.jaleHomeDir = void 0;
+exports.getConfig = exports.ensureHomeDirExists = exports.jaleNginxAppTemplatesPath = exports.jaleNginxAppsPath = exports.jaleFallbackServer = exports.jaleSitesPath = exports.jaleLogsPath = exports.jaleConfigPath = exports.jaleHomeDir = void 0;
 const tslib_1 = require("tslib");
 const fs = tslib_1.__importStar(require("fs"));
 const os_1 = require("os");
@@ -35,6 +35,11 @@ exports.jaleFallbackServer = jaleFallbackServer;
  */
 const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps';
 exports.jaleNginxAppsPath = jaleNginxAppsPath;
+/**
+ * Get the location of the Nginx app templates vhost directory.
+ */
+const jaleNginxAppTemplatesPath = '/usr/local/etc/nginx/jale/templates';
+exports.jaleNginxAppTemplatesPath = jaleNginxAppTemplatesPath;
 /**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.
  *

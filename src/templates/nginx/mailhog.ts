@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const nginxMailhogConf = (domain) => `server {
+const nginxMailhogConf = (domain: string): string => `server {
     listen 80;
     server_name mailhog.${domain} www.mailhog.${domain};
     charset utf-8;
@@ -8,7 +6,7 @@ const nginxMailhogConf = (domain) => `server {
 
     location / {
         chunked_transfer_encoding on;
-        proxy_set_header X-NginX-Proxy true;
+        proxy_set_header X-Nginx-Proxy true;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_http_version 1.1;
@@ -17,6 +15,6 @@ const nginxMailhogConf = (domain) => `server {
         proxy_pass http://localhost:8025;
     }
 }
-`;
-exports.default = nginxMailhogConf;
-//# sourceMappingURL=nginxMailhog.js.map
+`
+
+export default nginxMailhogConf

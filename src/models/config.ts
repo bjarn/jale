@@ -1,5 +1,6 @@
 interface Config {
     domain: string
+    defaultTemplate: string
     database: Database
     services: null // add enabled services to config.
 }

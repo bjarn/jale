@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const jale_1 = require("../utils/jale");
+const jale_1 = require("../../utils/jale");
 const jaleNginxConf = `server {
     listen 80 default_server;
     root /;
@@ -31,4 +31,4 @@ const jaleNginxConf = `server {
     }
 }`;
 exports.default = jaleNginxConf;
-//# sourceMappingURL=nginxJale.js.map
+//# sourceMappingURL=jale.js.map
