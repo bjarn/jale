@@ -88,12 +88,12 @@ class ServiceController {
                     return true
                 } catch (e) {
                     console.log(`Failed to stop ${service.service}: ${e.message}`)
+                    return false
                 }
             }
         }
 
         console.warn(`Invalid service: ${serviceName}`)
-
         return false
     }
 
@@ -111,7 +111,7 @@ class ServiceController {
         }
 
         for (const service of this.allServices) {
-            if (service.service.includes('restart')) {
+            if (service.service.includes(serviceName)) {
                 try {
                     if (!(await this.controlService(service, 'restart'))) {
                         continue
