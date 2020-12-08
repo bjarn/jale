@@ -7,6 +7,7 @@ const jale_1 = require("../utils/jale");
 class SubdomainController {
     constructor() {
         this.appTypes = ['laravel', 'magento2', 'magento1'];
+        this.serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi');
         this.execute = (option, subdomain) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (option !== 'add' && option !== 'del') {
                 console.log('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.');
@@ -20,7 +21,7 @@ class SubdomainController {
                 restartNginx = this.addSubdomain(subdomain, hostname);
             }
             else if (option === 'del') {
-                restartNginx = this.deleteSubdomain(subdomain, hostname, config.domain);
+                restartNginx = this.deleteSubdomain(subdomain, hostname);
             }
             if (restartNginx)
                 yield (new nginx_1.default()).reload();
@@ -34,7 +35,7 @@ class SubdomainController {
         this.subdomainExists = (subdomain, hostname) => {
             try {
                 const vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
-                return vhostConfig.includes(subdomain);
+                return vhostConfig.includes(`${subdomain}.${hostname}`);
             }
             catch (e) {
                 return false;
@@ -51,8 +52,17 @@ class SubdomainController {
                 console.log(`Subdomain ${subdomain}.${hostname} already exists.`);
                 return false;
             }
-            const vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
-            console.log(subdomain);
+            let vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
+            const rawServerNames = this.serverNamesRegex.exec(vhostConfig);
+            if (!rawServerNames) {
+                return false; // TODO: Catch this issue
+            }
+            const serverNames = rawServerNames[0].split(' ');
+            serverNames.push(`${subdomain}.${hostname}`);
+            // Replace the old server names with the server names including the new subdomain.
+            vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '));
+            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, vhostConfig);
+            console.log(`Added subdomain ${subdomain}.${hostname}`);
             return true;
         });
         /**
@@ -67,15 +77,14 @@ class SubdomainController {
                 return false;
             }
             let vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
-            const serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi');
-            const rawServerNames = serverNamesRegex.exec(vhostConfig);
+            const rawServerNames = this.serverNamesRegex.exec(vhostConfig);
             if (!rawServerNames) {
                 return false; // TODO: Catch this issue
             }
             const serverNames = rawServerNames[0].split(' ');
             serverNames.splice(serverNames.indexOf(`${subdomain}.${hostname}`), 1);
-            // Replace the old server names with the server names including the new subdomain.
-            vhostConfig = vhostConfig.replace(serverNamesRegex, serverNames.join(' '));
+            // Replace the old server names with the new list without the removed subdomain.
+            vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '));
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, vhostConfig);
             console.log(`Removed subdomain ${subdomain}.${hostname}`);
             return true;

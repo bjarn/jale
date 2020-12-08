@@ -6,6 +6,8 @@ class SubdomainController {
 
     appTypes = ['laravel', 'magento2', 'magento1']
 
+    serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi')
+
     execute = async (option: string, subdomain: string): Promise<void> => {
         if (option !== 'add' && option !== 'del') {
             console.log('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.')
@@ -38,7 +40,7 @@ class SubdomainController {
     subdomainExists = (subdomain: string, hostname: string): boolean => {
         try {
             const vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
-            return vhostConfig.includes(subdomain)
+            return vhostConfig.includes(`${subdomain}.${hostname}`)
         } catch (e) {
             return false
         }
@@ -56,8 +58,22 @@ class SubdomainController {
             return false
         }
 
-        const vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
-        console.log(subdomain)
+        let vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
+        const rawServerNames = this.serverNamesRegex.exec(vhostConfig)
+
+        if (!rawServerNames) {
+            return false // TODO: Catch this issue
+        }
+
+        const serverNames = rawServerNames[0].split(' ')
+        serverNames.push(`${subdomain}.${hostname}`)
+
+        // Replace the old server names with the server names including the new subdomain.
+        vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '))
+
+        writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
+
+        console.log(`Added subdomain ${subdomain}.${hostname}`)
 
         return true
     }
@@ -76,8 +92,7 @@ class SubdomainController {
 
         let vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
 
-        const serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi')
-        const rawServerNames = serverNamesRegex.exec(vhostConfig)
+        const rawServerNames = this.serverNamesRegex.exec(vhostConfig)
 
         if (!rawServerNames) {
             return false // TODO: Catch this issue
@@ -86,8 +101,8 @@ class SubdomainController {
         const serverNames = rawServerNames[0].split(' ')
         serverNames.splice(serverNames.indexOf(`${subdomain}.${hostname}`), 1)
 
-        // Replace the old server names with the server names including the new subdomain.
-        vhostConfig = vhostConfig.replace(serverNamesRegex, serverNames.join(' '))
+        // Replace the old server names with the new list without the removed subdomain.
+        vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '))
 
         writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
 
