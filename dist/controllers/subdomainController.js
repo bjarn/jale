@@ -40,6 +40,12 @@ class SubdomainController {
                 return false;
             }
         };
+        /**
+         * Add a new subdomain to the vhost's Nginx configuration.
+         *
+         * @param subdomain
+         * @param hostname
+         */
         this.addSubdomain = (subdomain, hostname) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (this.subdomainExists(subdomain, hostname)) {
                 console.log(`Subdomain ${subdomain}.${hostname} already exists.`);
@@ -49,11 +55,17 @@ class SubdomainController {
             console.log(subdomain);
             return true;
         });
-        this.deleteSubdomain = (subdomain, hostname, extension) => {
-            // if (!this.subdomainExists(subdomain, hostname)) {
-            //     console.log(`Subdomain ${subdomain}.${hostname} does not exist.`)
-            //     return false
-            // }
+        /**
+         * Delete a subdomain from the vhost's Nginx configuration.
+         *
+         * @param subdomain
+         * @param hostname
+         */
+        this.deleteSubdomain = (subdomain, hostname) => {
+            if (!this.subdomainExists(subdomain, hostname)) {
+                console.log(`Subdomain ${subdomain}.${hostname} does not exist.`);
+                return false;
+            }
             let vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
             const serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi');
             const rawServerNames = serverNamesRegex.exec(vhostConfig);

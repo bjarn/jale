@@ -22,7 +22,7 @@ class SubdomainController {
             restartNginx = this.addSubdomain(subdomain, hostname)
         }
         else if (option === 'del') {
-            restartNginx = this.deleteSubdomain(subdomain, hostname, config.domain)
+            restartNginx = this.deleteSubdomain(subdomain, hostname)
         }
 
         if (restartNginx)
@@ -44,6 +44,12 @@ class SubdomainController {
         }
     }
 
+    /**
+     * Add a new subdomain to the vhost's Nginx configuration.
+     *
+     * @param subdomain
+     * @param hostname
+     */
     addSubdomain = async (subdomain: string, hostname: string): boolean => {
         if (this.subdomainExists(subdomain, hostname)) {
             console.log(`Subdomain ${subdomain}.${hostname} already exists.`)
@@ -56,11 +62,17 @@ class SubdomainController {
         return true
     }
 
-    deleteSubdomain = (subdomain: string, hostname: string, extension: string): boolean => {
-        // if (!this.subdomainExists(subdomain, hostname)) {
-        //     console.log(`Subdomain ${subdomain}.${hostname} does not exist.`)
-        //     return false
-        // }
+    /**
+     * Delete a subdomain from the vhost's Nginx configuration.
+     *
+     * @param subdomain
+     * @param hostname
+     */
+    deleteSubdomain = (subdomain: string, hostname: string): boolean => {
+        if (!this.subdomainExists(subdomain, hostname)) {
+            console.log(`Subdomain ${subdomain}.${hostname} does not exist.`)
+            return false
+        }
 
         let vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
 
