@@ -47,7 +47,7 @@ class SubdomainController {
          * @param subdomain
          * @param hostname
          */
-        this.addSubdomain = (subdomain, hostname) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+        this.addSubdomain = (subdomain, hostname) => {
             if (this.subdomainExists(subdomain, hostname)) {
                 console.log(`Subdomain ${subdomain}.${hostname} already exists.`);
                 return false;
@@ -64,7 +64,7 @@ class SubdomainController {
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, vhostConfig);
             console.log(`Added subdomain ${subdomain}.${hostname}`);
             return true;
-        });
+        };
         /**
          * Delete a subdomain from the vhost's Nginx configuration.
          *

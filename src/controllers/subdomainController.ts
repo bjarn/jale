@@ -52,7 +52,7 @@ class SubdomainController {
      * @param subdomain
      * @param hostname
      */
-    addSubdomain = async (subdomain: string, hostname: string): boolean => {
+    addSubdomain = (subdomain: string, hostname: string): boolean => {
         if (this.subdomainExists(subdomain, hostname)) {
             console.log(`Subdomain ${subdomain}.${hostname} already exists.`)
             return false
