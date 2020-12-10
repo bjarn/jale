@@ -11,14 +11,33 @@ class SecureController {
     constructor() {
         this.executeSecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSslPath);
+            yield this.unsecure();
             yield this.createSslCertificate();
             this.secureNginxConfig();
             yield (new nginx_1.default()).restart();
         });
         this.executeUnsecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const restartNginx = false;
-            if (restartNginx)
-                yield (new nginx_1.default()).reload();
+            if (yield this.unsecure()) {
+                yield (new nginx_1.default()).restart();
+            }
+            else {
+                console.log(`The site ${this.hostname} is not secured.`);
+                return;
+            }
+        });
+        this.unsecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (fs_1.existsSync(this.crtPath)) {
+                fs_1.unlinkSync(this.csrPath);
+                fs_1.unlinkSync(this.keyPath);
+                fs_1.unlinkSync(this.crtPath);
+                fs_1.unlinkSync(this.configPath);
+                yield execa_1.default('sudo', ['security', 'find-certificate', '-c', this.hostname, '-a', '-Z', '|', 'sudo', 'awk', '\'/SHA-1/{system("sudo security delete-certificate -Z "$NF)}\''], { shell: true, stdio: 'inherit' });
+                this.unsecureNginxConfig();
+                return true;
+            }
+            else {
+                return false;
+            }
         });
         /**
          * Generate a certificate to secure a site.
@@ -56,6 +75,19 @@ class SecureController {
     
     ssl_certificate ${this.crtPath};
     ssl_certificate_key ${this.keyPath};\n`);
+            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, nginxConfig);
+        };
+        /**
+         * Clean up the Nginx config by removing references to the key en cert and stop listening on port 443.
+         */
+        this.unsecureNginxConfig = () => {
+            let nginxConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, 'utf-8');
+            nginxConfig = nginxConfig.replace(`listen [::]:80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    
+    ssl_certificate ${this.crtPath};
+    ssl_certificate_key ${this.keyPath};\n`, 'listen [::]:80;');
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, nginxConfig);
         };
         this.config = jale_1.getConfig();

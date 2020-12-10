@@ -1,5 +1,5 @@
 import execa from 'execa'
-import {readFileSync, writeFileSync} from 'fs'
+import {existsSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
 import {Config} from '../models/config'
 import Nginx from '../services/nginx'
 import nginx from '../templates/nginx'
@@ -32,6 +32,8 @@ class SecureController {
     executeSecure = async (): Promise<void> => {
         await ensureDirectoryExists(jaleSslPath)
 
+        await this.unsecure()
+
         await this.createSslCertificate()
         this.secureNginxConfig()
 
@@ -39,12 +41,33 @@ class SecureController {
     }
 
     executeUnsecure = async (): Promise<void> => {
+        if (await this.unsecure()) {
+            await (new Nginx()).restart()
+        } else {
+            console.log(`The site ${this.hostname} is not secured.`)
+            return
+        }
+    }
 
-        const restartNginx = false
+    private unsecure = async (): Promise<boolean> => {
+        if (existsSync(this.crtPath)) {
+            unlinkSync(this.csrPath)
+            unlinkSync(this.keyPath)
+            unlinkSync(this.crtPath)
+            unlinkSync(this.configPath)
 
+            await execa(
+                'sudo',
+                ['security', 'find-certificate', '-c', this.hostname, '-a', '-Z', '|', 'sudo', 'awk', '\'/SHA-1/{system("sudo security delete-certificate -Z "$NF)}\''],
+                {shell: true, stdio: 'inherit'}
+            )
 
-        if (restartNginx)
-            await (new Nginx()).reload()
+            this.unsecureNginxConfig()
+
+            return true
+        } else {
+            return false
+        }
     }
 
     /**
@@ -89,6 +112,22 @@ class SecureController {
     
     ssl_certificate ${this.crtPath};
     ssl_certificate_key ${this.keyPath};\n`)
+
+        writeFileSync(`${jaleSitesPath}/${this.hostname}.conf`, nginxConfig)
+    }
+
+    /**
+     * Clean up the Nginx config by removing references to the key en cert and stop listening on port 443.
+     */
+    private unsecureNginxConfig = () => {
+        let nginxConfig = readFileSync(`${jaleSitesPath}/${this.hostname}.conf`, 'utf-8')
+
+        nginxConfig = nginxConfig.replace(`listen [::]:80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    
+    ssl_certificate ${this.crtPath};
+    ssl_certificate_key ${this.keyPath};\n`, 'listen [::]:80;')
 
         writeFileSync(`${jaleSitesPath}/${this.hostname}.conf`, nginxConfig)
     }
