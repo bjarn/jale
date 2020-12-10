@@ -25,6 +25,9 @@ class SecureController {
                 return;
             }
         });
+        /**
+         * Unsecure the current hostname.
+         */
         this.unsecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (fs_1.existsSync(this.crtPath)) {
                 fs_1.unlinkSync(this.csrPath);

@@ -49,6 +49,9 @@ class SecureController {
         }
     }
 
+    /**
+     * Unsecure the current hostname.
+     */
     private unsecure = async (): Promise<boolean> => {
         if (existsSync(this.crtPath)) {
             unlinkSync(this.csrPath)
