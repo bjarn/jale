@@ -2,7 +2,7 @@
 A blazing fast local development environment for MacOS* written in Typescript.<br />
 <sup><sub>*soon to be cross-platform!</sub></sup></center>
 
-![](https://i.imgur.com/oGwPWOX.png)
+![](https://i.imgur.com/Uri1I1p.png)
 
 ## What is Jale?
 Jale (Just Another Local Environment) allows you to setup a complete local development environment in just a couple of seconds.
@@ -17,9 +17,7 @@ Services are using optimized configs (credits to [Valet+](https://github.com/wep
 ## Why Jale?
 It has a completely different approach compared to services like Laravel Valet and aims to be both flexible and performant.
 
-Instead of using a single 'server.php' file which proxies every request, we just use Nginx configuration files per site. Don't be afraid though! We made it as easy as possible. We'll even introduce templates** for certain projects very soon!
-
-<sup><sub>** Templates allow you to link a site with a specific app configuration for Nginx. I.e. an optimized config for Laravel or Magento 2.</sub></sup></center>
+Instead of using a single 'server.php' file which proxies every request, we just use Nginx configuration files per site. Don't be afraid though! We made it as easy as possible. It is also possible to select an optimized app template for i.e. Laravel, Magento or Wordpress (and more to come!).
 
 ## Included services
 The following services are currently installed by Jale. Services marked with a * are optional, you can uncheck them ;-).
