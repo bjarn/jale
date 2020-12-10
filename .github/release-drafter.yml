@@ -1,10 +1,12 @@
-name-template: $NEXT_PATCH_VERSION
+name-template: v$NEXT_PATCH_VERSION
 tag-template: $NEXT_PATCH_VERSION
 categories:
   - title: 🚀 Features
     label: feature
   - title: 🐛 Bug Fixes
-    label: fix
+    label: bugfix
+  - title: 🏗 Dependencies
+    label: dependencies
 template: |
   ## What’s Changed
 
