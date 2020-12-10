@@ -316,6 +316,7 @@ class InstallController {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield jale_1.ensureHomeDirExists();
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleLogsPath);
+            yield filesystem_1.ensureDirectoryExists(`${jale_1.jaleHomeDir}/server/`);
             yield fs.writeFileSync(jale_1.jaleFallbackServer, fallbackServer_1.fallbackIndex);
             const tasks = new listr2_1.Listr([
                 this.configureJale(answers),

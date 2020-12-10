@@ -13,7 +13,7 @@ import {ensureDirectoryExists} from '../utils/filesystem'
 import {getOptionalServiceByname} from '../utils/optionalService'
 import {client} from '../utils/os'
 import {getPhpFpmByName} from '../utils/phpFpm'
-import {ensureHomeDirExists, jaleConfigPath, jaleFallbackServer, jaleLogsPath} from '../utils/jale'
+import {ensureHomeDirExists, jaleConfigPath, jaleFallbackServer, jaleHomeDir, jaleLogsPath} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
 import {getToolByName} from '../utils/tools'
 
@@ -102,6 +102,7 @@ class InstallController {
     private async install(answers: Answers) {
         await ensureHomeDirExists()
         await ensureDirectoryExists(jaleLogsPath)
+        await ensureDirectoryExists(`${jaleHomeDir}/server/`)
 
         await fs.writeFileSync(jaleFallbackServer, fallbackIndex)
 
