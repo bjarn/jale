@@ -10,14 +10,17 @@ const jale_1 = require("../utils/jale");
 class SecureController {
     constructor() {
         this.executeSecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            console.log(`Securing ${this.hostname}...`);
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSslPath);
             yield this.unsecure();
             yield this.createSslCertificate();
             this.secureNginxConfig();
             yield (new nginx_1.default()).restart();
+            console.log(`${this.hostname} has been secured and is now reachable via https://${this.hostname}`);
         });
         this.executeUnsecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.unsecure()) {
+                console.log(`${this.hostname} has been unsecured and is no longer reachable over https`);
                 yield (new nginx_1.default()).restart();
             }
             else {

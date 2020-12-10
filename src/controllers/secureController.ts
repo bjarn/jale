@@ -30,6 +30,7 @@ class SecureController {
     }
 
     executeSecure = async (): Promise<void> => {
+        console.log(`Securing ${this.hostname}...`)
         await ensureDirectoryExists(jaleSslPath)
 
         await this.unsecure()
@@ -38,10 +39,13 @@ class SecureController {
         this.secureNginxConfig()
 
         await (new Nginx()).restart()
+
+        console.log(`${this.hostname} has been secured and is now reachable via https://${this.hostname}`)
     }
 
     executeUnsecure = async (): Promise<void> => {
         if (await this.unsecure()) {
+            console.log(`${this.hostname} has been unsecured and is no longer reachable over https`)
             await (new Nginx()).restart()
         } else {
             console.log(`The site ${this.hostname} is not secured.`)
