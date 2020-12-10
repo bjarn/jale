@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clearConsole = void 0;
-const readline = require('readline');
+const tslib_1 = require("tslib");
+const readline = tslib_1.__importStar(require("readline"));
 const clearConsole = () => {
     const blank = '\n'.repeat(process.stdout.rows);
     console.log(blank);

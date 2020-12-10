@@ -53,7 +53,7 @@ class PhpExtension {
             if (stdout.includes('Error:'))
                 throw new Error(`Found installation path, but installation still failed: \n\n${stdout}`);
             const phpIniPath = yield this.getPhpIni();
-            let phpIni = yield fs.readFileSync(phpIniPath, 'utf-8');
+            const phpIni = yield fs.readFileSync(phpIniPath, 'utf-8');
             // TODO: Fix duplicate extension entires in php.ini
             const extensionRegex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"`, 'g').test(phpIni);
             if (!extensionRegex)
@@ -76,7 +76,7 @@ class PhpExtension {
             }
             const phpIniPath = yield this.getPhpIni();
             let phpIni = yield fs.readFileSync(phpIniPath, 'utf-8');
-            const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\/n`, 'g');
+            const regex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"\\n`, 'g');
             phpIni = phpIni.replace(regex, '');
             phpIni = `${this.extensionType}="${this.alias}.so"\n${phpIni}`;
             yield fs.writeFileSync(phpIniPath, phpIni);

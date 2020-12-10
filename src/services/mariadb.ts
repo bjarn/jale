@@ -1,9 +1,9 @@
 import Mysql from './mysql'
 
 class Mariadb extends Mysql {
-    versionName: string = ''
+    versionName = ''
 
-    service: string = `mariadb`
+    service = 'mariadb'
 }
 
 export default Mariadb

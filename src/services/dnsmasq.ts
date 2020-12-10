@@ -16,17 +16,13 @@ class Dnsmasq extends Service {
     customConfigPath = `${jaleHomeDir}/dnsmasq.conf`
 
     configure = async (): Promise<boolean> => {
-        let config: Config = await getConfig()
+        const config: Config = await getConfig()
 
-        try {
-            await this.appendCustomConfig
-            await this.setDomain(config.domain)
-            await this.addDomainResolver(config.domain)
+        await this.appendCustomConfig
+        await this.setDomain(config.domain)
+        await this.addDomainResolver(config.domain)
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
 
     /**
@@ -49,19 +45,15 @@ class Dnsmasq extends Service {
      * @param domain
      */
     addDomainResolver = async (domain: string): Promise<boolean> => {
-        try {
-            // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
-            await requireSudo()
-            await execa('sudo', ['mkdir', '-p', this.resolverPath], {shell: true, stdio: 'inherit'})
-            await execa('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
-                shell: true,
-                stdio: 'inherit'
-            })
+        // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
+        await requireSudo()
+        await execa('sudo', ['mkdir', '-p', this.resolverPath], {shell: true, stdio: 'inherit'})
+        await execa('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
+            shell: true,
+            stdio: 'inherit'
+        })
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
 
 }

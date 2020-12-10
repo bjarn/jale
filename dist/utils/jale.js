@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getConfig = exports.ensureHomeDirExists = exports.jaleNginxAppsPath = exports.jaleFallbackServer = exports.jaleSitesPath = exports.jaleLogsPath = exports.jaleConfigPath = exports.jaleHomeDir = void 0;
+exports.getConfig = exports.ensureHomeDirExists = exports.jaleNginxAppTemplatesPath = exports.jaleNginxAppsPath = exports.jaleFallbackServer = exports.jaleSitesPath = exports.jaleSslPath = exports.jaleLogsPath = exports.jaleConfigPath = exports.jaleHomeDir = void 0;
 const tslib_1 = require("tslib");
 const fs = tslib_1.__importStar(require("fs"));
 const os_1 = require("os");
@@ -21,10 +21,15 @@ exports.jaleConfigPath = jaleConfigPath;
 const jaleLogsPath = `${jaleHomeDir}/log`;
 exports.jaleLogsPath = jaleLogsPath;
 /**
- * Get the location of the Jale log directory.
+ * Get the location of the Jale sites directory.
  */
 const jaleSitesPath = `${jaleHomeDir}/sites`;
 exports.jaleSitesPath = jaleSitesPath;
+/**
+ * Get the location of the Jale certificates directory.
+ */
+const jaleSslPath = `${jaleHomeDir}/ssl`;
+exports.jaleSslPath = jaleSslPath;
 /**
  * Get the location of the fallback server of Jale.
  */
@@ -33,8 +38,13 @@ exports.jaleFallbackServer = jaleFallbackServer;
 /**
  * Get the location of the Nginx apps vhost directory.
  */
-const jaleNginxAppsPath = `/usr/local/etc/nginx/jale/apps`;
+const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps';
 exports.jaleNginxAppsPath = jaleNginxAppsPath;
+/**
+ * Get the location of the Nginx app templates vhost directory.
+ */
+const jaleNginxAppTemplatesPath = '/usr/local/etc/nginx/jale/templates';
+exports.jaleNginxAppTemplatesPath = jaleNginxAppTemplatesPath;
 /**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.
  *
@@ -47,10 +57,8 @@ function ensureHomeDirExists() {
 }
 exports.ensureHomeDirExists = ensureHomeDirExists;
 function getConfig() {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        let rawConfig = yield fs.readFileSync(jaleConfigPath, 'utf-8');
-        return JSON.parse(rawConfig);
-    });
+    const rawConfig = fs.readFileSync(jaleConfigPath, 'utf-8');
+    return JSON.parse(rawConfig);
 }
 exports.getConfig = getConfig;
 //# sourceMappingURL=jale.js.map

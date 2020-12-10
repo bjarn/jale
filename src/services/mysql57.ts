@@ -1,9 +1,9 @@
 import Mysql from './mysql'
 
 class Mysql57 extends Mysql {
-    versionName: string = '5.7'
+    versionName = '5.7'
 
-    service: string = `mysql@${this.versionName}`
+    service = `mysql@${this.versionName}`
 }
 
 export default Mysql57

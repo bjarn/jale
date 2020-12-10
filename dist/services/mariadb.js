@@ -6,7 +6,7 @@ class Mariadb extends mysql_1.default {
     constructor() {
         super(...arguments);
         this.versionName = '';
-        this.service = `mariadb`;
+        this.service = 'mariadb';
     }
 }
 exports.default = Mariadb;

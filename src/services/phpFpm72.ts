@@ -1,10 +1,10 @@
 import PhpFpm from './phpFpm'
 
 class PhpFpm72 extends PhpFpm {
-    isEndOfLife: boolean = true
-    versionName: string = '7.2'
+    isEndOfLife = true
+    versionName = '7.2'
 
-    service: string = `php@${this.versionName}`
+    service = `php@${this.versionName}`
 
     // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
     configPath = `${this.configRootPath}/7.2/php-fpm.d/www.conf`

@@ -11,7 +11,7 @@ abstract class CustomTool extends Tool {
     abstract url: string
     abstract shasum: string
 
-    binLocation: string = '/usr/local/bin'
+    binLocation = '/usr/local/bin'
 
     /**
      * Install the binary.
@@ -26,7 +26,7 @@ abstract class CustomTool extends Tool {
 
         console.log(`Downloading binary for ${this.name}...`)
 
-        await execa('curl', ['-OL', this.url], {cwd: `/tmp/`})
+        await execa('curl', ['-OL', this.url], {cwd: '/tmp/'})
 
         if (!(await this.isValidShasum(`/tmp/${fileName}`))) {
             console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`)

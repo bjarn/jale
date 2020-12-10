@@ -34,13 +34,8 @@ class BrewServices extends serviceCtl_1.default {
     }
     start(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield execa_1.default('brew', ['services', 'start', pkg], { shell: true });
-                return true;
-            }
-            catch (e) {
-                throw e;
-            }
+            yield execa_1.default('brew', ['services', 'start', pkg], { shell: true });
+            return true;
         });
     }
     stop(pkg) {

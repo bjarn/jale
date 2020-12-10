@@ -1,5 +1,4 @@
 import execa from 'execa'
-import {existsSync} from 'fs'
 import Apcu from './php/apcu'
 import Geoip from './php/geoip'
 import Memcached from './php/memcached'
@@ -36,7 +35,7 @@ class Pecl {
      *
      * @param optionals
      */
-    static installExtensions = async (optionals: boolean = false) => {
+    static installExtensions = async (optionals = false): Promise<void> => {
         console.log('Installing PECL extensions')
 
         for (const extension of Pecl.PHP_EXTENSIONS) {
@@ -54,7 +53,7 @@ class Pecl {
      *
      * @param optionals
      */
-    static uninstallExtensions = async (optionals: boolean = false) => {
+    static uninstallExtensions = async (optionals = false): Promise<void> => {
         console.log('Uninstalling PECL extensions')
 
         for (const extension of Pecl.PHP_EXTENSIONS) {

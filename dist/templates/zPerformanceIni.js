@@ -62,12 +62,14 @@ apc.mmap_file_mask=/tmp/apc.XXXXXX
 apc.enable_cli=1
 
 [xdebug]
-xdebug.remote_enable=1
-xdebug.remote_host=localhost
-xdebug.remote_port=9000
-xdebug.remote_autostart=1
+xdebug.mode=debug
+xdebug.client_host=localhost
+xdebug.client_port=9000
+xdebug.start_with_request=yes
+xdebug.discover_client_host=0
 xdebug.idekey=PHPSTORM
 xdebug.max_nesting_level=-1
+xdebug.var_display_max_depth=10
 `;
 exports.default = zPerformanceIni;
 //# sourceMappingURL=zPerformanceIni.js.map

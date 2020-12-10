@@ -2,9 +2,9 @@ import execa from 'execa'
 import PackageManager from '../packageManager'
 
 class Homebrew extends PackageManager {
-    alias: string = 'brew'
-    name: string = 'Homebrew'
-    path: string = '/usr/local/bin/brew'
+    alias = 'brew'
+    name = 'Homebrew'
+    path = '/usr/local/bin/brew'
 
     /**
      * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
@@ -12,7 +12,7 @@ class Homebrew extends PackageManager {
      * @param pkg
      * @param cask
      */
-    async install(pkg: string, cask: boolean = false): Promise<boolean> {
+    async install(pkg: string, cask = false): Promise<boolean> {
         let args: string[] = ['install', pkg]
 
         if (cask) {
@@ -30,7 +30,7 @@ class Homebrew extends PackageManager {
      * @param pkg
      * @param cask
      */
-    async uninstall(pkg: string, cask: boolean = false): Promise<boolean> {
+    async uninstall(pkg: string, cask = false): Promise<boolean> {
         let args: string[] = ['remove', pkg]
 
         if (cask) {
@@ -53,6 +53,7 @@ class Homebrew extends PackageManager {
         return stdout.includes(pkg)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     remove(pkg: string): Promise<boolean> {
         return Promise.resolve(false)
     }
@@ -61,6 +62,7 @@ class Homebrew extends PackageManager {
         return Promise.resolve(false)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     upgrade(pkg: string | undefined): Promise<boolean> {
         return Promise.resolve(false)
     }

@@ -2,21 +2,23 @@ import commander from 'commander'
 import fs from 'fs'
 import path from 'path'
 
-export default function (program: typeof commander) {
-    const commands: Dict = {}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default function (program: typeof commander): commander.Command[] {
+    const commands: commander.Command[] = []
     const loadPath = path.dirname(__filename)
 
     // Loop through command files
     fs.readdirSync(loadPath).filter(function (filename) {
         return (/\.js$/.test(filename) && filename !== 'index.js')
     }).forEach(function (filename) {
-        let name = filename.substr(0, filename.lastIndexOf('.'))
+        // const name: string = filename.substr(0, filename.lastIndexOf('.'))
 
         // Require command
-        let command = require(path.join(loadPath, filename))
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const command = require(path.join(loadPath, filename))
 
         // Initialize command
-        commands[name] = command.default(program)
+        commands.push(command.default(program))
     })
 
     return commands

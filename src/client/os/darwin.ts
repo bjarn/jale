@@ -6,10 +6,10 @@ import BrewServices from '../serviceCtl/brewServices'
 
 class Darwin implements Client {
 
-    operatingSystem: string = "darwin"
+    operatingSystem = 'darwin'
     packageManager: PackageManager = new Homebrew
     serviceCtl: ServiceCtl = new BrewServices
-    services: any = null
+    services = null
 
 }
 

@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import nginxMailhogConf from '../templates/nginxMailhog'
+import nginxMailhogConf from '../templates/nginx/mailhog'
 import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'
 import Service from './service'
@@ -11,14 +11,10 @@ class Mailhog extends Service {
     nginxConfigPath = `${jaleNginxAppsPath}/mailhog.conf`
 
     configure = async (): Promise<boolean> => {
-        try {
-            await this.addNginxConfiguration()
-            await (new Nginx).restart()
+        await this.addNginxConfiguration()
+        await (new Nginx).restart()
 
-            return true
-        } catch (e) {
-            throw e
-        }
+        return true
     }
 
     /**
