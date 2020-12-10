@@ -19,9 +19,14 @@ const jaleConfigPath = `${jaleHomeDir}/config.json`
 const jaleLogsPath = `${jaleHomeDir}/log`
 
 /**
- * Get the location of the Jale log directory.
+ * Get the location of the Jale sites directory.
  */
 const jaleSitesPath = `${jaleHomeDir}/sites`
+
+/**
+ * Get the location of the Jale certificates directory.
+ */
+const jaleSslPath = `${jaleHomeDir}/ssl`
 
 /**
  * Get the location of the fallback server of Jale.
@@ -47,8 +52,8 @@ async function ensureHomeDirExists(): Promise<false | string> {
     return ensureDirectoryExists(jaleHomeDir)
 }
 
-async function getConfig(): Promise<Config> {
-    const rawConfig: string = await fs.readFileSync(jaleConfigPath, 'utf-8')
+function getConfig(): Config {
+    const rawConfig: string = fs.readFileSync(jaleConfigPath, 'utf-8')
     return JSON.parse(rawConfig)
 }
 
@@ -56,6 +61,7 @@ export {
     jaleHomeDir,
     jaleConfigPath,
     jaleLogsPath,
+    jaleSslPath,
     jaleSitesPath,
     jaleFallbackServer,
     jaleNginxAppsPath,
