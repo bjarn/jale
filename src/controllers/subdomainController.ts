@@ -4,8 +4,6 @@ import {getConfig, jaleSitesPath} from '../utils/jale'
 
 class SubdomainController {
 
-    appTypes = ['laravel', 'magento2', 'magento1']
-
     serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi')
 
     execute = async (option: string, subdomain: string): Promise<void> => {
