@@ -25,11 +25,11 @@ class Tool {
             }
             console.log(`Uninstalling ${this.name}...`);
             yield os_1.client().packageManager.uninstall(this.alias, false);
-            console.log(`Installed ${this.name}`);
+            console.log(`Uninstalled ${this.name}`);
             return true;
         });
         /**
-         * Check if the is already installed..
+         * Check if app the is already installed..
          */
         this.isInstalled = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             return os_1.client().packageManager.packageIsInstalled(this.alias);

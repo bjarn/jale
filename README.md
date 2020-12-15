@@ -30,11 +30,12 @@ The following services are currently installed by Jale. Services marked with a *
 
 ### Dev tools
 The following development tools are included.
-- Mailhog
-- wp-cli*
-- magerun*
-- magerun2*
-- drush*
+- [Mailhog](https://github.com/mailhog/MailHog)
+- [Expose](https://github.com/beyondcode/expose)*
+- [wp-cli](https://github.com/wp-cli/wp-cli)*
+- [magerun](https://github.com/netz98/n98-magerun)*
+- [magerun2](https://github.com/netz98/n98-magerun2)*
+- [drush](https://github.com/drush-ops/drush-launcher)*
 
 ## Migrating from...?
 Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.

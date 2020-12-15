@@ -1,4 +1,5 @@
 import Drush from '../tools/drush'
+import Expose from '../tools/expose'
 import Magerun from '../tools/magerun'
 import Magerun2 from '../tools/magerun2'
 import Tool from '../tools/tool'
@@ -21,6 +22,9 @@ const getToolByName = (toolName: string): Tool => {
         break
     case (new Drush).alias || (new Drush).name:
         tool = new Drush()
+        break
+    case (new Expose).alias || (new Expose).name:
+        tool = new Expose()
         break
     default:
         throw Error('Invalid tool: ' + toolName)
