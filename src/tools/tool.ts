@@ -31,13 +31,13 @@ abstract class Tool {
 
         await client().packageManager.uninstall(this.alias, false)
 
-        console.log(`Installed ${this.name}`)
+        console.log(`Uninstalled ${this.name}`)
 
         return true
     }
 
     /**
-     * Check if the is already installed..
+     * Check if app the is already installed..
      */
     isInstalled = async (): Promise<boolean> => {
         return client().packageManager.packageIsInstalled(this.alias)

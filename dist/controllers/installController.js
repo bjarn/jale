@@ -68,7 +68,7 @@ class InstallController {
                 type: 'checkbox',
                 name: 'apps',
                 message: 'Tools and apps',
-                choices: ['wp-cli', 'magerun', 'magerun2', 'drush']
+                choices: ['wp-cli', 'magerun', 'magerun2', 'drush', 'expose']
             }
         ];
         /**
