@@ -23,9 +23,11 @@ class SitesController {
             }
             const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
             const hostname = `${domain}.${config.tld}`;
+            console_1.info(`Linking ${domain} to ${hostname}...`);
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSitesPath);
             this.createNginxConfig(appType, hostname);
             yield (new nginx_1.default()).reload();
+            console_1.success(`Successfully linked ${domain}. Access it from ${console_1.url(`http://${hostname}`)}.`);
         });
         /**
          * Create a Nginx template for the provided hostname with a specific template.

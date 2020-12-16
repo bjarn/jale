@@ -3,7 +3,7 @@ import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
 import nginxMagento2Template from '../templates/nginx/apps/magento2'
-import {error} from '../utils/console'
+import {error, info, success, url} from '../utils/console'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getConfig, jaleSitesPath} from '../utils/jale'
 
@@ -26,11 +26,15 @@ class SitesController {
         const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
         const hostname = `${domain}.${config.tld}`
 
+        info(`Linking ${domain} to ${hostname}...`)
+
         await ensureDirectoryExists(jaleSitesPath)
 
         this.createNginxConfig(appType, hostname)
 
         await (new Nginx()).reload()
+
+        success(`Successfully linked ${domain}. Access it from ${url(`http://${hostname}`)}.`)
     }
 
     /**
