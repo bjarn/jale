@@ -19,7 +19,6 @@ const body = {
 const log = (prefix: string, body: string): void => {
     let out = prefix
     out = out.concat(body)
-    out = out.concat('\n')
 
     console.log(out)
 }
