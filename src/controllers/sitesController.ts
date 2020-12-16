@@ -3,6 +3,7 @@ import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
 import nginxMagento2Template from '../templates/nginx/apps/magento2'
+import {error} from '../utils/console'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getConfig, jaleSitesPath} from '../utils/jale'
 
@@ -18,7 +19,7 @@ class SitesController {
             appType = type
 
         if (!this.appTypes.includes(appType)) {
-            console.log(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`)
+            error(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`)
             return
         }
 

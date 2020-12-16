@@ -1,6 +1,7 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {chmodSync, existsSync, unlinkSync} from 'fs'
+import {error, info, success, warning} from '../utils/console'
 import Tool from './tool'
 
 abstract class CustomTool extends Tool {
@@ -18,18 +19,18 @@ abstract class CustomTool extends Tool {
      */
     install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
-            console.log(`${this.name} already is installed. Execute it by running ${this.alias}`)
+            error(`${this.name} already is installed. Execute it by running ${this.alias}`)
             return false
         }
 
         const fileName = this.url.substring(this.url.lastIndexOf('/') + 1)
 
-        console.log(`Downloading binary for ${this.name}...`)
+        info(`Downloading binary for ${this.name}...`)
 
         await execa('curl', ['-OL', this.url], {cwd: '/tmp/'})
 
         if (!(await this.isValidShasum(`/tmp/${fileName}`))) {
-            console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`)
+            error(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`)
             await unlinkSync(`/tmp/${fileName}`)
             return false
         }
@@ -37,7 +38,7 @@ abstract class CustomTool extends Tool {
         await fs.copyFileSync(`/tmp/${fileName}`, `${this.binLocation}/${this.alias}`)
         await chmodSync(`${this.binLocation}/${this.alias}`, 0o777)
 
-        console.log(`Successfully installed ${this.name}`)
+        success(`Successfully installed ${this.name}.`)
 
         return true
     }
@@ -47,10 +48,11 @@ abstract class CustomTool extends Tool {
      */
     uninstall = async (): Promise<boolean> => {
         if (!(await this.isInstalled())) {
-            console.log(`${this.name} is not installed`)
+            error(`${this.name} is not installed`)
+            return false
         }
 
-        console.log(`Uninstalling ${this.name}...`)
+        info(`Uninstalling ${this.name}...`)
 
         try {
             await unlinkSync(`${this.binLocation}/${this.alias}`)
@@ -58,7 +60,7 @@ abstract class CustomTool extends Tool {
             throw new Error(`Unable to uninstall ${this.name}. Please remove the file manually to continue:\nrm${this.binLocation}/${this.alias}`)
         }
 
-        console.log(`Uninstalled ${this.name}`)
+        success(`Uninstalled ${this.name}.`)
 
         return true
     }

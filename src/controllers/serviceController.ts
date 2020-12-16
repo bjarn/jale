@@ -13,6 +13,7 @@ import PhpFpm74 from '../services/phpFpm74'
 import PhpFpm80 from '../services/phpFpm80'
 import Redis from '../services/redis'
 import Service from '../services/service'
+import {error, info, success, warning} from '../utils/console'
 import {getLinkedDatabase} from '../utils/database'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 
@@ -38,10 +39,10 @@ class ServiceController {
                 try {
                     await this.controlService(service, 'start')
                 } catch (e) {
-                    console.log(`Failed to start ${service.service}: ${e.message}`)
+                    error(`Failed to start ${service.service}: ${e.message}`)
                 }
             }
-            console.log('Successfully started all Jale services')
+            success('Successfully started all Jale services.')
             return true
         }
 
@@ -51,10 +52,10 @@ class ServiceController {
                     if (!(await this.controlService(service, 'start'))) {
                         continue
                     }
-                    console.log(`Successfully started ${serviceName}`)
+                    success(`Successfully started ${serviceName}.`)
                     return true
                 } catch (e) {
-                    console.log(`Failed to start ${service.service}: ${e.message}`)
+                    error(`Failed to start ${service.service}: ${e.message}`)
                     return false
                 }
             }
@@ -70,11 +71,11 @@ class ServiceController {
                 try {
                     await this.controlService(service, 'stop')
                 } catch (e) {
-                    console.log(`Failed to stop ${service.service}: ${e.message}`)
+                    error(`Failed to stop ${service.service}: ${e.message}`)
                 }
             }
 
-            console.log('Successfully stopped all Jale services')
+            success('Successfully stopped all Jale services.')
             return true
         }
 
@@ -84,16 +85,16 @@ class ServiceController {
                     if (!(await this.controlService(service, 'stop'))) {
                         continue
                     }
-                    console.log(`Successfully stopped ${serviceName}`)
+                    success(`Successfully stopped ${serviceName}`)
                     return true
                 } catch (e) {
-                    console.log(`Failed to stop ${service.service}: ${e.message}`)
+                    error(`Failed to stop ${service.service}: ${e.message}`)
                     return false
                 }
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}`)
+        error(`Invalid service: ${serviceName}`)
         return false
     }
 
@@ -103,10 +104,10 @@ class ServiceController {
                 try {
                     await this.controlService(service, 'restart')
                 } catch (e) {
-                    console.log(`Failed to restarted ${service.service}: ${e.message}`)
+                    error(`Failed to restarted ${service.service}: ${e.message}`)
                 }
             }
-            console.log('Successfully restarted all Jale services')
+            success('Successfully restarted all Jale services.')
             return true
         }
 
@@ -116,16 +117,16 @@ class ServiceController {
                     if (!(await this.controlService(service, 'restart'))) {
                         continue
                     }
-                    console.log(`Successfully restarted ${serviceName}`)
+                    success(`Successfully restarted ${serviceName}.`)
                     return true
                 } catch (e) {
-                    console.log(`Failed to restarted ${service.service}: ${e.message}`)
+                    error(`Failed to restarted ${service.service}: ${e.message}`)
                     return false
                 }
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}`)
+        error(`Invalid service: ${serviceName}`)
         return false
     }
 
@@ -151,15 +152,15 @@ class ServiceController {
 
         switch (action) {
         case 'start':
-            console.log(`Starting ${service.service}...`)
+            info(`Starting ${service.service}...`)
             await service.start()
             break
         case 'stop':
-            console.log(`Stopping ${service.service}...`)
+            info(`Stopping ${service.service}...`)
             await service.stop()
             break
         case 'restart':
-            console.log(`Retarting ${service.service}...`)
+            info(`Retarting ${service.service}...`)
             await service.restart()
             break
         }

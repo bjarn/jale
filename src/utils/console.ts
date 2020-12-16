@@ -3,11 +3,12 @@ import * as readline from 'readline'
 
 const prefix = {
     verbose: kleur.gray(kleur.bold('\n🛠  ')),
-    info: kleur.gray(kleur.bold('\nℹ️  ')),
+    info: kleur.gray(kleur.bold('\n✨  ')),
     success: kleur.gray(kleur.bold('\n✅ ')),
     warning: kleur.yellow(kleur.bold('\n⚠️  Warning: ')),
     error: kleur.red(kleur.bold('\n🚨 Error: ')),
 }
+
 const body = {
     default: kleur.white,
     verbose: kleur.gray,
@@ -43,7 +44,15 @@ const success = (message: string) => {
     log(prefix.success, body.default(message))
 }
 
-const clearConsole = (): void => {
+const url = (url: string) => {
+    console.log(kleur.bold(kleur.underline(url)))
+}
+
+const emptyLine = () => {
+    console.log('')
+}
+
+const clearConsole = () => {
     const blank = '\n'.repeat(process.stdout.rows)
     console.log(blank)
     readline.cursorTo(process.stdout, 0, 0)
@@ -56,5 +65,7 @@ export {
     success,
     warning,
     error,
+    url,
+    emptyLine,
     clearConsole
 }

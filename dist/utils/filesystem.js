@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensureDirectoryExists = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = require("fs");
+const console_1 = require("./console");
 /**
  * Ensure the given path exists, then return a string or false when failed.
  * @param path
@@ -15,7 +16,7 @@ function ensureDirectoryExists(path) {
                 return path;
             }
             catch (e) {
-                console.log(e.message);
+                console_1.error(e.message);
                 return false;
             }
         }

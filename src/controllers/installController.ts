@@ -7,7 +7,7 @@ import Dnsmasq from '../services/dnsmasq'
 import Mailhog from '../services/mailhog'
 import Nginx from '../services/nginx'
 import {fallbackIndex} from '../templates/fallbackServer'
-import {clearConsole} from '../utils/console'
+import {clearConsole, emptyLine, error} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getOptionalServiceByname} from '../utils/optionalService'
@@ -83,11 +83,11 @@ class InstallController {
         inquirer
             .prompt(this.questions)
             .then(answers => {
-                console.log('')
+                emptyLine()
                 this.install(answers)
             })
-            .catch(() => {
-                console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.')
+            .catch((err) => {
+                error(`Something went wrong during the installation: ${err.message}`)
             })
 
         return true

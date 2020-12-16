@@ -3,13 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = require("fs");
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
+const console_1 = require("../utils/console");
 const jale_1 = require("../utils/jale");
 class SubdomainController {
     constructor() {
         this.serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi');
         this.execute = (option, subdomain) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (option !== 'add' && option !== 'del') {
-                console.log('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.');
+                console_1.error('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.');
                 return;
             }
             const config = yield jale_1.getConfig();
@@ -48,7 +49,7 @@ class SubdomainController {
          */
         this.addSubdomain = (subdomain, hostname) => {
             if (this.subdomainExists(subdomain, hostname)) {
-                console.log(`Subdomain ${subdomain}.${hostname} already exists.`);
+                console_1.error(`Subdomain ${subdomain}.${hostname} already exists.`);
                 return false;
             }
             let vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
@@ -61,7 +62,7 @@ class SubdomainController {
             // Replace the old server names with the server names including the new subdomain.
             vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '));
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, vhostConfig);
-            console.log(`Added subdomain ${subdomain}.${hostname}`);
+            console_1.success(`Added subdomain ${console_1.url(`${subdomain}.${hostname}`)}.`);
             return true;
         };
         /**
@@ -72,7 +73,7 @@ class SubdomainController {
          */
         this.deleteSubdomain = (subdomain, hostname) => {
             if (!this.subdomainExists(subdomain, hostname)) {
-                console.log(`Subdomain ${subdomain}.${hostname} does not exist.`);
+                console_1.error(`Subdomain ${console_1.url(`${subdomain}.${hostname}`)} does not exist.`);
                 return false;
             }
             let vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, 'utf-8');
@@ -85,7 +86,7 @@ class SubdomainController {
             // Replace the old server names with the new list without the removed subdomain.
             vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '));
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${hostname}.conf`, vhostConfig);
-            console.log(`Removed subdomain ${subdomain}.${hostname}`);
+            console_1.success(`Removed subdomain ${subdomain}.${hostname}.`);
             return true;
         };
     }

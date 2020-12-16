@@ -81,11 +81,11 @@ class InstallController {
             inquirer_1.default
                 .prompt(this.questions)
                 .then(answers => {
-                console.log('');
+                console_1.emptyLine();
                 this.install(answers);
             })
-                .catch(() => {
-                console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.');
+                .catch((err) => {
+                console_1.error(`Something went wrong during the installation: ${err.message}`);
             });
             return true;
         });

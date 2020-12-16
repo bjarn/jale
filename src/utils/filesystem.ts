@@ -1,4 +1,5 @@
 import {existsSync, mkdirSync} from 'fs'
+import {error} from './console'
 
 /**
  * Ensure the given path exists, then return a string or false when failed.
@@ -10,7 +11,7 @@ async function ensureDirectoryExists(path: string): Promise<false | string> {
             await mkdirSync(path, {mode: 0o755})
             return path
         } catch (e) {
-            console.log(e.message)
+            error(e.message)
             return false
         }
     }

@@ -1,4 +1,5 @@
 import Xdebug from '../extensions/php/xdebug'
+import {error, info, warning} from '../utils/console'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 
 class XdebugController {
@@ -8,7 +9,7 @@ class XdebugController {
      */
     execute = async (status: string): Promise<boolean> => {
         if (status !== 'on' && status !== 'off') {
-            console.log('Invalid status. Please provide status \'on\' or \'off\'.')
+            error('Invalid status. Please provide status \'on\' or \'off\'.')
             return false
         }
 
@@ -33,13 +34,13 @@ class XdebugController {
 
     enable = async (xdebug: Xdebug): Promise<boolean> => {
         if (!(await xdebug.isInstalled())) {
-            console.log('Extension xdebug is not installed. Installing now...')
+            info('Extension xdebug is not installed. Installing now...')
             await xdebug.install()
         }
 
         // TODO: Enable auto start configuration for xdebug.
 
-        console.log('Enabling xdebug...')
+        info('Enabling xdebug...')
         await xdebug.enable()
 
         return true
@@ -47,12 +48,12 @@ class XdebugController {
 
     disable = async (xdebug: Xdebug): Promise<boolean> => {
         if (!(await xdebug.isInstalled())) {
-            console.log('Extension xdebug is not installed. We do not need to disable it then...')
+            warning('Extension xdebug is not installed. We do not need to disable it then...')
             return false
         }
 
         if (!(await xdebug.isEnabled())) {
-            console.log('Extension xdebug is not enabled.')
+            warning('Extension xdebug is not enabled.')
             return false
         }
 
