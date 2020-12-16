@@ -2,10 +2,10 @@ import kleur from 'kleur'
 import * as readline from 'readline'
 
 const prefix = {
-    verbose: kleur.gray(kleur.bold('\n🛠  ')),
-    info: kleur.gray(kleur.bold('\n✨  ')),
+    verbose: kleur.gray(kleur.bold('🛠  ')),
+    info: kleur.gray(kleur.bold('✨  ')),
     success: kleur.gray(kleur.bold('\n✅ ')),
-    warning: kleur.yellow(kleur.bold('\n⚠️  Warning: ')),
+    warning: kleur.yellow(kleur.bold('⚠️  Warning: ')),
     error: kleur.red(kleur.bold('\n🚨 Error: ')),
 }
 
@@ -16,7 +16,7 @@ const body = {
     error: kleur.red
 }
 
-const log = (prefix: string, body: string) => {
+const log = (prefix: string, body: string): void => {
     let out = prefix
     out = out.concat(body)
     out = out.concat('\n')
@@ -24,31 +24,31 @@ const log = (prefix: string, body: string) => {
     console.log(out)
 }
 
-const verbose = (message: string) => {
+const verbose = (message: string): void => {
     log(prefix.verbose, body.verbose(message))
 }
 
-const info = (message: string) => {
+const info = (message: string): void => {
     log(prefix.info, body.default(message))
 }
 
-const warning = (message: string) => {
+const warning = (message: string): void => {
     log(prefix.warning, body.warning(message))
 }
 
-const error = (message: string) => {
+const error = (message: string): void => {
     log(prefix.error, body.error(message))
 }
 
-const success = (message: string) => {
+const success = (message: string): void => {
     log(prefix.success, body.default(message))
 }
 
-const url = (url: string) => {
+const url = (url: string): void => {
     console.log(kleur.bold(kleur.underline(url)))
 }
 
-const emptyLine = () => {
+const emptyLine = (): void => {
     console.log('')
 }
 
