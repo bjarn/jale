@@ -9,6 +9,7 @@ const magento2_1 = tslib_1.__importDefault(require("../templates/nginx/apps/mage
 const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
+const secureController_1 = tslib_1.__importDefault(require("./secureController"));
 class SitesController {
     constructor() {
         this.appTypes = ['laravel', 'magento2', 'magento1'];
@@ -28,6 +29,22 @@ class SitesController {
             this.createNginxConfig(appType, hostname);
             yield (new nginx_1.default()).reload();
             console_1.success(`Successfully linked ${domain}. Access it from ${console_1.url(`http://${hostname}`)}.`);
+        });
+        this.executeUnlink = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const config = yield jale_1.getConfig();
+            const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
+            const hostname = `${domain}.${config.tld}`;
+            if (!fs_1.existsSync(`${jale_1.jaleSitesPath}/${hostname}.conf`)) {
+                console_1.error(`This project doesn't seem to be linked because the configuration file can't be found: ${jale_1.jaleSitesPath}/${hostname}.conf`);
+                return;
+            }
+            console_1.info(`Unlinking ${hostname}...`);
+            const secureController = new secureController_1.default;
+            if (fs_1.existsSync(secureController.crtPath))
+                yield secureController.executeUnsecure();
+            fs_1.unlinkSync(`${jale_1.jaleSitesPath}/${hostname}.conf`);
+            yield (new nginx_1.default()).reload();
+            console_1.success(`Successfully unlinked ${domain}.`);
         });
         /**
          * Create a Nginx template for the provided hostname with a specific template.
