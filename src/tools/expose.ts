@@ -1,4 +1,5 @@
 import execa from 'execa'
+import {error, info, success, warning} from '../utils/console'
 import Tool from './tool'
 
 class Expose extends Tool {
@@ -10,15 +11,15 @@ class Expose extends Tool {
      */
     install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
-            console.log(`${this.name} already is installed. Execute it by running ${this.alias}`)
+            warning(`${this.name} already is installed. Execute it by running ${this.alias}`)
             return false
         }
 
-        console.log(`Installing ${this.name} using Composer...`)
+        info(`Installing ${this.name} using Composer...`)
 
         await execa('composer', ['global', 'require', 'beyondcode/expose'])
 
-        console.log(`Successfully installed ${this.name}`)
+        success(`Successfully installed ${this.name}.`)
 
         return true
     }
@@ -29,14 +30,15 @@ class Expose extends Tool {
      */
     uninstall = async (): Promise<boolean> => {
         if (!(await this.isInstalled())) {
-            console.log(`${this.name} is not installed`)
+            error(`${this.name} is not installed.`)
+            return false
         }
 
-        console.log(`Uninstalling ${this.name} using Composer...`)
+        info(`Uninstalling ${this.name} using Composer...`)
 
         await execa('composer', ['global', 'remove', 'beyondcode/expose'])
 
-        console.log(`Successfully uninstalled ${this.name}`)
+        success(`Successfully uninstalled ${this.name}.`)
 
         return true
     }

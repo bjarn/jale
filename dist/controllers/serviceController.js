@@ -15,6 +15,7 @@ const phpFpm73_1 = tslib_1.__importDefault(require("../services/phpFpm73"));
 const phpFpm74_1 = tslib_1.__importDefault(require("../services/phpFpm74"));
 const phpFpm80_1 = tslib_1.__importDefault(require("../services/phpFpm80"));
 const redis_1 = tslib_1.__importDefault(require("../services/redis"));
+const console_1 = require("../utils/console");
 const database_1 = require("../utils/database");
 const phpFpm_2 = require("../utils/phpFpm");
 class ServiceController {
@@ -40,10 +41,10 @@ class ServiceController {
                         yield this.controlService(service, 'start');
                     }
                     catch (e) {
-                        console.log(`Failed to start ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to start ${service.service}: ${e.message}`);
                     }
                 }
-                console.log('Successfully started all Jale services');
+                console_1.success('Successfully started all Jale services.');
                 return true;
             }
             for (const service of this.allServices) {
@@ -52,11 +53,11 @@ class ServiceController {
                         if (!(yield this.controlService(service, 'start'))) {
                             continue;
                         }
-                        console.log(`Successfully started ${serviceName}`);
+                        console_1.success(`Successfully started ${serviceName}.`);
                         return true;
                     }
                     catch (e) {
-                        console.log(`Failed to start ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to start ${service.service}: ${e.message}`);
                         return false;
                     }
                 }
@@ -71,10 +72,10 @@ class ServiceController {
                         yield this.controlService(service, 'stop');
                     }
                     catch (e) {
-                        console.log(`Failed to stop ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to stop ${service.service}: ${e.message}`);
                     }
                 }
-                console.log('Successfully stopped all Jale services');
+                console_1.success('Successfully stopped all Jale services.');
                 return true;
             }
             for (const service of this.allServices) {
@@ -83,16 +84,16 @@ class ServiceController {
                         if (!(yield this.controlService(service, 'stop'))) {
                             continue;
                         }
-                        console.log(`Successfully stopped ${serviceName}`);
+                        console_1.success(`Successfully stopped ${serviceName}`);
                         return true;
                     }
                     catch (e) {
-                        console.log(`Failed to stop ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to stop ${service.service}: ${e.message}`);
                         return false;
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}`);
+            console_1.error(`Invalid service: ${serviceName}`);
             return false;
         });
         this.executeRestart = (serviceName) => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -102,10 +103,10 @@ class ServiceController {
                         yield this.controlService(service, 'restart');
                     }
                     catch (e) {
-                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to restarted ${service.service}: ${e.message}`);
                     }
                 }
-                console.log('Successfully restarted all Jale services');
+                console_1.success('Successfully restarted all Jale services.');
                 return true;
             }
             for (const service of this.allServices) {
@@ -114,16 +115,16 @@ class ServiceController {
                         if (!(yield this.controlService(service, 'restart'))) {
                             continue;
                         }
-                        console.log(`Successfully restarted ${serviceName}`);
+                        console_1.success(`Successfully restarted ${serviceName}.`);
                         return true;
                     }
                     catch (e) {
-                        console.log(`Failed to restarted ${service.service}: ${e.message}`);
+                        console_1.error(`Failed to restarted ${service.service}: ${e.message}`);
                         return false;
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}`);
+            console_1.error(`Invalid service: ${serviceName}`);
             return false;
         });
         /**
@@ -146,15 +147,15 @@ class ServiceController {
             }
             switch (action) {
                 case 'start':
-                    console.log(`Starting ${service.service}...`);
+                    console_1.info(`Starting ${service.service}...`);
                     yield service.start();
                     break;
                 case 'stop':
-                    console.log(`Stopping ${service.service}...`);
+                    console_1.info(`Stopping ${service.service}...`);
                     yield service.stop();
                     break;
                 case 'restart':
-                    console.log(`Retarting ${service.service}...`);
+                    console_1.info(`Retarting ${service.service}...`);
                     yield service.restart();
                     break;
             }

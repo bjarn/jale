@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs_1 = require("fs");
 const fs = tslib_1.__importStar(require("fs"));
+const console_1 = require("../utils/console");
 class PhpExtension {
     constructor() {
         // Extension settings
@@ -43,7 +44,7 @@ class PhpExtension {
          */
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.isInstalled()) {
-                console.log(`Extension ${this.extension} is already installed.`);
+                console_1.warning(`Extension ${this.extension} is already installed.`);
                 return false;
             }
             const { stdout } = yield execa_1.default('pecl', ['install', this.extension]);
@@ -58,7 +59,7 @@ class PhpExtension {
             const extensionRegex = new RegExp(`(zend_extension|extension)="(.*${this.alias}.so)"`, 'g').test(phpIni);
             if (!extensionRegex)
                 throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`);
-            console.log(`Extension ${this.extension} has been installed.`);
+            console_1.success(`Extension ${this.extension} has been installed.`);
             return true;
         });
         /**
@@ -72,7 +73,8 @@ class PhpExtension {
          */
         this.enable = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.isEnabled()) {
-                console.log(`Extension ${this.extension} is already enabled.`);
+                console_1.warning(`Extension ${this.extension} is already enabled.`);
+                return;
             }
             const phpIniPath = yield this.getPhpIni();
             let phpIni = yield fs.readFileSync(phpIniPath, 'utf-8');
@@ -80,7 +82,7 @@ class PhpExtension {
             phpIni = phpIni.replace(regex, '');
             phpIni = `${this.extensionType}="${this.alias}.so"\n${phpIni}`;
             yield fs.writeFileSync(phpIniPath, phpIni);
-            console.log(`Extension ${this.extension} has been enabled`);
+            console_1.success(`Extension ${this.extension} has been enabled.`);
         });
         /**
          * Disable the extension.
@@ -91,7 +93,7 @@ class PhpExtension {
             const regex = new RegExp(`;?(zend_extension|extension)=".*${this.alias}.so"\n`, 'g');
             phpIni = phpIni.replace(regex, '');
             yield fs.writeFileSync(phpIniPath, phpIni);
-            console.log(`Extension ${this.extension} has been disabled`);
+            console_1.success(`Extension ${this.extension} has been disabled.`);
             return true;
         });
     }

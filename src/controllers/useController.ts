@@ -1,3 +1,4 @@
+import {error, info, success, warning} from '../utils/console'
 import {client} from '../utils/os'
 import {getLinkedPhpVersion, getPhpFpmByName, supportedPhpVersions} from '../utils/phpFpm'
 
@@ -9,11 +10,11 @@ class UseController {
     execute = async (service: string, version: string): Promise<boolean> => {
         switch (service) {
         case 'php':
-            console.log(`Switching to PHP ${version}`)
+            info(`Switching to PHP ${version}...`)
             await this.switchPhpVersionTo(version)
             return true
         default:
-            console.log('Invalid service.')
+            error('Invalid service.')
             return false
         }
     }
@@ -30,7 +31,7 @@ class UseController {
         }
 
         if (currentPhpVersion.versionName === phpVersion) {
-            console.log(`PHP ${phpVersion} is already active.`)
+            warning(`PHP ${phpVersion} is already active.`)
             return
         }
 
@@ -45,9 +46,9 @@ class UseController {
         const isVersionInstalled = await client().packageManager.packageIsInstalled(newPhpVersion.service)
 
         if (!isVersionInstalled) {
-            console.log(`Installing PHP ${newPhpVersion.versionName}`)
+            info(`PHP ${newPhpVersion.versionName} not found, installing now...`)
             await client().packageManager.install(newPhpVersion.service, false)
-            console.log(`Configuring PHP ${newPhpVersion.versionName}`)
+            info(`Configuring PHP ${newPhpVersion.versionName}...`)
             await newPhpVersion.configure()
         }
 
@@ -60,7 +61,7 @@ class UseController {
         await currentPhpVersion.stop()
         await newPhpVersion.start()
 
-        console.log(`Successfully switched to PHP ${newPhpVersion.versionName}`)
+        success(`Successfully switched to PHP ${newPhpVersion.versionName}.`)
     }
 
 }

@@ -1,3 +1,4 @@
+import {error, info, success} from '../utils/console'
 import {client} from '../utils/os'
 
 abstract class Tool {
@@ -10,11 +11,11 @@ abstract class Tool {
      */
     install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
-            console.log(`${this.name} already is installed`)
+            error(`${this.name} already is installed.`)
             return false
         }
 
-        console.log(`Installing ${this.name}...`)
+        info(`Installing ${this.name}...`)
         await client().packageManager.install(this.alias, false)
         return true
     }
@@ -24,14 +25,15 @@ abstract class Tool {
      */
     uninstall = async (): Promise<boolean> => {
         if (!(await this.isInstalled())) {
-            console.log(`${this.name} is not installed`)
+            error(`${this.name} is not installed.`)
+            return false
         }
 
-        console.log(`Uninstalling ${this.name}...`)
+        info(`Uninstalling ${this.name}...`)
 
         await client().packageManager.uninstall(this.alias, false)
 
-        console.log(`Uninstalled ${this.name}`)
+        success(`Uninstalled ${this.name}.`)
 
         return true
     }

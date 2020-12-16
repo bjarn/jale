@@ -6,6 +6,7 @@ const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
 const laravel_1 = tslib_1.__importDefault(require("../templates/nginx/apps/laravel"));
 const magento1_1 = tslib_1.__importDefault(require("../templates/nginx/apps/magento1"));
 const magento2_1 = tslib_1.__importDefault(require("../templates/nginx/apps/magento2"));
+const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
 class SitesController {
@@ -17,14 +18,16 @@ class SitesController {
             if (type)
                 appType = type;
             if (!this.appTypes.includes(appType)) {
-                console.log(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`);
+                console_1.error(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`);
                 return;
             }
             const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
             const hostname = `${domain}.${config.tld}`;
+            console_1.info(`Linking ${domain} to ${hostname}...`);
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSitesPath);
             this.createNginxConfig(appType, hostname);
             yield (new nginx_1.default()).reload();
+            console_1.success(`Successfully linked ${domain}. Access it from ${console_1.url(`http://${hostname}`)}.`);
         });
         /**
          * Create a Nginx template for the provided hostname with a specific template.

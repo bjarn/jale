@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const console_1 = require("../utils/console");
 const os_1 = require("../utils/os");
 const phpFpm_1 = require("../utils/phpFpm");
 class UseController {
@@ -11,11 +12,11 @@ class UseController {
         this.execute = (service, version) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             switch (service) {
                 case 'php':
-                    console.log(`Switching to PHP ${version}`);
+                    console_1.info(`Switching to PHP ${version}...`);
                     yield this.switchPhpVersionTo(version);
                     return true;
                 default:
-                    console.log('Invalid service.');
+                    console_1.error('Invalid service.');
                     return false;
             }
         });
@@ -29,7 +30,7 @@ class UseController {
                 throw Error(`Invalid PHP version. Please pick one of the following version: ${phpFpm_1.supportedPhpVersions.join(', ')}`);
             }
             if (currentPhpVersion.versionName === phpVersion) {
-                console.log(`PHP ${phpVersion} is already active.`);
+                console_1.warning(`PHP ${phpVersion} is already active.`);
                 return;
             }
             const newPhpVersion = phpFpm_1.getPhpFpmByName(`php@${phpVersion}`);
@@ -40,9 +41,9 @@ class UseController {
             // Make sure the PHP version is installed.
             const isVersionInstalled = yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service);
             if (!isVersionInstalled) {
-                console.log(`Installing PHP ${newPhpVersion.versionName}`);
+                console_1.info(`PHP ${newPhpVersion.versionName} not found, installing now...`);
                 yield os_1.client().packageManager.install(newPhpVersion.service, false);
-                console.log(`Configuring PHP ${newPhpVersion.versionName}`);
+                console_1.info(`Configuring PHP ${newPhpVersion.versionName}...`);
                 yield newPhpVersion.configure();
             }
             yield currentPhpVersion.unLinkPhpVersion();
@@ -50,7 +51,7 @@ class UseController {
             yield newPhpVersion.linkPhpVersion();
             yield currentPhpVersion.stop();
             yield newPhpVersion.start();
-            console.log(`Successfully switched to PHP ${newPhpVersion.versionName}`);
+            console_1.success(`Successfully switched to PHP ${newPhpVersion.versionName}.`);
         });
     }
 }

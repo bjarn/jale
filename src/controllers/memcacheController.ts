@@ -1,5 +1,6 @@
 import Memcached from '../extensions/php/memcached'
 import Memcache from '../services/memcache'
+import {error, info, success, warning} from '../utils/console'
 import {client} from '../utils/os'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 
@@ -10,7 +11,7 @@ class MemcacheController {
      */
     execute = async (status: string): Promise<boolean> => {
         if (status !== 'on' && status !== 'off') {
-            console.log('Invalid status. Please provide status \'on\' or \'off\'.')
+            error('Invalid status. Please provide status \'on\' or \'off\'.')
             return false
         }
 
@@ -38,15 +39,15 @@ class MemcacheController {
         let restart = false
 
         if (await client().packageManager.packageIsInstalled(memcache.service)) {
-            console.log(`${memcache.service} is already installed.`)
+            warning(`${memcache.service} is already installed.`)
         } else {
             restart = true
-            console.log(`Installing ${memcache.service}...`)
+            info(`Installing ${memcache.service}...`)
             await memcache.install()
-            console.log(`${memcache.service} has been installed`)
+            success(`${memcache.service} has been installed.`)
         }
 
-        console.log('Install Memcached PHP extension...')
+        info('Install Memcached PHP extension...')
 
         // Memcache is ready, now install the PHP extension.
         const phpExtensionInstalled = await phpMemcached.install()
@@ -58,19 +59,19 @@ class MemcacheController {
         const phpExtensionDisabled = await phpMemcached.disable()
 
         if (phpExtensionDisabled) {
-            console.log('Disabled memcache\'s PHP extension')
+            success('Disabled memcache\'s PHP extension.')
         } else {
-            console.log('Memcache\'s PHP extension was not enabled.')
+            warning('Memcache\'s PHP extension was not enabled.')
         }
 
         if (!(await client().packageManager.packageIsInstalled(memcache.service))) {
-            console.log(`${memcache.service} was not installed.`)
+            warning(`${memcache.service} was not installed.`)
             return phpExtensionDisabled
         }
 
-        console.log(`Uninstalling ${memcache.service}...`)
+        info(`Uninstalling ${memcache.service}...`)
         await memcache.uninstall()
-        console.log(`${memcache.service} has been uninstalled`)
+        success(`${memcache.service} has been uninstalled.`)
 
         return true
     }

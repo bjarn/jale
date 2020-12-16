@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs = tslib_1.__importStar(require("fs"));
 const fs_1 = require("fs");
+const console_1 = require("../utils/console");
 const tool_1 = tslib_1.__importDefault(require("./tool"));
 class CustomTool extends tool_1.default {
     constructor() {
@@ -14,20 +15,20 @@ class CustomTool extends tool_1.default {
          */
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.isInstalled()) {
-                console.log(`${this.name} already is installed. Execute it by running ${this.alias}`);
+                console_1.error(`${this.name} already is installed. Execute it by running ${this.alias}`);
                 return false;
             }
             const fileName = this.url.substring(this.url.lastIndexOf('/') + 1);
-            console.log(`Downloading binary for ${this.name}...`);
+            console_1.info(`Downloading binary for ${this.name}...`);
             yield execa_1.default('curl', ['-OL', this.url], { cwd: '/tmp/' });
             if (!(yield this.isValidShasum(`/tmp/${fileName}`))) {
-                console.log(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`);
+                console_1.error(`Unable to install ${this.name}. The checksum ${this.shasum} is not equal to the one of the downloaded file.`);
                 yield fs_1.unlinkSync(`/tmp/${fileName}`);
                 return false;
             }
             yield fs.copyFileSync(`/tmp/${fileName}`, `${this.binLocation}/${this.alias}`);
             yield fs_1.chmodSync(`${this.binLocation}/${this.alias}`, 0o777);
-            console.log(`Successfully installed ${this.name}`);
+            console_1.success(`Successfully installed ${this.name}.`);
             return true;
         });
         /**
@@ -35,16 +36,17 @@ class CustomTool extends tool_1.default {
          */
         this.uninstall = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!(yield this.isInstalled())) {
-                console.log(`${this.name} is not installed`);
+                console_1.error(`${this.name} is not installed`);
+                return false;
             }
-            console.log(`Uninstalling ${this.name}...`);
+            console_1.info(`Uninstalling ${this.name}...`);
             try {
                 yield fs_1.unlinkSync(`${this.binLocation}/${this.alias}`);
             }
             catch (e) {
                 throw new Error(`Unable to uninstall ${this.name}. Please remove the file manually to continue:\nrm${this.binLocation}/${this.alias}`);
             }
-            console.log(`Uninstalled ${this.name}`);
+            console_1.success(`Uninstalled ${this.name}.`);
             return true;
         });
         /**
