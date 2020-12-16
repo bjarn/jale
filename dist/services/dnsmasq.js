@@ -18,8 +18,8 @@ class Dnsmasq extends service_1.default {
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
             yield this.appendCustomConfig;
-            yield this.setDomain(config.domain);
-            yield this.addDomainResolver(config.domain);
+            yield this.setDomain(config.tld);
+            yield this.addDomainResolver(config.tld);
             return true;
         });
         /**
@@ -29,21 +29,21 @@ class Dnsmasq extends service_1.default {
             return fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`);
         });
         /**
-         * Set our custom domain in our custom dnsmasq config file.
-         * @param domain
+         * Set our custom tld in our custom dnsmasq config file.
+         * @param tld
          */
-        this.setDomain = (domain) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return fs.appendFileSync(this.customConfigPath, `address=/.${domain}/127.0.0.1\n`);
+        this.setDomain = (tld) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            return fs.appendFileSync(this.customConfigPath, `address=/.${tld}/127.0.0.1\n`);
         });
         /**
          * Create the Resolver config to resolve our custom domain.
          * @param domain
          */
-        this.addDomainResolver = (domain) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+        this.addDomainResolver = (tld) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
             yield sudo_1.requireSudo();
             yield execa_1.default('sudo', ['mkdir', '-p', this.resolverPath], { shell: true, stdio: 'inherit' });
-            yield execa_1.default('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${domain}'`], {
+            yield execa_1.default('sudo', ['bash', '-c', `'echo "nameserver 127.0.0.1" > ${this.resolverPath}/${tld}'`], {
                 shell: true,
                 stdio: 'inherit'
             });

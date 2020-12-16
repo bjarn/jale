@@ -26,7 +26,7 @@ class Elasticsearch extends Service {
 
     configure = async (): Promise<boolean> => {
         const config = await getConfig()
-        await writeFileSync(this.nginxConfigPath, nginxElasticsearchConf(config.domain))
+        await writeFileSync(this.nginxConfigPath, nginxElasticsearchConf(config.tld))
         await (new Nginx).restart()
 
         return true

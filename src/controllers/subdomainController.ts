@@ -14,7 +14,7 @@ class SubdomainController {
 
         const config = await getConfig()
         const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${project}.${config.domain}`
+        const hostname = `${project}.${config.tld}`
 
         let restartNginx = false
 

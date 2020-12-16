@@ -22,7 +22,7 @@ class Mailhog extends Service {
      */
     addNginxConfiguration = async (): Promise<void> => {
         const config = await getConfig()
-        return fs.writeFileSync(this.nginxConfigPath, nginxMailhogConf(config.domain))
+        return fs.writeFileSync(this.nginxConfigPath, nginxMailhogConf(config.tld))
     }
 
 }

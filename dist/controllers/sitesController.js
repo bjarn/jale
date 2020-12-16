@@ -21,7 +21,7 @@ class SitesController {
                 return;
             }
             const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
-            const hostname = `${domain}.${config.domain}`;
+            const hostname = `${domain}.${config.tld}`;
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSitesPath);
             this.createNginxConfig(appType, hostname);
             yield (new nginx_1.default()).reload();
