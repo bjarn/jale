@@ -2,11 +2,24 @@ name-template: v$NEXT_PATCH_VERSION
 tag-template: $NEXT_PATCH_VERSION
 categories:
   - title: 🚀 Features
-    label: feature
+      labels:
+        - 'feature'
+        - 'enhancement'
   - title: 🐛 Bug Fixes
     label: bugfix
   - title: 🏗 Dependencies
     label: dependencies
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
 template: |
   ## What’s Changed
 

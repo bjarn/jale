@@ -7,7 +7,7 @@ import Dnsmasq from '../services/dnsmasq'
 import Mailhog from '../services/mailhog'
 import Nginx from '../services/nginx'
 import {fallbackIndex} from '../templates/fallbackServer'
-import {clearConsole} from '../utils/console'
+import {clearConsole, emptyLine, error} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getOptionalServiceByname} from '../utils/optionalService'
@@ -22,8 +22,8 @@ class InstallController {
     private readonly questions = [
         {
             type: 'input',
-            name: 'domain',
-            message: 'Enter a domain',
+            name: 'tld',
+            message: 'Enter a tld',
             default: 'test',
             validate: (input: string) => {
                 return input !== ''
@@ -67,7 +67,7 @@ class InstallController {
             type: 'checkbox',
             name: 'apps',
             message: 'Tools and apps',
-            choices: ['wp-cli', 'magerun', 'magerun2', 'drush']
+            choices: ['wp-cli', 'magerun', 'magerun2', 'drush', 'expose']
         }
     ]
 
@@ -83,11 +83,11 @@ class InstallController {
         inquirer
             .prompt(this.questions)
             .then(answers => {
-                console.log('')
+                emptyLine()
                 this.install(answers)
             })
-            .catch(() => {
-                console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.')
+            .catch((err) => {
+                error(`Something went wrong during the installation: ${err.message}`)
             })
 
         return true
@@ -142,7 +142,7 @@ class InstallController {
         title: 'Configure Jale',
         task: (): void => {
             const config = <Config>{
-                domain: answers.domain,
+                tld: answers.tld,
                 defaultTemplate: answers.template,
                 database: <Database>{password: 'root'},
                 services: null // TODO: Make services configurable.

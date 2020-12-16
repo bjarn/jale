@@ -22,7 +22,7 @@ class Mailhog extends service_1.default {
          */
         this.addNginxConfiguration = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
-            return fs.writeFileSync(this.nginxConfigPath, mailhog_1.default(config.domain));
+            return fs.writeFileSync(this.nginxConfigPath, mailhog_1.default(config.tld));
         });
     }
 }

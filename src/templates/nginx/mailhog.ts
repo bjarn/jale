@@ -1,6 +1,6 @@
-const nginxMailhogConf = (domain: string): string => `server {
+const nginxMailhogConf = (tld: string): string => `server {
     listen 80;
-    server_name mailhog.${domain} www.mailhog.${domain};
+    server_name mailhog.${tld} www.mailhog.${tld};
     charset utf-8;
     client_max_body_size 128M;
 

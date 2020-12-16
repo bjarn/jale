@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
+const console_1 = require("../utils/console");
 const apcu_1 = tslib_1.__importDefault(require("./php/apcu"));
 const geoip_1 = tslib_1.__importDefault(require("./php/geoip"));
 const memcached_1 = tslib_1.__importDefault(require("./php/memcached"));
@@ -35,7 +36,7 @@ Pecl.getExtensionDirectory = () => tslib_1.__awaiter(void 0, void 0, void 0, fun
  * @param optionals
  */
 Pecl.installExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    console.log('Installing PECL extensions');
+    console_1.info('Installing PECL extensions...');
     for (const extension of Pecl.PHP_EXTENSIONS) {
         const ext = new extension;
         if (!optionals && !ext.default)
@@ -50,7 +51,7 @@ Pecl.installExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0
  * @param optionals
  */
 Pecl.uninstallExtensions = (optionals = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    console.log('Uninstalling PECL extensions');
+    console_1.info('Uninstalling PECL extensions...');
     for (const extension of Pecl.PHP_EXTENSIONS) {
         const ext = new extension;
         if (!optionals && !ext.default)

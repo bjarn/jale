@@ -1,5 +1,6 @@
 import {readFileSync, writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
+import {error, success, url} from '../utils/console'
 import {getConfig, jaleSitesPath} from '../utils/jale'
 
 class SubdomainController {
@@ -8,13 +9,13 @@ class SubdomainController {
 
     execute = async (option: string, subdomain: string): Promise<void> => {
         if (option !== 'add' && option !== 'del') {
-            console.log('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.')
+            error('Invalid option. Please use \'add\' or \'del\', followed by the subdomain.')
             return
         }
 
         const config = await getConfig()
         const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${project}.${config.domain}`
+        const hostname = `${project}.${config.tld}`
 
         let restartNginx = false
 
@@ -52,7 +53,7 @@ class SubdomainController {
      */
     addSubdomain = (subdomain: string, hostname: string): boolean => {
         if (this.subdomainExists(subdomain, hostname)) {
-            console.log(`Subdomain ${subdomain}.${hostname} already exists.`)
+            error(`Subdomain ${subdomain}.${hostname} already exists.`)
             return false
         }
 
@@ -71,7 +72,7 @@ class SubdomainController {
 
         writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
 
-        console.log(`Added subdomain ${subdomain}.${hostname}`)
+        success(`Added subdomain ${url(`${subdomain}.${hostname}`)}.`)
 
         return true
     }
@@ -84,7 +85,7 @@ class SubdomainController {
      */
     deleteSubdomain = (subdomain: string, hostname: string): boolean => {
         if (!this.subdomainExists(subdomain, hostname)) {
-            console.log(`Subdomain ${subdomain}.${hostname} does not exist.`)
+            error(`Subdomain ${url(`${subdomain}.${hostname}`)} does not exist.`)
             return false
         }
 
@@ -104,7 +105,7 @@ class SubdomainController {
 
         writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
 
-        console.log(`Removed subdomain ${subdomain}.${hostname}`)
+        success(`Removed subdomain ${subdomain}.${hostname}.`)
 
         return true
     }

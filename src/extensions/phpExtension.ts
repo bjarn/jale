@@ -1,6 +1,7 @@
 import execa from 'execa'
 import {existsSync} from 'fs'
 import * as fs from 'fs'
+import {success, warning} from '../utils/console'
 
 abstract class PhpExtension {
     static NORMAL_EXTENSION_TYPE = 'extension'
@@ -56,7 +57,7 @@ abstract class PhpExtension {
      */
     install = async (): Promise<boolean> => {
         if (await this.isInstalled()) {
-            console.log(`Extension ${this.extension} is already installed.`)
+            warning(`Extension ${this.extension} is already installed.`)
             return false
         }
 
@@ -77,7 +78,7 @@ abstract class PhpExtension {
         if (!extensionRegex)
             throw new Error(`Unable to find definition in ${phpIniPath} for ${this.extension}`)
 
-        console.log(`Extension ${this.extension} has been installed.`)
+        success(`Extension ${this.extension} has been installed.`)
         return true
     }
 
@@ -93,7 +94,8 @@ abstract class PhpExtension {
      */
     enable = async (): Promise<void> => {
         if (await this.isEnabled()) {
-            console.log(`Extension ${this.extension} is already enabled.`)
+            warning(`Extension ${this.extension} is already enabled.`)
+            return
         }
 
         const phpIniPath = await this.getPhpIni()
@@ -104,7 +106,7 @@ abstract class PhpExtension {
 
         await fs.writeFileSync(phpIniPath, phpIni)
 
-        console.log(`Extension ${this.extension} has been enabled`)
+        success(`Extension ${this.extension} has been enabled.`)
     }
 
     /**
@@ -119,7 +121,7 @@ abstract class PhpExtension {
 
         await fs.writeFileSync(phpIniPath, phpIni)
 
-        console.log(`Extension ${this.extension} has been disabled`)
+        success(`Extension ${this.extension} has been disabled.`)
 
         return true
     }

@@ -26,7 +26,7 @@ class Elasticsearch extends service_1.default {
         });
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
-            yield fs_1.writeFileSync(this.nginxConfigPath, elasticsearch_1.default(config.domain));
+            yield fs_1.writeFileSync(this.nginxConfigPath, elasticsearch_1.default(config.tld));
             yield (new nginx_1.default).restart();
             return true;
         });

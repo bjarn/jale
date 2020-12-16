@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nginxMailhogConf = (domain) => `server {
+const nginxMailhogConf = (tld) => `server {
     listen 80;
-    server_name mailhog.${domain} www.mailhog.${domain};
+    server_name mailhog.${tld} www.mailhog.${tld};
     charset utf-8;
     client_max_body_size 128M;
 

@@ -1,1 +1,1 @@
-{"version":3,"file":"mailhog.js","sourceRoot":"","sources":["../../../src/templates/nginx/mailhog.ts"],"names":[],"mappings":";;AAAA,MAAM,gBAAgB,GAAG,CAAC,MAAc,EAAU,EAAE,CAAC;;0BAE3B,MAAM,gBAAgB,MAAM;;;;;;;;;;;;;;;CAerD,CAAA;AAED,kBAAe,gBAAgB,CAAA"}
+{"version":3,"file":"mailhog.js","sourceRoot":"","sources":["../../../src/templates/nginx/mailhog.ts"],"names":[],"mappings":";;AAAA,MAAM,gBAAgB,GAAG,CAAC,GAAW,EAAU,EAAE,CAAC;;0BAExB,GAAG,gBAAgB,GAAG;;;;;;;;;;;;;;;CAe/C,CAAA;AAED,kBAAe,gBAAgB,CAAA"}

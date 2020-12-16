@@ -5,26 +5,27 @@ const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs_1 = require("fs");
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
 const openssl_1 = tslib_1.__importDefault(require("../templates/openssl"));
+const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
 class SecureController {
     constructor() {
         this.executeSecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            console.log(`Securing ${this.hostname}...`);
+            console_1.info(`Securing ${this.hostname}...`);
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSslPath);
             yield this.unsecure();
             yield this.createSslCertificate();
             this.secureNginxConfig();
             yield (new nginx_1.default()).restart();
-            console.log(`${this.hostname} has been secured and is now reachable via https://${this.hostname}`);
+            console_1.success(`${this.hostname} has been secured and is now reachable via ${console_1.url(`https://${this.hostname}`)}.`);
         });
         this.executeUnsecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (yield this.unsecure()) {
-                console.log(`${this.hostname} has been unsecured and is no longer reachable over https`);
+                console_1.success(`${this.hostname} has been unsecured and is no longer reachable over https.`);
                 yield (new nginx_1.default()).restart();
             }
             else {
-                console.log(`The site ${this.hostname} is not secured.`);
+                console_1.warning(`The site ${this.hostname} is not secured.`);
                 return;
             }
         });
@@ -98,7 +99,7 @@ class SecureController {
         };
         this.config = jale_1.getConfig();
         this.project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
-        this.hostname = `${this.project}.${this.config.domain}`;
+        this.hostname = `${this.project}.${this.config.tld}`;
         this.keyPath = `${jale_1.jaleSslPath}/${this.hostname}.key`;
         this.csrPath = `${jale_1.jaleSslPath}/${this.hostname}.csr`;
         this.crtPath = `${jale_1.jaleSslPath}/${this.hostname}.crt`;

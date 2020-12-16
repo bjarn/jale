@@ -23,8 +23,8 @@ class InstallController {
         this.questions = [
             {
                 type: 'input',
-                name: 'domain',
-                message: 'Enter a domain',
+                name: 'tld',
+                message: 'Enter a tld',
                 default: 'test',
                 validate: (input) => {
                     return input !== '';
@@ -68,7 +68,7 @@ class InstallController {
                 type: 'checkbox',
                 name: 'apps',
                 message: 'Tools and apps',
-                choices: ['wp-cli', 'magerun', 'magerun2', 'drush']
+                choices: ['wp-cli', 'magerun', 'magerun2', 'drush', 'expose']
             }
         ];
         /**
@@ -81,11 +81,11 @@ class InstallController {
             inquirer_1.default
                 .prompt(this.questions)
                 .then(answers => {
-                console.log('');
+                console_1.emptyLine();
                 this.install(answers);
             })
-                .catch(() => {
-                console.log('Something went wrong. However, this version is just a proof of concept and the error handling sucks. Sorry, again.');
+                .catch((err) => {
+                console_1.error(`Something went wrong during the installation: ${err.message}`);
             });
             return true;
         });
@@ -99,7 +99,7 @@ class InstallController {
             title: 'Configure Jale',
             task: () => {
                 const config = {
-                    domain: answers.domain,
+                    tld: answers.tld,
                     defaultTemplate: answers.template,
                     database: { password: 'root' },
                     services: null // TODO: Make services configurable.

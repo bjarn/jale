@@ -1,10 +1,12 @@
-import {writeFileSync} from 'fs'
+import {existsSync, unlinkSync, writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
 import nginxMagento2Template from '../templates/nginx/apps/magento2'
+import {error, info, success, url} from '../utils/console'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getConfig, jaleSitesPath} from '../utils/jale'
+import SecureController from './secureController'
 
 class SitesController {
 
@@ -18,18 +20,47 @@ class SitesController {
             appType = type
 
         if (!this.appTypes.includes(appType)) {
-            console.log(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`)
+            error(`Invalid app type ${appType}. Please select one of: ${this.appTypes.join(', ')}`)
             return
         }
 
         const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${domain}.${config.domain}`
+        const hostname = `${domain}.${config.tld}`
+
+        info(`Linking ${domain} to ${hostname}...`)
 
         await ensureDirectoryExists(jaleSitesPath)
 
         this.createNginxConfig(appType, hostname)
 
         await (new Nginx()).reload()
+
+        success(`Successfully linked ${domain}. Access it from ${url(`http://${hostname}`)}.`)
+    }
+
+    executeUnlink = async (): Promise<void> => {
+        const config = await getConfig()
+
+        const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
+        const hostname = `${domain}.${config.tld}`
+
+        if (!existsSync(`${jaleSitesPath}/${hostname}.conf`)) {
+            error(`This project doesn't seem to be linked because the configuration file can't be found: ${jaleSitesPath}/${hostname}.conf`)
+            return
+        }
+
+        info(`Unlinking ${hostname}...`)
+
+        const secureController = new SecureController
+
+        if (existsSync(secureController.crtPath))
+            await secureController.executeUnsecure()
+
+        unlinkSync(`${jaleSitesPath}/${hostname}.conf`)
+
+        await (new Nginx()).reload()
+
+        success(`Successfully unlinked ${domain}.`)
     }
 
     /**
