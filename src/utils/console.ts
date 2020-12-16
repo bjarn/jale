@@ -1,4 +1,47 @@
+import kleur from 'kleur'
 import * as readline from 'readline'
+
+const prefix = {
+    verbose: kleur.gray(kleur.bold('\n🛠  ')),
+    info: kleur.gray(kleur.bold('\nℹ️  ')),
+    success: kleur.gray(kleur.bold('\n✅ ')),
+    warning: kleur.yellow(kleur.bold('\n⚠️  Warning: ')),
+    error: kleur.red(kleur.bold('\n🚨 Error: ')),
+}
+const body = {
+    default: kleur.white,
+    verbose: kleur.gray,
+    warning: kleur.yellow,
+    error: kleur.red
+}
+
+const log = (prefix: string, body: string) => {
+    let out = prefix
+    out = out.concat(body)
+    out = out.concat('\n')
+
+    console.log(out)
+}
+
+const verbose = (message: string) => {
+    log(prefix.verbose, body.verbose(message))
+}
+
+const info = (message: string) => {
+    log(prefix.info, body.default(message))
+}
+
+const warning = (message: string) => {
+    log(prefix.warning, body.warning(message))
+}
+
+const error = (message: string) => {
+    log(prefix.error, body.error(message))
+}
+
+const success = (message: string) => {
+    log(prefix.success, body.default(message))
+}
 
 const clearConsole = (): void => {
     const blank = '\n'.repeat(process.stdout.rows)
@@ -8,5 +51,10 @@ const clearConsole = (): void => {
 }
 
 export {
+    verbose,
+    info,
+    success,
+    warning,
+    error,
     clearConsole
 }
