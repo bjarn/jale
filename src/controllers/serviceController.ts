@@ -13,7 +13,7 @@ import PhpFpm74 from '../services/phpFpm74'
 import PhpFpm80 from '../services/phpFpm80'
 import Redis from '../services/redis'
 import Service from '../services/service'
-import {error, info, success, warning} from '../utils/console'
+import {error, info, success} from '../utils/console'
 import {getLinkedDatabase} from '../utils/database'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 

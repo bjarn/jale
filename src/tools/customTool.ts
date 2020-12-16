@@ -1,7 +1,7 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {chmodSync, existsSync, unlinkSync} from 'fs'
-import {error, info, success, warning} from '../utils/console'
+import {error, info, success} from '../utils/console'
 import Tool from './tool'
 
 abstract class CustomTool extends Tool {
