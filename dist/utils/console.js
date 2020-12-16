@@ -43,7 +43,7 @@ const success = (message) => {
 };
 exports.success = success;
 const url = (url) => {
-    console.log(kleur_1.default.bold(kleur_1.default.underline(url)));
+    return kleur_1.default.bold(kleur_1.default.underline(url));
 };
 exports.url = url;
 const emptyLine = () => {

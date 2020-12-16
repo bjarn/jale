@@ -43,8 +43,8 @@ const success = (message: string): void => {
     log(prefix.success, body.default(message))
 }
 
-const url = (url: string): void => {
-    console.log(kleur.bold(kleur.underline(url)))
+const url = (url: string): string => {
+    return kleur.bold(kleur.underline(url))
 }
 
 const emptyLine = (): void => {
