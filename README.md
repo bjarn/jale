@@ -38,4 +38,4 @@ The following development tools are included.
 - [drush](https://github.com/drush-ops/drush-launcher)*
 
 ## Migrating from...?
-Are you migrating from Valet or Valet+? Hold on! We'll have a migration guide ready for you soon.
+Are you migrating from Valet or Valet+? Check out the following [wiki](https://github.com/bjarn/jale/wiki/Migrate).
