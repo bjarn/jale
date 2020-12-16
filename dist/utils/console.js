@@ -20,7 +20,6 @@ const body = {
 const log = (prefix, body) => {
     let out = prefix;
     out = out.concat(body);
-    out = out.concat('\n');
     console.log(out);
 };
 const verbose = (message) => {
