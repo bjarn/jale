@@ -1,6 +1,6 @@
-const nginxElasticsearchConf = (domain: string): string => `server {
+const nginxElasticsearchConf = (tld: string): string => `server {
     listen 80;
-    server_name elasticsearch.${domain} www.elasticsearch.${domain};
+    server_name elasticsearch.${tld} www.elasticsearch.${tld};
     charset utf-8;
     client_max_body_size 128M;
 

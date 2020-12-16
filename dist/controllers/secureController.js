@@ -98,7 +98,7 @@ class SecureController {
         };
         this.config = jale_1.getConfig();
         this.project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
-        this.hostname = `${this.project}.${this.config.domain}`;
+        this.hostname = `${this.project}.${this.config.tld}`;
         this.keyPath = `${jale_1.jaleSslPath}/${this.hostname}.key`;
         this.csrPath = `${jale_1.jaleSslPath}/${this.hostname}.csr`;
         this.crtPath = `${jale_1.jaleSslPath}/${this.hostname}.crt`;

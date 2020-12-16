@@ -14,7 +14,7 @@ class SubdomainController {
             }
             const config = yield jale_1.getConfig();
             const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
-            const hostname = `${project}.${config.domain}`;
+            const hostname = `${project}.${config.tld}`;
             let restartNginx = false;
             if (option === 'add') {
                 restartNginx = this.addSubdomain(subdomain, hostname);

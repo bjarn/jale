@@ -23,7 +23,7 @@ class SitesController {
         }
 
         const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${domain}.${config.domain}`
+        const hostname = `${domain}.${config.tld}`
 
         await ensureDirectoryExists(jaleSitesPath)
 

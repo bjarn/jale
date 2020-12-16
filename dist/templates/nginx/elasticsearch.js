@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nginxElasticsearchConf = (domain) => `server {
+const nginxElasticsearchConf = (tld) => `server {
     listen 80;
-    server_name elasticsearch.${domain} www.elasticsearch.${domain};
+    server_name elasticsearch.${tld} www.elasticsearch.${tld};
     charset utf-8;
     client_max_body_size 128M;
 

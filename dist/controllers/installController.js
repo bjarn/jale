@@ -23,8 +23,8 @@ class InstallController {
         this.questions = [
             {
                 type: 'input',
-                name: 'domain',
-                message: 'Enter a domain',
+                name: 'tld',
+                message: 'Enter a tld',
                 default: 'test',
                 validate: (input) => {
                     return input !== '';
@@ -99,7 +99,7 @@ class InstallController {
             title: 'Configure Jale',
             task: () => {
                 const config = {
-                    domain: answers.domain,
+                    tld: answers.tld,
                     defaultTemplate: answers.template,
                     database: { password: 'root' },
                     services: null // TODO: Make services configurable.
