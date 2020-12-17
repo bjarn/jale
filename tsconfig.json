@@ -30,7 +30,7 @@
   ],
   "exclude": [
     "node_modules",
-    "tests",
+    "__tests__",
     "dist"
   ]
 }

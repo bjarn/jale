@@ -59,6 +59,7 @@ const clearConsole = (): void => {
 }
 
 export {
+    log,
     verbose,
     info,
     success,
