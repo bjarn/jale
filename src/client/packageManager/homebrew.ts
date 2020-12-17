@@ -7,7 +7,7 @@ class Homebrew extends PackageManager {
     path = '/usr/local/bin/brew'
 
     /**
-     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     * Install a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
      *
      * @param pkg
      * @param cask
