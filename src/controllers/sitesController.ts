@@ -15,17 +15,16 @@ class SitesController {
     listLinks = async (): Promise<void> => {
         const config = await getConfig()
         await ensureDirectoryExists(jaleSitesPath)
-
         const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace(`.${config.tld}.conf`, ''))
 
         if (sites.length) {
-            info(`Currently there are ${sites.length} active Nginx vhost configurations\n`)
+            info(`Currently there are ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`)
 
             for (const site of sites) {
                 info(`    - ${site}`)
             }
         } else {
-            info('Currently there are no active Nginx vhost configurations')
+            info(`Currently there are no active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}`)
         }
     }
 
