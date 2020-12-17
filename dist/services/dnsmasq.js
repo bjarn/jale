@@ -28,7 +28,7 @@ class Dnsmasq extends service_1.default {
         this.appendCustomConfig = () => {
             const config = fs.readFileSync(this.configPath, 'utf-8');
             if (!config.includes(this.customConfigPath))
-                fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`);
+                fs.appendFileSync(this.configPath, `\nconf-file=${this.customConfigPath}\n`);
         };
         /**
          * Set our custom tld in our custom dnsmasq config file.

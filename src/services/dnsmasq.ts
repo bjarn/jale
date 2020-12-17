@@ -32,7 +32,7 @@ class Dnsmasq extends Service {
         const config = fs.readFileSync(this.configPath, 'utf-8')
 
         if (!config.includes(this.customConfigPath))
-            fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`)
+            fs.appendFileSync(this.configPath, `\nconf-file=${this.customConfigPath}\n`)
     }
 
     /**
