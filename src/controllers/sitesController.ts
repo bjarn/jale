@@ -1,4 +1,4 @@
-import {existsSync, unlinkSync, writeFileSync} from 'fs'
+import {existsSync, readdirSync, unlinkSync, writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
@@ -11,6 +11,23 @@ import SecureController from './secureController'
 class SitesController {
 
     appTypes = ['laravel', 'magento2', 'magento1']
+
+    listLinks = async (): Promise<void> => {
+        const config = await getConfig()
+        await ensureDirectoryExists(jaleSitesPath)
+
+        const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace(`.${config.tld}.conf`, ''))
+
+        if (sites.length) {
+            info(`Currently there are ${sites.length} active Nginx vhost configurations\n`)
+
+            for (const site of sites) {
+                info(`    - ${site}`)
+            }
+        } else {
+            info('Currently there are no active Nginx vhost configurations')
+        }
+    }
 
     executeLink = async (type: string | undefined): Promise<void> => {
         const config = await getConfig()
