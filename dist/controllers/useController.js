@@ -35,8 +35,7 @@ class UseController {
             }
             const newPhpVersion = phpFpm_1.getPhpFpmByName(`php@${phpVersion}`);
             if (newPhpVersion.isEndOfLife) {
-                console.warn('This PHP version is End Of Life. Be aware it might contain security flaws.');
-                console.warn('Please check http://php.net/supported-versions.php for more information.');
+                console_1.warning('This PHP version is End Of Life. Be aware it might contain security flaws.\n   Please check http://php.net/supported-versions.php for more information.');
             }
             // Make sure the PHP version is installed.
             const isVersionInstalled = yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service);
