@@ -8,7 +8,7 @@ const filesystem_1 = require("./filesystem");
 /**
  * Get the location of the home directory of Jale.
  */
-const jaleHomeDir = `${os_1.homedir()}/.jale`;
+const jaleHomeDir = `${os_1.homedir()}/.config/jale`;
 exports.jaleHomeDir = jaleHomeDir;
 /**
  * Get the location of the Jale configuration.
