@@ -155,7 +155,7 @@ class ServiceController {
                     yield service.stop();
                     break;
                 case 'restart':
-                    console_1.info(`Retarting ${service.service}...`);
+                    console_1.info(`Restarting ${service.service}...`);
                     yield service.restart();
                     break;
             }
