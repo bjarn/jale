@@ -160,7 +160,7 @@ class ServiceController {
             await service.stop()
             break
         case 'restart':
-            info(`Retarting ${service.service}...`)
+            info(`Restarting ${service.service}...`)
             await service.restart()
             break
         }

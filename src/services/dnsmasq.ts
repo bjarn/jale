@@ -18,8 +18,8 @@ class Dnsmasq extends Service {
     configure = async (): Promise<boolean> => {
         const config: Config = await getConfig()
 
-        await this.appendCustomConfig
-        await this.setDomain(config.tld)
+        this.appendCustomConfig()
+        this.setDomain(config.tld)
         await this.addDomainResolver(config.tld)
 
         return true
@@ -28,21 +28,24 @@ class Dnsmasq extends Service {
     /**
      * Append our custom configuration file to the dnsmasq.conf.
      */
-    appendCustomConfig = async (): Promise<void> => {
-        return fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`)
+    appendCustomConfig = (): void => {
+        const config = fs.readFileSync(this.configPath, 'utf-8')
+
+        if (!config.includes(this.customConfigPath))
+            fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`)
     }
 
     /**
      * Set our custom tld in our custom dnsmasq config file.
      * @param tld
      */
-    setDomain = async (tld: string): Promise<void> => {
-        return fs.appendFileSync(this.customConfigPath, `address=/.${tld}/127.0.0.1\n`)
+    setDomain = (tld: string): void => {
+        return fs.writeFileSync(this.customConfigPath, `address=/.${tld}/127.0.0.1\n`)
     }
 
     /**
      * Create the Resolver config to resolve our custom domain.
-     * @param domain
+     * @param tld
      */
     addDomainResolver = async (tld: string): Promise<boolean> => {
         // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
