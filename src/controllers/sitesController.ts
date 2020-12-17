@@ -15,7 +15,7 @@ class SitesController {
     listLinks = async (): Promise<void> => {
         const config = await getConfig()
         await ensureDirectoryExists(jaleSitesPath)
-        const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace(`.${config.tld}.conf`, ''))
+        const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace('.conf', ''))
 
         if (sites.length) {
             info(`Currently there are ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`)
