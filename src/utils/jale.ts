@@ -6,7 +6,7 @@ import {ensureDirectoryExists} from './filesystem'
 /**
  * Get the location of the home directory of Jale.
  */
-const jaleHomeDir = `${homedir()}/.config/jale`
+const jaleHomeDir = `${homedir()}/.jale`
 
 /**
  * Get the location of the Jale configuration.
