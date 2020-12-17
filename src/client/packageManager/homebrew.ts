@@ -19,7 +19,7 @@ class Homebrew extends PackageManager {
             args = ['cask', 'install', pkg]
         }
 
-        const {stdout} = await execa('brew', args)
+        const {stdout} = await execa('brew', args, {shell: true})
 
         return stdout.includes(pkg)
     }
@@ -37,7 +37,7 @@ class Homebrew extends PackageManager {
             args = ['cask', 'remove', pkg]
         }
 
-        const {stdout} = await execa('brew', args)
+        const {stdout} = await execa('brew', args, {shell: true})
 
         return stdout.includes(pkg)
     }
@@ -48,7 +48,7 @@ class Homebrew extends PackageManager {
      * @param pkg
      */
     async packageIsInstalled(pkg: string): Promise<boolean> {
-        const {stdout} = await execa('brew', ['list', '--formula'])
+        const {stdout} = await execa('brew', ['list', '--formula'], {shell: true})
 
         return stdout.includes(pkg)
     }
