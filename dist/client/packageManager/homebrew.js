@@ -11,7 +11,7 @@ class Homebrew extends packageManager_1.default {
         this.path = '/usr/local/bin/brew';
     }
     /**
-     * Uninstall a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
+     * Install a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.
      *
      * @param pkg
      * @param cask
@@ -22,7 +22,7 @@ class Homebrew extends packageManager_1.default {
             if (cask) {
                 args = ['cask', 'install', pkg];
             }
-            const { stdout } = yield execa_1.default('brew', args);
+            const { stdout } = yield execa_1.default('brew', args, { shell: true });
             return stdout.includes(pkg);
         });
     }
@@ -38,7 +38,7 @@ class Homebrew extends packageManager_1.default {
             if (cask) {
                 args = ['cask', 'remove', pkg];
             }
-            const { stdout } = yield execa_1.default('brew', args);
+            const { stdout } = yield execa_1.default('brew', args, { shell: true });
             return stdout.includes(pkg);
         });
     }
@@ -49,7 +49,7 @@ class Homebrew extends packageManager_1.default {
      */
     packageIsInstalled(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { stdout } = yield execa_1.default('brew', ['list', '--formula']);
+            const { stdout } = yield execa_1.default('brew', ['list', '--formula'], { shell: true });
             return stdout.includes(pkg);
         });
     }

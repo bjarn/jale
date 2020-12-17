@@ -62,7 +62,7 @@ class ServiceController {
                     }
                 }
             }
-            console.warn(`Invalid service: ${serviceName}`);
+            console_1.warning(`Invalid service: ${serviceName}`);
             return false;
         });
         this.executeStop = (serviceName) => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -155,7 +155,7 @@ class ServiceController {
                     yield service.stop();
                     break;
                 case 'restart':
-                    console_1.info(`Retarting ${service.service}...`);
+                    console_1.info(`Restarting ${service.service}...`);
                     yield service.restart();
                     break;
             }

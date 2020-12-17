@@ -13,7 +13,7 @@ import PhpFpm74 from '../services/phpFpm74'
 import PhpFpm80 from '../services/phpFpm80'
 import Redis from '../services/redis'
 import Service from '../services/service'
-import {error, info, success} from '../utils/console'
+import {error, info, success, warning} from '../utils/console'
 import {getLinkedDatabase} from '../utils/database'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 
@@ -61,7 +61,7 @@ class ServiceController {
             }
         }
 
-        console.warn(`Invalid service: ${serviceName}`)
+        warning(`Invalid service: ${serviceName}`)
         return false
     }
 
@@ -160,7 +160,7 @@ class ServiceController {
             await service.stop()
             break
         case 'restart':
-            info(`Retarting ${service.service}...`)
+            info(`Restarting ${service.service}...`)
             await service.restart()
             break
         }

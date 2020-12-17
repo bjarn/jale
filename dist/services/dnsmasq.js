@@ -17,27 +17,29 @@ class Dnsmasq extends service_1.default {
         this.customConfigPath = `${jale_1.jaleHomeDir}/dnsmasq.conf`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
-            yield this.appendCustomConfig;
-            yield this.setDomain(config.tld);
+            this.appendCustomConfig();
+            this.setDomain(config.tld);
             yield this.addDomainResolver(config.tld);
             return true;
         });
         /**
          * Append our custom configuration file to the dnsmasq.conf.
          */
-        this.appendCustomConfig = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return fs.appendFileSync(this.configPath, `\nconfig-file=${this.customConfigPath}\n`);
-        });
+        this.appendCustomConfig = () => {
+            const config = fs.readFileSync(this.configPath, 'utf-8');
+            if (!config.includes(this.customConfigPath))
+                fs.appendFileSync(this.configPath, `\nconf-file=${this.customConfigPath}\n`);
+        };
         /**
          * Set our custom tld in our custom dnsmasq config file.
          * @param tld
          */
-        this.setDomain = (tld) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return fs.appendFileSync(this.customConfigPath, `address=/.${tld}/127.0.0.1\n`);
-        });
+        this.setDomain = (tld) => {
+            return fs.writeFileSync(this.customConfigPath, `address=/.${tld}/127.0.0.1\n`);
+        };
         /**
          * Create the Resolver config to resolve our custom domain.
-         * @param domain
+         * @param tld
          */
         this.addDomainResolver = (tld) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             // TODO: Should improve this part, we're executing plain commands in order to bypass issues with root permissions.
