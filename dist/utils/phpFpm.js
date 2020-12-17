@@ -26,7 +26,7 @@ const getPhpFpmByName = (phpVersion) => {
         case (new phpFpm74_1.default).service:
             phpService = new phpFpm74_1.default();
             break;
-        case (new phpFpm80_1.default).service:
+        case `${(new phpFpm80_1.default).service}@8.0`: // TODO: When PHP 8.1 is out, remove the hardcoded version.
             phpService = new phpFpm80_1.default();
             break;
         default:
