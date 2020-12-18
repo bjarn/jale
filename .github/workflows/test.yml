@@ -1,4 +1,4 @@
-name: Run ESLint
+name: Run Jest
 
 on: [ push,pull_request ]
 
