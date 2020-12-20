@@ -18,13 +18,13 @@ class SitesController {
         const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace('.conf', ''))
 
         if (sites.length) {
-            info(`Currently there are ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`)
+            info(`Currently there ${sites.length > 1 ? 'are' : 'is'} ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`)
 
             for (const site of sites) {
                 info(`    - ${site}`)
             }
         } else {
-            info(`Currently there are no active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}`)
+            info(`Currently there ${sites.length > 1 ? 'are' : 'is'} no active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}`)
         }
     }
 
