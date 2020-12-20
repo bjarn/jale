@@ -53,6 +53,10 @@ class SecureController {
         }
     }
 
+    isSecure = (): boolean => {
+        return existsSync(this.configPath)
+    }
+
     /**
      * Unsecure the current hostname.
      */
