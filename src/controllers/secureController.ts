@@ -18,9 +18,9 @@ class SecureController {
     crtPath: string
     configPath: string
 
-    constructor() {
+    constructor(project?: string) {
         this.config = getConfig()
-        this.project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
+        this.project = project || process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
         this.hostname = `${this.project}.${this.config.tld}`
 
         this.keyPath = `${jaleSslPath}/${this.hostname}.key`
