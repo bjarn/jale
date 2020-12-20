@@ -31,6 +31,7 @@
   "license": "GPL-3.0",
   "preferGlobal": true,
   "devDependencies": {
+    "@types/cli-table": "^0.3.0",
     "@types/commander": "^2.12.2",
     "@types/inquirer": "^7.3.1",
     "@types/node": "^14.14.10",
@@ -41,6 +42,7 @@
     "typescript": "^4.1.2"
   },
   "dependencies": {
+    "cli-table": "^0.3.4",
     "commander": "^6.2.0",
     "execa": "^5.0.0",
     "inquirer": "^7.3.3",
