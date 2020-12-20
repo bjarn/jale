@@ -9,7 +9,7 @@ const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
 class SecureController {
-    constructor() {
+    constructor(project) {
         this.executeSecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             console_1.info(`Securing ${this.hostname}...`);
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSslPath);
@@ -29,6 +29,9 @@ class SecureController {
                 return;
             }
         });
+        this.isSecure = () => {
+            return fs_1.existsSync(this.configPath);
+        };
         /**
          * Unsecure the current hostname.
          */
@@ -98,7 +101,7 @@ class SecureController {
             fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, nginxConfig);
         };
         this.config = jale_1.getConfig();
-        this.project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
+        this.project = project || process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
         this.hostname = `${this.project}.${this.config.tld}`;
         this.keyPath = `${jale_1.jaleSslPath}/${this.hostname}.key`;
         this.csrPath = `${jale_1.jaleSslPath}/${this.hostname}.csr`;
