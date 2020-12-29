@@ -1,4 +1,5 @@
-import {existsSync, unlinkSync, writeFileSync} from 'fs'
+import Table from 'cli-table'
+import {existsSync, readdirSync, unlinkSync, writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
@@ -7,10 +8,35 @@ import {error, info, success, url} from '../utils/console'
 import {ensureDirectoryExists} from '../utils/filesystem'
 import {getConfig, jaleSitesPath} from '../utils/jale'
 import SecureController from './secureController'
+import kleur from 'kleur'
 
 class SitesController {
 
     appTypes = ['laravel', 'magento2', 'magento1']
+
+    listLinks = async (): Promise<void> => {
+        const config = await getConfig()
+        await ensureDirectoryExists(jaleSitesPath)
+        const sites = readdirSync(jaleSitesPath).map(fileName => fileName.replace(`.${config.tld}.conf`, ''))
+
+        if (sites.length) {
+            info(`Currently there ${sites.length > 1 ? 'are' : 'is'} ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`)
+
+            const table = new Table({
+                head: ['Project', 'Secure'],
+                colors: false
+            })
+
+            for (const site of sites) {
+                const secure = new SecureController(site).isSecure()
+                table.push([`${site}.${config.tld}`, (secure ? kleur.green('Yes') : kleur.red('No'))])
+            }
+
+            console.log(table.toString())
+        } else {
+            info(`Currently there ${sites.length > 1 ? 'are' : 'is'} no active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}`)
+        }
+    }
 
     executeLink = async (type: string | undefined): Promise<void> => {
         const config = await getConfig()
