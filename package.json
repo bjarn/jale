@@ -1,6 +1,6 @@
 {
   "name": "jale",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Jale is a blazing fast local development environment for MacOS written in Typescript.",
   "author": {
     "name": "Bjarn Bronsveld",
