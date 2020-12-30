@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const cli_table_1 = tslib_1.__importDefault(require("cli-table"));
 const fs_1 = require("fs");
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
 const laravel_1 = tslib_1.__importDefault(require("../templates/nginx/apps/laravel"));
@@ -10,9 +11,30 @@ const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
 const secureController_1 = tslib_1.__importDefault(require("./secureController"));
+const kleur_1 = tslib_1.__importDefault(require("kleur"));
 class SitesController {
     constructor() {
         this.appTypes = ['laravel', 'magento2', 'magento1'];
+        this.listLinks = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const config = yield jale_1.getConfig();
+            yield filesystem_1.ensureDirectoryExists(jale_1.jaleSitesPath);
+            const sites = fs_1.readdirSync(jale_1.jaleSitesPath).map(fileName => fileName.replace(`.${config.tld}.conf`, ''));
+            if (sites.length) {
+                console_1.info(`Currently there ${sites.length > 1 ? 'are' : 'is'} ${sites.length} active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}\n`);
+                const table = new cli_table_1.default({
+                    head: ['Project', 'Secure'],
+                    colors: false
+                });
+                for (const site of sites) {
+                    const secure = new secureController_1.default(site).isSecure();
+                    table.push([`${site}.${config.tld}`, (secure ? kleur_1.default.green('Yes') : kleur_1.default.red('No'))]);
+                }
+                console.log(table.toString());
+            }
+            else {
+                console_1.info(`Currently there ${sites.length > 1 ? 'are' : 'is'} no active Nginx vhost ${sites.length > 1 ? 'configurations' : 'configuration'}`);
+            }
+        });
         this.executeLink = (type) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
             let appType = config.defaultTemplate;
