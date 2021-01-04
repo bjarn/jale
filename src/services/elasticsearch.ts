@@ -16,7 +16,6 @@ class Elasticsearch extends Service {
     nginxConfigPath = `${jaleNginxAppsPath}/elasticsearch.conf`
 
     install = async (): Promise<boolean> => {
-        await client().packageManager.install('java', true)
         await client().packageManager.install('homebrew/cask-versions/adoptopenjdk8', true)
         await client().packageManager.install('libyaml', false)
         await client().packageManager.install(this.service, false)
