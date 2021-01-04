@@ -18,7 +18,6 @@ class Elasticsearch extends service_1.default {
         this.dataRootPath = '/usr/local/var';
         this.nginxConfigPath = `${jale_1.jaleNginxAppsPath}/elasticsearch.conf`;
         this.install = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield os_1.client().packageManager.install('java', true);
             yield os_1.client().packageManager.install('homebrew/cask-versions/adoptopenjdk8', true);
             yield os_1.client().packageManager.install('libyaml', false);
             yield os_1.client().packageManager.install(this.service, false);

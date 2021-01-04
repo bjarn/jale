@@ -20,7 +20,7 @@ class Homebrew extends packageManager_1.default {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let args = ['install', pkg];
             if (cask) {
-                args = ['cask', 'install', pkg];
+                args = ['install', 'cask', pkg];
             }
             const { stdout } = yield execa_1.default('brew', args, { shell: true });
             return stdout.includes(pkg);
@@ -36,7 +36,7 @@ class Homebrew extends packageManager_1.default {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let args = ['remove', pkg];
             if (cask) {
-                args = ['cask', 'remove', pkg];
+                args = ['remove', 'cask', pkg];
             }
             const { stdout } = yield execa_1.default('brew', args, { shell: true });
             return stdout.includes(pkg);

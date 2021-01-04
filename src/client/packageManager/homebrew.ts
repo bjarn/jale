@@ -16,7 +16,7 @@ class Homebrew extends PackageManager {
         let args: string[] = ['install', pkg]
 
         if (cask) {
-            args = ['cask', 'install', pkg]
+            args = ['install', 'cask', pkg]
         }
 
         const {stdout} = await execa('brew', args, {shell: true})
@@ -34,7 +34,7 @@ class Homebrew extends PackageManager {
         let args: string[] = ['remove', pkg]
 
         if (cask) {
-            args = ['cask', 'remove', pkg]
+            args = ['remove', 'cask', pkg]
         }
 
         const {stdout} = await execa('brew', args, {shell: true})
