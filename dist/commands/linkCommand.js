@@ -8,6 +8,8 @@ exports.default = (program) => program
     .option('-t, --type <type>', 'Provide a type for generating an optimized Nginx config. Supported: laravel, magento2, magento1.')
     .description('Create a new Nginx vhost config for your current project.')
     .action((options) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     (new sitesController_1.default()).executeLink(options.type).catch(err => console_1.error(err.message));
 });
 //# sourceMappingURL=linkCommand.js.map

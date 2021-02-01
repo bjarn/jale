@@ -39,8 +39,14 @@ class Mysql extends service_1.default {
                 yield fs_1.mkdirSync(this.configRootPath);
             }
             let config = myCnf_1.default;
-            if (this.service === 'mariadb') {
+            if (this.service === 'mariadb' || this.service === 'mysql@8.0') {
                 config = config.replace('show_compatibility_56=ON', '');
+            }
+            if (this.service === 'mysql@8.0') {
+                config = config.replace('query_cache_size=67108864', '');
+                config = config.replace('query_cache_type=1', '');
+                config = config.replace('query_cache_limit=4194304', '');
+                config = config.replace('query_cache_size=67108864', '');
             }
             yield fs_1.writeFileSync(this.configPath, config);
         });
