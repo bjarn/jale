@@ -38,7 +38,7 @@ class SitesController {
         }
     }
 
-    executeLink = async (type: string | undefined): Promise<void> => {
+    executeLink = async (type: string | undefined, name: string | undefined): Promise<void> => {
         const config = await getConfig()
         let appType = config.defaultTemplate
 
@@ -50,14 +50,15 @@ class SitesController {
             return
         }
 
-        const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
+        const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
+        const domain = name || project
         const hostname = `${domain}.${config.tld}`
 
-        info(`Linking ${domain} to ${hostname}...`)
+        info(`Linking ${project} to ${hostname}...`)
 
         await ensureDirectoryExists(jaleSitesPath)
 
-        this.createNginxConfig(appType, hostname)
+        this.createNginxConfig(appType, hostname, project)
 
         await (new Nginx()).reload()
 
@@ -67,26 +68,35 @@ class SitesController {
     executeUnlink = async (): Promise<void> => {
         const config = await getConfig()
 
-        const domain = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${domain}.${config.tld}`
+        const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
 
-        if (!existsSync(`${jaleSitesPath}/${hostname}.conf`)) {
-            error(`This project doesn't seem to be linked because the configuration file can't be found: ${jaleSitesPath}/${hostname}.conf`)
+        let filename = `${project}.${config.tld}.conf`
+
+        readdirSync(jaleSitesPath).forEach(file => {
+            if (file.includes(project)) {
+                filename = file
+            }
+        })
+
+        // const hostname = `${domain}.${config.tld}`
+
+        if (!existsSync(`${jaleSitesPath}/${filename}`)) {
+            error(`This project doesn't seem to be linked because the configuration file can't be found: ${jaleSitesPath}/${filename}`)
             return
         }
 
-        info(`Unlinking ${hostname}...`)
+        info(`Unlinking ${project}...`)
 
         const secureController = new SecureController
 
         if (existsSync(secureController.crtPath))
             await secureController.executeUnsecure()
 
-        unlinkSync(`${jaleSitesPath}/${hostname}.conf`)
+        unlinkSync(`${jaleSitesPath}/${filename}`)
 
         await (new Nginx()).reload()
 
-        success(`Successfully unlinked ${domain}.`)
+        success(`Successfully unlinked ${project}.`)
     }
 
     /**
@@ -94,17 +104,18 @@ class SitesController {
      *
      * @param appType
      * @param hostname
+     * @param project
      */
-    createNginxConfig = (appType: string, hostname: string): void => {
+    createNginxConfig = (appType: string, hostname: string, project: string): void => {
         switch (appType) {
         case 'magento2':
-            writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxMagento2Template(hostname, process.cwd()))
+            writeFileSync(`${jaleSitesPath}/${project}.conf`, nginxMagento2Template(hostname, process.cwd()))
             break
         case 'magento1':
-            writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxMagento1Template(hostname, process.cwd()))
+            writeFileSync(`${jaleSitesPath}/${project}.conf`, nginxMagento1Template(hostname, process.cwd()))
             break
         default:
-            writeFileSync(`${jaleSitesPath}/${hostname}.conf`, nginxLaravelTemplate(hostname, process.cwd()))
+            writeFileSync(`${jaleSitesPath}/${project}.conf`, nginxLaravelTemplate(hostname, process.cwd()))
             break
         }
     }
