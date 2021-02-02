@@ -48,8 +48,15 @@ abstract class Mysql extends Service {
 
         let config = myCnf
 
-        if (this.service === 'mariadb') {
+        if (this.service === 'mariadb' || this.service === 'mysql@8.0') {
             config = config.replace('show_compatibility_56=ON', '')
+        }
+
+        if (this.service === 'mysql@8.0') {
+            config = config.replace('query_cache_size=67108864', '')
+            config = config.replace('query_cache_type=1', '')
+            config = config.replace('query_cache_limit=4194304', '')
+            config = config.replace('query_cache_size=67108864', '')
         }
 
         await writeFileSync(this.configPath, config)
