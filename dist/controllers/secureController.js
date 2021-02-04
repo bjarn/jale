@@ -8,6 +8,7 @@ const openssl_1 = tslib_1.__importDefault(require("../templates/openssl"));
 const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
+const regex_1 = require("../utils/regex");
 class SecureController {
     constructor(project) {
         this.executeSecure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -24,10 +25,8 @@ class SecureController {
                 console_1.success(`${this.hostname} has been unsecured and is no longer reachable over https.`);
                 yield (new nginx_1.default()).restart();
             }
-            else {
-                console_1.warning(`The site ${this.hostname} is not secured.`);
-                return;
-            }
+            console_1.warning(`The site ${this.hostname} is not secured.`);
+            return;
         });
         this.isSecure = () => {
             return fs_1.existsSync(this.configPath);
@@ -45,9 +44,7 @@ class SecureController {
                 this.unsecureNginxConfig();
                 return true;
             }
-            else {
-                return false;
-            }
+            return false;
         });
         /**
          * Generate a certificate to secure a site.
@@ -73,7 +70,7 @@ class SecureController {
          * Make sure the Nginx config works with SSL.
          */
         this.secureNginxConfig = () => {
-            let nginxConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, 'utf-8');
+            let nginxConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.project}.conf`, 'utf-8');
             if (nginxConfig.includes('listen 443 ssl http2')) {
                 // TODO: Implement a nicer check. This is just a rushed thing to prevent duplicate ssl entries. Maybe it's
                 // fine, but I ain't so sure about that.
@@ -85,28 +82,34 @@ class SecureController {
     
     ssl_certificate ${this.crtPath};
     ssl_certificate_key ${this.keyPath};\n`);
-            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, nginxConfig);
+            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.project}.conf`, nginxConfig);
         };
         /**
          * Clean up the Nginx config by removing references to the key en cert and stop listening on port 443.
          */
         this.unsecureNginxConfig = () => {
-            let nginxConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, 'utf-8');
+            let nginxConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.project}.conf`, 'utf-8');
             nginxConfig = nginxConfig.replace(`listen [::]:80;
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     
     ssl_certificate ${this.crtPath};
     ssl_certificate_key ${this.keyPath};\n`, 'listen [::]:80;');
-            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.hostname}.conf`, nginxConfig);
+            fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${this.project}.conf`, nginxConfig);
         };
         this.config = jale_1.getConfig();
         this.project = project || process.cwd().substring(process.cwd().lastIndexOf('/') + 1);
+        const vhostConfig = fs_1.readFileSync(`${jale_1.jaleSitesPath}/${this.project}.conf`, 'utf-8');
+        const serverNames = regex_1.serverNamesRegex.exec(vhostConfig);
         this.hostname = `${this.project}.${this.config.tld}`;
-        this.keyPath = `${jale_1.jaleSslPath}/${this.hostname}.key`;
-        this.csrPath = `${jale_1.jaleSslPath}/${this.hostname}.csr`;
-        this.crtPath = `${jale_1.jaleSslPath}/${this.hostname}.crt`;
-        this.configPath = `${jale_1.jaleSslPath}/${this.hostname}.conf`;
+        // TODO catch this issue
+        if (serverNames) {
+            this.hostname = serverNames[0].split(' ')[1];
+        }
+        this.keyPath = `${jale_1.jaleSslPath}/${this.project}.key`;
+        this.csrPath = `${jale_1.jaleSslPath}/${this.project}.csr`;
+        this.crtPath = `${jale_1.jaleSslPath}/${this.project}.crt`;
+        this.configPath = `${jale_1.jaleSslPath}/${this.project}.conf`;
     }
 }
 exports.default = SecureController;

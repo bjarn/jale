@@ -62,7 +62,6 @@ class SitesController {
                     filename = file;
                 }
             });
-            // const hostname = `${domain}.${config.tld}`
             if (!fs_1.existsSync(`${jale_1.jaleSitesPath}/${filename}`)) {
                 console_1.error(`This project doesn't seem to be linked because the configuration file can't be found: ${jale_1.jaleSitesPath}/${filename}`);
                 return;
