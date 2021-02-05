@@ -7,9 +7,9 @@ const readline = tslib_1.__importStar(require("readline"));
 const prefix = {
     verbose: kleur_1.default.gray(kleur_1.default.bold('🛠  ')),
     info: kleur_1.default.gray(kleur_1.default.bold('✨  ')),
-    success: kleur_1.default.gray(kleur_1.default.bold('\n✅ ')),
+    success: kleur_1.default.gray(kleur_1.default.bold('✅ ')),
     warning: kleur_1.default.yellow(kleur_1.default.bold('⚠️  Warning: ')),
-    error: kleur_1.default.red(kleur_1.default.bold('\n🚨 Error: ')),
+    error: kleur_1.default.red(kleur_1.default.bold('🚨 Error: ')),
 };
 const body = {
     default: kleur_1.default.white,

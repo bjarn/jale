@@ -1,11 +1,31 @@
 import {readFileSync, writeFileSync} from 'fs'
+import {Config} from '../models/config'
 import Nginx from '../services/nginx'
 import {error, success, url} from '../utils/console'
 import {getConfig, jaleSitesPath} from '../utils/jale'
+import {serverNamesRegex} from '../utils/regex'
 
 class SubdomainController {
 
-    serverNamesRegex = new RegExp('(?<=server_name \\s*).*?(?=\\s*;)', 'gi')
+    config: Config
+    project: string
+    hostname: string
+
+    constructor() {
+        this.config = getConfig()
+        this.project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
+
+        const vhostConfig = readFileSync(`${jaleSitesPath}/${this.project}.conf`, 'utf-8')
+        const serverNames = serverNamesRegex.exec(vhostConfig) ?? []
+
+        serverNamesRegex.lastIndex = 0
+
+        this.hostname = `${this.project}.${this.config.tld}`
+
+        if (serverNames[0].split(' ').length > 1) {
+            this.hostname = serverNames[0].split(' ')[1]
+        }
+    }
 
     execute = async (option: string, subdomain: string): Promise<void> => {
         if (option !== 'add' && option !== 'del') {
@@ -13,17 +33,13 @@ class SubdomainController {
             return
         }
 
-        const config = await getConfig()
-        const project = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
-        const hostname = `${project}.${config.tld}`
-
         let restartNginx = false
 
         if (option === 'add') {
-            restartNginx = this.addSubdomain(subdomain, hostname)
+            restartNginx = this.addSubdomain(subdomain)
         }
         else if (option === 'del') {
-            restartNginx = this.deleteSubdomain(subdomain, hostname)
+            restartNginx = this.deleteSubdomain(subdomain)
         }
 
         if (restartNginx)
@@ -34,12 +50,11 @@ class SubdomainController {
      * Check if the subdomain already exists in the vhost's Nginx configuration.
      *
      * @param subdomain
-     * @param hostname
      */
-    subdomainExists = (subdomain: string, hostname: string): boolean => {
+    subdomainExists = (subdomain: string): boolean => {
         try {
-            const vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
-            return vhostConfig.includes(`${subdomain}.${hostname}`)
+            const vhostConfig = readFileSync(`${jaleSitesPath}/${this.project}.conf`, 'utf-8')
+            return vhostConfig.includes(`${subdomain}.${this.hostname}`)
         } catch (e) {
             return false
         }
@@ -49,30 +64,29 @@ class SubdomainController {
      * Add a new subdomain to the vhost's Nginx configuration.
      *
      * @param subdomain
-     * @param hostname
      */
-    addSubdomain = (subdomain: string, hostname: string): boolean => {
-        if (this.subdomainExists(subdomain, hostname)) {
-            error(`Subdomain ${subdomain}.${hostname} already exists.`)
+    addSubdomain = (subdomain: string): boolean => {
+        if (this.subdomainExists(subdomain)) {
+            error(`Subdomain ${subdomain}.${this.hostname} already exists.`)
             return false
         }
 
-        let vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
-        const rawServerNames = this.serverNamesRegex.exec(vhostConfig)
+        let vhostConfig = readFileSync(`${jaleSitesPath}/${this.project}.conf`, 'utf-8')
+        const rawServerNames = serverNamesRegex.exec(vhostConfig)
 
         if (!rawServerNames) {
             return false // TODO: Catch this issue
         }
 
         const serverNames = rawServerNames[0].split(' ')
-        serverNames.push(`${subdomain}.${hostname}`)
+        serverNames.push(`${subdomain}.${this.hostname}`)
 
         // Replace the old server names with the server names including the new subdomain.
-        vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '))
+        vhostConfig = vhostConfig.replace(serverNamesRegex, serverNames.join(' '))
 
-        writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
+        writeFileSync(`${jaleSitesPath}/${this.project}.conf`, vhostConfig)
 
-        success(`Added subdomain ${url(`${subdomain}.${hostname}`)}.`)
+        success(`Added subdomain ${url(`${subdomain}.${this.hostname}`)}.`)
 
         return true
     }
@@ -81,31 +95,30 @@ class SubdomainController {
      * Delete a subdomain from the vhost's Nginx configuration.
      *
      * @param subdomain
-     * @param hostname
      */
-    deleteSubdomain = (subdomain: string, hostname: string): boolean => {
-        if (!this.subdomainExists(subdomain, hostname)) {
-            error(`Subdomain ${url(`${subdomain}.${hostname}`)} does not exist.`)
+    deleteSubdomain = (subdomain: string): boolean => {
+        if (!this.subdomainExists(subdomain)) {
+            error(`Subdomain ${url(`${subdomain}.${this.hostname}`)} does not exist.`)
             return false
         }
 
-        let vhostConfig = readFileSync(`${jaleSitesPath}/${hostname}.conf`, 'utf-8')
+        let vhostConfig = readFileSync(`${jaleSitesPath}/${this.project}.conf`, 'utf-8')
 
-        const rawServerNames = this.serverNamesRegex.exec(vhostConfig)
+        const rawServerNames = serverNamesRegex.exec(vhostConfig)
 
         if (!rawServerNames) {
             return false // TODO: Catch this issue
         }
         
         const serverNames = rawServerNames[0].split(' ')
-        serverNames.splice(serverNames.indexOf(`${subdomain}.${hostname}`), 1)
+        serverNames.splice(serverNames.indexOf(`${subdomain}.${this.hostname}`), 1)
 
         // Replace the old server names with the new list without the removed subdomain.
-        vhostConfig = vhostConfig.replace(this.serverNamesRegex, serverNames.join(' '))
+        vhostConfig = vhostConfig.replace(serverNamesRegex, serverNames.join(' '))
 
-        writeFileSync(`${jaleSitesPath}/${hostname}.conf`, vhostConfig)
+        writeFileSync(`${jaleSitesPath}/${this.project}.conf`, vhostConfig)
 
-        success(`Removed subdomain ${subdomain}.${hostname}.`)
+        success(`Removed subdomain ${subdomain}.${this.hostname}.`)
 
         return true
     }

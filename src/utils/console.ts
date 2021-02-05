@@ -4,9 +4,9 @@ import * as readline from 'readline'
 const prefix = {
     verbose: kleur.gray(kleur.bold('🛠  ')),
     info: kleur.gray(kleur.bold('✨  ')),
-    success: kleur.gray(kleur.bold('\n✅ ')),
+    success: kleur.gray(kleur.bold('✅ ')),
     warning: kleur.yellow(kleur.bold('⚠️  Warning: ')),
-    error: kleur.red(kleur.bold('\n🚨 Error: ')),
+    error: kleur.red(kleur.bold('🚨 Error: ')),
 }
 
 const body = {
