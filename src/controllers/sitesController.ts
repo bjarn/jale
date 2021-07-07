@@ -1,6 +1,7 @@
 import Table from 'cli-table'
 import {existsSync, readdirSync, unlinkSync, writeFileSync} from 'fs'
 import Nginx from '../services/nginx'
+import nginxShopware6Template from '../templates/nginx/apps/shopware6'
 import nginxLaravelTemplate from '../templates/nginx/apps/laravel'
 import nginxMagento1Template from '../templates/nginx/apps/magento1'
 import nginxMagento2Template from '../templates/nginx/apps/magento2'
@@ -12,7 +13,7 @@ import kleur from 'kleur'
 
 class SitesController {
 
-    appTypes = ['laravel', 'magento2', 'magento1']
+    appTypes = ['shopware6', 'laravel', 'magento2', 'magento1']
 
     listLinks = async (): Promise<void> => {
         const config = await getConfig()
@@ -106,6 +107,9 @@ class SitesController {
      */
     createNginxConfig = (appType: string, hostname: string, project: string): void => {
         switch (appType) {
+        case 'shopware6':
+            writeFileSync(`${jaleSitesPath}/${project}.conf`, nginxShopware6Template(hostname, process.cwd()))
+            break
         case 'magento2':
             writeFileSync(`${jaleSitesPath}/${project}.conf`, nginxMagento2Template(hostname, process.cwd()))
             break
