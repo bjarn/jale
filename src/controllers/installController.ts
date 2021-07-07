@@ -33,7 +33,7 @@ class InstallController {
             type: 'list',
             name: 'template',
             message: 'Default Nginx Template',
-            choices: ['laravel', 'magento2', 'magento1'],
+            choices: ['shopware6', 'laravel', 'magento2', 'magento1'],
             default: 'laravel',
             validate: (input: string) => {
                 return input !== ''

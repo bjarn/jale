@@ -7,6 +7,7 @@ const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
 const laravel_1 = tslib_1.__importDefault(require("../templates/nginx/apps/laravel"));
 const magento1_1 = tslib_1.__importDefault(require("../templates/nginx/apps/magento1"));
 const magento2_1 = tslib_1.__importDefault(require("../templates/nginx/apps/magento2"));
+const shopware6_1 = tslib_1.__importDefault(require("../templates/nginx/apps/shopware6"));
 const console_1 = require("../utils/console");
 const filesystem_1 = require("../utils/filesystem");
 const jale_1 = require("../utils/jale");
@@ -14,7 +15,7 @@ const secureController_1 = tslib_1.__importDefault(require("./secureController")
 const kleur_1 = tslib_1.__importDefault(require("kleur"));
 class SitesController {
     constructor() {
-        this.appTypes = ['laravel', 'magento2', 'magento1'];
+        this.appTypes = ['shopware6', 'laravel', 'magento2', 'magento1'];
         this.listLinks = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();
             yield filesystem_1.ensureDirectoryExists(jale_1.jaleSitesPath);
@@ -83,6 +84,9 @@ class SitesController {
          */
         this.createNginxConfig = (appType, hostname, project) => {
             switch (appType) {
+                case 'shopware6':
+                    fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${project}.conf`, shopware6_1.default(hostname, process.cwd()));
+                    break;
                 case 'magento2':
                     fs_1.writeFileSync(`${jale_1.jaleSitesPath}/${project}.conf`, magento2_1.default(hostname, process.cwd()));
                     break;
