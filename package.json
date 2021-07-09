@@ -33,20 +33,20 @@
   "devDependencies": {
     "@types/cli-table": "^0.3.0",
     "@types/commander": "^2.12.2",
-    "@types/inquirer": "^7.3.1",
-    "@types/node": "^14.14.10",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
-    "eslint": "^7.14.0",
-    "ts-node": "^9.1.0",
-    "typescript": "^4.1.2"
+    "@types/inquirer": "^7.3.3",
+    "@types/node": "^16.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
-    "cli-table": "^0.3.4",
-    "commander": "^7.0.0",
-    "execa": "^5.0.0",
-    "inquirer": "^7.3.3",
-    "kleur": "^4.1.3",
-    "listr2": "^3.2.3"
+    "cli-table": "^0.3.6",
+    "commander": "^8.0.0",
+    "execa": "^5.1.1",
+    "inquirer": "^8.1.1",
+    "kleur": "^4.1.4",
+    "listr2": "^3.10.0"
   }
 }
