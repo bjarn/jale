@@ -3,20 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs_1 = require("fs");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const limitMaxFilesPlist_1 = tslib_1.__importDefault(require("../templates/limitMaxFilesPlist"));
 const myCnf_1 = tslib_1.__importDefault(require("../templates/myCnf"));
-const os_1 = require("../utils/os");
 const service_1 = tslib_1.__importDefault(require("./service"));
 class Mysql extends service_1.default {
     constructor() {
         super(...arguments);
         this.requireRoot = false;
         this.isEndOfLife = false;
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-        this.configRootPath = '/usr/local/etc';
+        this.configRootPath = `${OS_1.default.getInstance().usrLocalDir}/etc`;
         this.configPath = `${this.configRootPath}/my.cnf`;
         this.maxFilesConfPath = '/Library/LaunchDaemons/limit.maxfiles.plist'; // TODO: This is Mac only, make it cross platform.
-        this.mysqlDirectoryPath = '/usr/local/var/mysql';
+        this.mysqlDirectoryPath = `${OS_1.default.getInstance().usrLocalDir}/var/mysql`;
         this.rootPassword = 'root';
         this.systemDatabases = ['sys', 'performance_schema', 'information_schema'];
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -55,7 +54,7 @@ class Mysql extends service_1.default {
             yield execa_1.default('launchctl', ['load', '-w', this.maxFilesConfPath]);
         });
         this.linkDatabase = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield os_1.client().serviceCtl.link(this.service);
+            yield OS_1.default.getInstance().serviceCtl.link(this.service);
         });
         // TODO: We should get the current password from the Jale config instead.
         this.setRootPassword = (oldPassword = '', password = 'root') => tslib_1.__awaiter(this, void 0, void 0, function* () {

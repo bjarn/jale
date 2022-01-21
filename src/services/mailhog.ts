@@ -7,7 +7,7 @@ import Service from './service'
 class Mailhog extends Service {
     service = 'mailhog'
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
+
     nginxConfigPath = `${jaleNginxAppsPath}/mailhog.conf`
 
     configure = async (): Promise<boolean> => {

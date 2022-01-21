@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const redisConf = `# Redis configuration file example.
 #
 # Note that in order to read the configuration file, Redis must be
@@ -246,7 +248,7 @@ dbfilename dump.rdb
 # The Append Only File will also be created inside this directory.
 #
 # Note that you must specify a directory here, not a file name.
-dir /usr/local/var/db/redis/
+dir ${OS_1.default.getInstance().usrLocalDir}/var/db/redis/
 
 ################################# REPLICATION #################################
 

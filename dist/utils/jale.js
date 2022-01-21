@@ -4,6 +4,7 @@ exports.getConfig = exports.ensureHomeDirExists = exports.jaleNginxAppTemplatesP
 const tslib_1 = require("tslib");
 const fs = tslib_1.__importStar(require("fs"));
 const os_1 = require("os");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const filesystem_1 = require("./filesystem");
 /**
  * Get the location of the home directory of Jale.
@@ -38,12 +39,12 @@ exports.jaleFallbackServer = jaleFallbackServer;
 /**
  * Get the location of the Nginx apps vhost directory.
  */
-const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps';
+const jaleNginxAppsPath = `${OS_1.default.getInstance().usrLocalDir}/etc/nginx/jale/apps`;
 exports.jaleNginxAppsPath = jaleNginxAppsPath;
 /**
  * Get the location of the Nginx app templates vhost directory.
  */
-const jaleNginxAppTemplatesPath = '/usr/local/etc/nginx/jale/templates';
+const jaleNginxAppTemplatesPath = `${OS_1.default.getInstance().usrLocalDir}/etc/nginx/jale/templates`;
 exports.jaleNginxAppTemplatesPath = jaleNginxAppTemplatesPath;
 /**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.

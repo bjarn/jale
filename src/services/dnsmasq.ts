@@ -1,5 +1,6 @@
 import execa from 'execa'
 import * as fs from 'fs'
+import OS from '../client/OS'
 import {Config} from '../models/config'
 import {getConfig, jaleHomeDir} from '../utils/jale'
 import {requireSudo} from '../utils/sudo'
@@ -9,9 +10,9 @@ class Dnsmasq extends Service {
     service = 'dnsmasq'
     requireRoot = true
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
+
     resolverPath = '/etc/resolver'
-    configPath = '/usr/local/etc/dnsmasq.conf'
+    configPath = `${OS.getInstance().usrLocalDir}/etc/dnsmasq.conf`
 
     customConfigPath = `${jaleHomeDir}/dnsmasq.conf`
 

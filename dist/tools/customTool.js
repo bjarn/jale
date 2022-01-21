@@ -4,12 +4,13 @@ const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs = tslib_1.__importStar(require("fs"));
 const fs_1 = require("fs");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const console_1 = require("../utils/console");
 const tool_1 = tslib_1.__importDefault(require("./tool"));
 class CustomTool extends tool_1.default {
     constructor() {
         super(...arguments);
-        this.binLocation = '/usr/local/bin';
+        this.binLocation = `${OS_1.default.getInstance().usrLocalDir}/bin`;
         /**
          * Install the binary.
          */

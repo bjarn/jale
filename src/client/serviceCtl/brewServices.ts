@@ -2,9 +2,37 @@ import execa from 'execa'
 import ServiceCtl from '../serviceCtl'
 
 class BrewServices extends ServiceCtl {
-    alias = 'brew'
-    name = 'Homebrew'
-    path = '/usr/local/bin/brew'
+    private static instance: BrewServices;
+
+    alias: string
+    name: string
+    path: string
+
+    private constructor() {
+        super()
+
+        let usrLocalDir
+        switch (`${process.platform}_${process.arch}`) {
+        case 'darwin_arm64':
+            usrLocalDir = '/opt/homebrew'
+            break
+        default: // darwin x64
+            usrLocalDir = '/usr/local'
+            break
+        }
+
+        this.alias = 'brew'
+        this.name = 'Homebrew'
+        this.path = `${usrLocalDir}/bin/brew`
+    }
+
+    public static getInstance(): ServiceCtl {
+        if (!BrewServices.instance) {
+            BrewServices.instance = new BrewServices()
+        }
+
+        return BrewServices.instance
+    }
 
     async reload(pkg: string): Promise<boolean> {
         try {

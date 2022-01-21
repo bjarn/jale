@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const console_1 = require("../utils/console");
-const os_1 = require("../utils/os");
 const phpFpm_1 = require("../utils/phpFpm");
 class UseController {
     constructor() {
@@ -38,10 +38,10 @@ class UseController {
                 console_1.warning('This PHP version is End Of Life. Be aware it might contain security flaws.\n   Please check http://php.net/supported-versions.php for more information.');
             }
             // Make sure the PHP version is installed.
-            const isVersionInstalled = yield os_1.client().packageManager.packageIsInstalled(newPhpVersion.service);
+            const isVersionInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled(newPhpVersion.service);
             if (!isVersionInstalled) {
                 console_1.info(`PHP ${newPhpVersion.versionName} not found, installing now...`);
-                yield os_1.client().packageManager.install(newPhpVersion.service, false);
+                yield OS_1.default.getInstance().packageManager.install(newPhpVersion.service, false);
                 console_1.info(`Configuring PHP ${newPhpVersion.versionName}...`);
                 yield newPhpVersion.configure();
             }

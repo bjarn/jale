@@ -1,7 +1,7 @@
+import OS from '../client/OS'
 import Memcached from '../extensions/php/memcached'
 import Memcache from '../services/memcache'
 import {error, info, success, warning} from '../utils/console'
-import {client} from '../utils/os'
 import {getLinkedPhpVersion} from '../utils/phpFpm'
 
 class MemcacheController {
@@ -38,7 +38,7 @@ class MemcacheController {
     enable = async (memcache: Memcache, phpMemcached: Memcached): Promise<boolean> => {
         let restart = false
 
-        if (await client().packageManager.packageIsInstalled(memcache.service)) {
+        if (await OS.getInstance().packageManager.packageIsInstalled(memcache.service)) {
             warning(`${memcache.service} is already installed.`)
         } else {
             restart = true
@@ -64,7 +64,7 @@ class MemcacheController {
             warning('Memcache\'s PHP extension was not enabled.')
         }
 
-        if (!(await client().packageManager.packageIsInstalled(memcache.service))) {
+        if (!(await OS.getInstance().packageManager.packageIsInstalled(memcache.service))) {
             warning(`${memcache.service} was not installed.`)
             return phpExtensionDisabled
         }

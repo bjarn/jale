@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs = tslib_1.__importStar(require("fs"));
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const fastcgiParams_1 = tslib_1.__importDefault(require("../templates/fastcgiParams"));
 const nginx_1 = tslib_1.__importDefault(require("../templates/nginx"));
 const jale_1 = tslib_1.__importDefault(require("../templates/nginx/jale"));
@@ -15,11 +16,10 @@ class Nginx extends service_1.default {
         super(...arguments);
         this.service = 'nginx';
         this.requireRoot = true;
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-        this.configPath = '/usr/local/etc/nginx/nginx.conf';
-        this.jaleNginxFolderPath = '/usr/local/etc/nginx/jale';
+        this.configPath = `${OS_1.default.getInstance().usrLocalDir}/etc/nginx/nginx.conf`;
+        this.jaleNginxFolderPath = `${OS_1.default.getInstance().usrLocalDir}/etc/nginx/jale`;
         this.jaleNginxConfigPath = `${this.jaleNginxFolderPath}/jale.conf`;
-        this.fastCgiParamsConfigPath = '/usr/local/etc/nginx/fastcgi_params';
+        this.fastCgiParamsConfigPath = `${OS_1.default.getInstance().usrLocalDir}/etc/nginx/fastcgi_params`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield filesystem_1.ensureDirectoryExists(this.jaleNginxFolderPath);
             yield filesystem_1.ensureDirectoryExists(`${this.jaleNginxFolderPath}/apps`);

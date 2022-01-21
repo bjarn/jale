@@ -1,6 +1,7 @@
 import execa from 'execa'
 import * as fs from 'fs'
 import {chmodSync, existsSync, unlinkSync} from 'fs'
+import OS from '../client/OS'
 import {error, info, success} from '../utils/console'
 import Tool from './tool'
 
@@ -12,7 +13,7 @@ abstract class CustomTool extends Tool {
     abstract url: string
     abstract shasum: string
 
-    binLocation = '/usr/local/bin'
+    binLocation = `${OS.getInstance().usrLocalDir}/bin`
 
     /**
      * Install the binary.

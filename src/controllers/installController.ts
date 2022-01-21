@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import inquirer, {Answers} from 'inquirer'
 import {white} from 'kleur/colors'
 import {Listr, ListrTask} from 'listr2'
+import OS from '../client/OS'
 import {Config, Database} from '../models/config'
 import Dnsmasq from '../services/dnsmasq'
 import Mailhog from '../services/mailhog'
@@ -10,10 +11,9 @@ import {fallbackIndex} from '../templates/fallbackServer'
 import {clearConsole, emptyLine, error} from '../utils/console'
 import {getDatabaseByName} from '../utils/database'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {getOptionalServiceByname} from '../utils/optionalService'
-import {client} from '../utils/os'
-import {getPhpFpmByName} from '../utils/phpFpm'
 import {ensureHomeDirExists, jaleConfigPath, jaleFallbackServer, jaleHomeDir, jaleLogsPath} from '../utils/jale'
+import {getOptionalServiceByname} from '../utils/optionalService'
+import {getPhpFpmByName} from '../utils/phpFpm'
 import {requireSudo} from '../utils/sudo'
 import {getToolByName} from '../utils/tools'
 
@@ -43,7 +43,7 @@ class InstallController {
             type: 'checkbox',
             name: 'phpVersions',
             message: 'Choose one or more PHP versions',
-            choices: ['php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
+            choices: ['php@8.1', 'php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
             validate: (input: string[]) => {
                 return input.length >= 1
             }
@@ -166,7 +166,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: async (): Promise<string | boolean> => {
-                        const isInstalled = await client().packageManager.packageIsInstalled('dnsmasq')
+                        const isInstalled = await OS.getInstance().packageManager.packageIsInstalled('dnsmasq')
 
                         if (isInstalled) return 'Dnsmasq is already installed.'
                     },
@@ -192,7 +192,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: async (): Promise<string | boolean> => {
-                        const isInstalled = await client().packageManager.packageIsInstalled('nginx')
+                        const isInstalled = await OS.getInstance().packageManager.packageIsInstalled('nginx')
 
                         if (isInstalled) return 'Nginx is already installed.'
                     },
@@ -222,8 +222,8 @@ class InstallController {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                             skip: async (): Promise<string | boolean> => {
-                                if (phpVersion == 'php@8.0') phpVersion = 'php'
-                                const isInstalled = await client().packageManager.packageIsInstalled(phpVersion)
+                                if (phpVersion == 'php@8.1') phpVersion = 'php'
+                                const isInstalled = await OS.getInstance().packageManager.packageIsInstalled(phpVersion)
 
                                 if (isInstalled) return `${phpVersion} is already installed.`
                             },
@@ -264,7 +264,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: async (): Promise<string | boolean> => {
-                        const isInstalled = await client().packageManager.packageIsInstalled(database)
+                        const isInstalled = await OS.getInstance().packageManager.packageIsInstalled(database)
 
                         if (isInstalled) return `${database} is already installed.`
                     },
@@ -291,7 +291,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: async (): Promise<string | boolean> => {
-                        const isInstalled = await client().packageManager.packageIsInstalled('mailhog')
+                        const isInstalled = await OS.getInstance().packageManager.packageIsInstalled('mailhog')
 
                         if (isInstalled) return 'Mailhog is already installed.'
                     },
@@ -322,7 +322,7 @@ class InstallController {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                             skip: async (): Promise<string | boolean> => {
-                                const isInstalled = await client().packageManager.packageIsInstalled(service.service)
+                                const isInstalled = await OS.getInstance().packageManager.packageIsInstalled(service.service)
 
                                 if (isInstalled) return `${service.service} is already installed.`
                             },

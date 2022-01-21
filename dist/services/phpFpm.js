@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs = tslib_1.__importStar(require("fs"));
 const os = tslib_1.__importStar(require("os"));
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const zPerformanceIni_1 = tslib_1.__importDefault(require("../templates/zPerformanceIni"));
 const filesystem_1 = require("../utils/filesystem");
-const os_1 = require("../utils/os");
 const jale_1 = require("../utils/jale");
 const service_1 = tslib_1.__importDefault(require("./service"));
 class PhpFpm extends service_1.default {
@@ -13,8 +13,7 @@ class PhpFpm extends service_1.default {
         super(...arguments);
         this.requireRoot = true;
         this.isEndOfLife = false;
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-        this.configRootPath = '/usr/local/etc/php';
+        this.configRootPath = `${OS_1.default.getInstance().usrLocalDir}/etc/php`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield this.updateConfiguration();
             yield this.addPerformanceConfiguration();
@@ -46,10 +45,10 @@ class PhpFpm extends service_1.default {
             return fs.writeFileSync(path, zPerformanceIni_1.default);
         });
         this.unLinkPhpVersion = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return os_1.client().serviceCtl.unlink(this.service);
+            return OS_1.default.getInstance().serviceCtl.unlink(this.service);
         });
         this.linkPhpVersion = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return os_1.client().serviceCtl.link(this.service);
+            return OS_1.default.getInstance().serviceCtl.link(this.service);
         });
     }
 }

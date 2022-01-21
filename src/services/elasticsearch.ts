@@ -1,6 +1,6 @@
 import {writeFileSync} from 'fs'
+import OS from '../client/OS'
 import nginxElasticsearchConf from '../templates/nginx/elasticsearch'
-import {client} from '../utils/os'
 import {getConfig, jaleNginxAppsPath} from '../utils/jale'
 import Nginx from './nginx'
 import Service from './service'
@@ -9,16 +9,16 @@ class Elasticsearch extends Service {
     requireRoot = false
     service = 'elasticsearch'
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    configPath = '/usr/local/etc/elasticsearch/elasticsearch.yml'
+
+    configPath = `${OS.getInstance().usrLocalDir}/etc/elasticsearch/elasticsearch.yml`
     dataPath = 'path.data'
-    dataRootPath = '/usr/local/var'
+    dataRootPath = `${OS.getInstance().usrLocalDir}/var`
     nginxConfigPath = `${jaleNginxAppsPath}/elasticsearch.conf`
 
     install = async (): Promise<boolean> => {
-        await client().packageManager.install('homebrew/cask-versions/adoptopenjdk8', true)
-        await client().packageManager.install('libyaml', false)
-        await client().packageManager.install(this.service, false)
+        await OS.getInstance().packageManager.install('homebrew/cask-versions/adoptopenjdk8', true)
+        await OS.getInstance().packageManager.install('libyaml', false)
+        await OS.getInstance().packageManager.install(this.service, false)
 
         return true
     }

@@ -1,8 +1,8 @@
 import execa from 'execa'
 import {chmodSync, existsSync, mkdirSync, unlinkSync, writeFileSync} from 'fs'
+import OS from '../client/OS'
 import limitMaxFilesPlist from '../templates/limitMaxFilesPlist'
 import myCnf from '../templates/myCnf'
-import {client} from '../utils/os'
 import Service from './service'
 
 abstract class Mysql extends Service {
@@ -11,11 +11,11 @@ abstract class Mysql extends Service {
 
     abstract versionName: string
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    configRootPath = '/usr/local/etc'
+
+    configRootPath = `${OS.getInstance().usrLocalDir}/etc`
     configPath = `${this.configRootPath}/my.cnf`
     maxFilesConfPath = '/Library/LaunchDaemons/limit.maxfiles.plist' // TODO: This is Mac only, make it cross platform.
-    mysqlDirectoryPath = '/usr/local/var/mysql'
+    mysqlDirectoryPath = `${OS.getInstance().usrLocalDir}/var/mysql`
 
     rootPassword = 'root'
 
@@ -68,7 +68,7 @@ abstract class Mysql extends Service {
     }
 
     linkDatabase = async (): Promise<void> => {
-        await client().serviceCtl.link(this.service)
+        await OS.getInstance().serviceCtl.link(this.service)
     }
 
     // TODO: We should get the current password from the Jale config instead.

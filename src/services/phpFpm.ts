@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import * as os from 'os'
+import OS from '../client/OS'
 import zPerformanceIni from '../templates/zPerformanceIni'
 import {ensureDirectoryExists} from '../utils/filesystem'
-import {client} from '../utils/os'
 import {jaleHomeDir, jaleLogsPath} from '../utils/jale'
 import Service from './service'
 
@@ -15,8 +15,7 @@ abstract class PhpFpm extends Service {
     abstract configPath: string
     abstract iniDirectoryPath: string
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    configRootPath = '/usr/local/etc/php'
+    configRootPath = `${OS.getInstance().usrLocalDir}/etc/php`
 
     configure = async (): Promise<boolean> => {
         await this.updateConfiguration()
@@ -62,11 +61,11 @@ abstract class PhpFpm extends Service {
     }
 
     unLinkPhpVersion = async (): Promise<boolean> => {
-        return client().serviceCtl.unlink(this.service)
+        return OS.getInstance().serviceCtl.unlink(this.service)
     }
 
     linkPhpVersion = async (): Promise<boolean> => {
-        return client().serviceCtl.link(this.service)
+        return OS.getInstance().serviceCtl.link(this.service)
     }
 }
 

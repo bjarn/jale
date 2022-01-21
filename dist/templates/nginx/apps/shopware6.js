@@ -7,7 +7,7 @@ const nginxShopware6Template = (hostname, docroot) => `server {
     server_name www.${hostname} ${hostname};
     root ${docroot}/public;
     client_max_body_size 128M;
-    
+
     access_log off;
     error_log ${jale_1.jaleLogsPath}/nginx/${hostname}-error.log;
     
@@ -25,7 +25,7 @@ const nginxShopware6Template = (hostname, docroot) => `server {
     }
     
     location / {
-        try_files $uri /index.php$is_args$args;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location ~ \\.php$ {
@@ -37,5 +37,10 @@ const nginxShopware6Template = (hostname, docroot) => `server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
     }
+
+    location ~ /\\.ht {
+        deny all;
+    }
 }`;
 exports.default = nginxShopware6Template;
+//# sourceMappingURL=shopware6.js.map

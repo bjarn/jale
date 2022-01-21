@@ -7,9 +7,7 @@ class PhpFpm80 extends phpFpm_1.default {
         super(...arguments);
         this.isEndOfLife = false;
         this.versionName = '8.0';
-        // TODO: When PHP 8.1 is out, change this to php@8.0
-        this.service = 'php';
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
+        this.service = 'php@8.0';
         this.configPath = `${this.configRootPath}/8.0/php-fpm.d/www.conf`;
         this.iniDirectoryPath = `${this.configRootPath}/8.0/conf.d`;
     }
