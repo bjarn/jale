@@ -1,0 +1,1 @@
+{"version":3,"file":"darwinArm.js","sourceRoot":"","sources":["../../../src/client/os/darwinArm.ts"],"names":[],"mappings":";;;AAEA,kFAAiD;AAEjD,sFAAqD;AAErD,MAAM,SAAS;IAAf;QAEI,oBAAe,GAAG,cAAc,CAAA;QAChC,mBAAc,GAAmB,IAAI,kBAAQ,CAAA;QAC7C,eAAU,GAAe,IAAI,sBAAY,CAAA;QACzC,aAAQ,GAAG,IAAI,CAAA;QACf,gBAAW,GAAG,eAAe,CAAA;IAEjC,CAAC;CAAA;AAED,kBAAe,SAAS,CAAA"}

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const memcached_1 = tslib_1.__importDefault(require("../extensions/php/memcached"));
 const memcache_1 = tslib_1.__importDefault(require("../services/memcache"));
 const console_1 = require("../utils/console");
-const os_1 = require("../utils/os");
 const phpFpm_1 = require("../utils/phpFpm");
 class MemcacheController {
     constructor() {
@@ -33,7 +33,7 @@ class MemcacheController {
         });
         this.enable = (memcache, phpMemcached) => tslib_1.__awaiter(this, void 0, void 0, function* () {
             let restart = false;
-            if (yield os_1.client().packageManager.packageIsInstalled(memcache.service)) {
+            if (yield OS_1.default.getInstance().packageManager.packageIsInstalled(memcache.service)) {
                 console_1.warning(`${memcache.service} is already installed.`);
             }
             else {
@@ -55,7 +55,7 @@ class MemcacheController {
             else {
                 console_1.warning('Memcache\'s PHP extension was not enabled.');
             }
-            if (!(yield os_1.client().packageManager.packageIsInstalled(memcache.service))) {
+            if (!(yield OS_1.default.getInstance().packageManager.packageIsInstalled(memcache.service))) {
                 console_1.warning(`${memcache.service} was not installed.`);
                 return phpExtensionDisabled;
             }

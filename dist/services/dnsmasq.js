@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const execa_1 = tslib_1.__importDefault(require("execa"));
 const fs = tslib_1.__importStar(require("fs"));
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const jale_1 = require("../utils/jale");
 const sudo_1 = require("../utils/sudo");
 const service_1 = tslib_1.__importDefault(require("./service"));
@@ -11,9 +12,8 @@ class Dnsmasq extends service_1.default {
         super(...arguments);
         this.service = 'dnsmasq';
         this.requireRoot = true;
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
         this.resolverPath = '/etc/resolver';
-        this.configPath = '/usr/local/etc/dnsmasq.conf';
+        this.configPath = `${OS_1.default.getInstance().usrLocalDir}/etc/dnsmasq.conf`;
         this.customConfigPath = `${jale_1.jaleHomeDir}/dnsmasq.conf`;
         this.configure = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
             const config = yield jale_1.getConfig();

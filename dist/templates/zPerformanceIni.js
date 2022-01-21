@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const zPerformanceIni = `; Add TIMEZONE string for replacing with machine timezone
 date.timezone = "${Intl.DateTimeFormat().resolvedOptions().timeZone}"
 
@@ -23,7 +25,7 @@ suhosin.session.cryptua = off
 zend.enable_gc = off
 
 ; Use mailhog for sending emails
-sendmail_path = /usr/local/bin/MailHog sendmail test@test
+sendmail_path = ${OS_1.default.getInstance().usrLocalDir}/bin/MailHog sendmail test@test
 
 [opcache]
 opcache.enable = 1

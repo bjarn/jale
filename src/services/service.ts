@@ -1,4 +1,4 @@
-import {client} from '../utils/os'
+import OS from '../client/OS'
 
 abstract class Service {
     abstract service: string
@@ -6,30 +6,30 @@ abstract class Service {
 
     start = async (): Promise<boolean> =>
         this.requireRoot ?
-            client().serviceCtl.startAsRoot(this.service) :
-            client().serviceCtl.start(this.service)
+            OS.getInstance().serviceCtl.startAsRoot(this.service) :
+            OS.getInstance().serviceCtl.start(this.service)
 
     stop = async (): Promise<boolean> =>
         this.requireRoot ?
-            client().serviceCtl.stopAsRoot(this.service) :
-            client().serviceCtl.stop(this.service)
+            OS.getInstance().serviceCtl.stopAsRoot(this.service) :
+            OS.getInstance().serviceCtl.stop(this.service)
 
     restart = async (): Promise<boolean> =>
         this.requireRoot ?
-            client().serviceCtl.restartAsRoot(this.service) :
-            client().serviceCtl.restart(this.service)
+            OS.getInstance().serviceCtl.restartAsRoot(this.service) :
+            OS.getInstance().serviceCtl.restart(this.service)
 
     reload = async (): Promise<boolean> =>
         this.requireRoot ?
-            client().serviceCtl.reloadAsRoot(this.service) :
-            client().serviceCtl.reload(this.service)
+            OS.getInstance().serviceCtl.reloadAsRoot(this.service) :
+            OS.getInstance().serviceCtl.reload(this.service)
 
     install = (): Promise<boolean> => {
-        return client().packageManager.install(this.service, false)
+        return OS.getInstance().packageManager.install(this.service, false)
     }
 
     uninstall = (): Promise<boolean> => {
-        return client().packageManager.uninstall(this.service, false)
+        return OS.getInstance().packageManager.uninstall(this.service, false)
     }
 
     abstract configure(): Promise<boolean>

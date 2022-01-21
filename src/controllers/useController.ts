@@ -1,5 +1,5 @@
+import OS from '../client/OS'
 import {error, info, success, warning} from '../utils/console'
-import {client} from '../utils/os'
 import {getLinkedPhpVersion, getPhpFpmByName, supportedPhpVersions} from '../utils/phpFpm'
 
 class UseController {
@@ -42,11 +42,11 @@ class UseController {
         }
 
         // Make sure the PHP version is installed.
-        const isVersionInstalled = await client().packageManager.packageIsInstalled(newPhpVersion.service)
+        const isVersionInstalled = await OS.getInstance().packageManager.packageIsInstalled(newPhpVersion.service)
 
         if (!isVersionInstalled) {
             info(`PHP ${newPhpVersion.versionName} not found, installing now...`)
-            await client().packageManager.install(newPhpVersion.service, false)
+            await OS.getInstance().packageManager.install(newPhpVersion.service, false)
             info(`Configuring PHP ${newPhpVersion.versionName}...`)
             await newPhpVersion.configure()
         }

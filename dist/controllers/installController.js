@@ -5,6 +5,7 @@ const fs = tslib_1.__importStar(require("fs"));
 const inquirer_1 = tslib_1.__importDefault(require("inquirer"));
 const colors_1 = require("kleur/colors");
 const listr2_1 = require("listr2");
+const OS_1 = tslib_1.__importDefault(require("../client/OS"));
 const dnsmasq_1 = tslib_1.__importDefault(require("../services/dnsmasq"));
 const mailhog_1 = tslib_1.__importDefault(require("../services/mailhog"));
 const nginx_1 = tslib_1.__importDefault(require("../services/nginx"));
@@ -12,10 +13,9 @@ const fallbackServer_1 = require("../templates/fallbackServer");
 const console_1 = require("../utils/console");
 const database_1 = require("../utils/database");
 const filesystem_1 = require("../utils/filesystem");
-const optionalService_1 = require("../utils/optionalService");
-const os_1 = require("../utils/os");
-const phpFpm_1 = require("../utils/phpFpm");
 const jale_1 = require("../utils/jale");
+const optionalService_1 = require("../utils/optionalService");
+const phpFpm_1 = require("../utils/phpFpm");
 const sudo_1 = require("../utils/sudo");
 const tools_1 = require("../utils/tools");
 class InstallController {
@@ -44,7 +44,7 @@ class InstallController {
                 type: 'checkbox',
                 name: 'phpVersions',
                 message: 'Choose one or more PHP versions',
-                choices: ['php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
+                choices: ['php@8.1', 'php@8.0', 'php@7.4', 'php@7.3', 'php@7.2', 'php@7.1'],
                 validate: (input) => {
                     return input.length >= 1;
                 }
@@ -118,7 +118,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                        const isInstalled = yield os_1.client().packageManager.packageIsInstalled('dnsmasq');
+                        const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled('dnsmasq');
                         if (isInstalled)
                             return 'Dnsmasq is already installed.';
                     }),
@@ -142,7 +142,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                        const isInstalled = yield os_1.client().packageManager.packageIsInstalled('nginx');
+                        const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled('nginx');
                         if (isInstalled)
                             return 'Nginx is already installed.';
                     }),
@@ -169,9 +169,9 @@ class InstallController {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                             skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                                if (phpVersion == 'php@8.0')
+                                if (phpVersion == 'php@8.1')
                                     phpVersion = 'php';
-                                const isInstalled = yield os_1.client().packageManager.packageIsInstalled(phpVersion);
+                                const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled(phpVersion);
                                 if (isInstalled)
                                     return `${phpVersion} is already installed.`;
                             }),
@@ -209,7 +209,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                        const isInstalled = yield os_1.client().packageManager.packageIsInstalled(database);
+                        const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled(database);
                         if (isInstalled)
                             return `${database} is already installed.`;
                     }),
@@ -234,7 +234,7 @@ class InstallController {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                     skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                        const isInstalled = yield os_1.client().packageManager.packageIsInstalled('mailhog');
+                        const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled('mailhog');
                         if (isInstalled)
                             return 'Mailhog is already installed.';
                     }),
@@ -262,7 +262,7 @@ class InstallController {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore this is valid, however, the types are kind of a mess? not sure yet.
                             skip: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                                const isInstalled = yield os_1.client().packageManager.packageIsInstalled(service.service);
+                                const isInstalled = yield OS_1.default.getInstance().packageManager.packageIsInstalled(service.service);
                                 if (isInstalled)
                                     return `${service.service} is already installed.`;
                             }),

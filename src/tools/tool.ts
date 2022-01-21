@@ -1,5 +1,5 @@
+import OS from '../client/OS'
 import {error, info, success} from '../utils/console'
-import {client} from '../utils/os'
 
 abstract class Tool {
 
@@ -16,7 +16,7 @@ abstract class Tool {
         }
 
         info(`Installing ${this.name}...`)
-        await client().packageManager.install(this.alias, false)
+        await OS.getInstance().packageManager.install(this.alias, false)
         return true
     }
 
@@ -31,7 +31,7 @@ abstract class Tool {
 
         info(`Uninstalling ${this.name}...`)
 
-        await client().packageManager.uninstall(this.alias, false)
+        await OS.getInstance().packageManager.uninstall(this.alias, false)
 
         success(`Uninstalled ${this.name}.`)
 
@@ -42,7 +42,7 @@ abstract class Tool {
      * Check if app the is already installed..
      */
     isInstalled = async (): Promise<boolean> => {
-        return client().packageManager.packageIsInstalled(this.alias)
+        return OS.getInstance().packageManager.packageIsInstalled(this.alias)
     }
 
 }

@@ -1,3 +1,5 @@
+import OS from '../client/OS'
+
 const redisConf = `# Redis configuration file example.
 #
 # Note that in order to read the configuration file, Redis must be
@@ -244,7 +246,7 @@ dbfilename dump.rdb
 # The Append Only File will also be created inside this directory.
 #
 # Note that you must specify a directory here, not a file name.
-dir /usr/local/var/db/redis/
+dir ${OS.getInstance().usrLocalDir}/var/db/redis/
 
 ################################# REPLICATION #################################
 

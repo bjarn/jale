@@ -1,4 +1,5 @@
 import fs from 'fs'
+import OS from '../client/OS'
 import Mariadb from '../services/mariadb'
 import Mysql from '../services/mysql'
 import Mysql57 from '../services/mysql57'
@@ -38,13 +39,13 @@ const getDatabaseByName = (databaseType: string): Mysql => {
  * Get the currently linked Mysql binary.
  */
 const getLinkedDatabase = async (): Promise<Mysql> => {
-    const mysqlLink = await fs.lstatSync('/usr/local/bin/mysql')
+    const mysqlLink = await fs.lstatSync(`${OS.getInstance().usrLocalDir}/bin/mysql`)
 
     if (!mysqlLink.isSymbolicLink()) {
         throw Error('Mysql executable is not found.')
     }
 
-    const mysqlBinary = await fs.realpathSync('/usr/local/bin/mysql')
+    const mysqlBinary = await fs.realpathSync(`${OS.getInstance().usrLocalDir}/bin/mysql`)
 
     let linkedDatabase: Mysql | undefined
 

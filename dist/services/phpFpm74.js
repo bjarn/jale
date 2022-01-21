@@ -8,7 +8,6 @@ class PhpFpm74 extends phpFpm_1.default {
         this.isEndOfLife = false;
         this.versionName = '7.4';
         this.service = `php@${this.versionName}`;
-        // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
         this.configPath = `${this.configRootPath}/7.4/php-fpm.d/www.conf`;
         this.iniDirectoryPath = `${this.configRootPath}/7.4/conf.d`;
     }

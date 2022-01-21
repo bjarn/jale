@@ -5,10 +5,25 @@ const execa_1 = tslib_1.__importDefault(require("execa"));
 const packageManager_1 = tslib_1.__importDefault(require("../packageManager"));
 class Homebrew extends packageManager_1.default {
     constructor() {
-        super(...arguments);
+        super();
+        let usrLocalDir;
+        switch (`${process.platform}_${process.arch}`) {
+            case 'darwin_arm64':
+                usrLocalDir = '/opt/homebrew';
+                break;
+            default: // darwin x64
+                usrLocalDir = '/usr/local';
+                break;
+        }
         this.alias = 'brew';
         this.name = 'Homebrew';
-        this.path = '/usr/local/bin/brew';
+        this.path = `${usrLocalDir}/bin/brew`;
+    }
+    static getInstance() {
+        if (!Homebrew.instance) {
+            Homebrew.instance = new Homebrew();
+        }
+        return Homebrew.instance;
     }
     /**
      * Install a package. In case of brew, the cask variable should be true of it ain't a formula but a cask.

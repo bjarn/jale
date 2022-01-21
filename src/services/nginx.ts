@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import OS from '../client/OS'
 import fastcgiParams from '../templates/fastcgiParams'
 import nginxConf from '../templates/nginx'
 import jaleNginxConf from '../templates/nginx/jale'
@@ -12,11 +13,10 @@ class Nginx extends Service {
     service = 'nginx'
     requireRoot = true
 
-    // TODO: These paths should be using the Client class. Otherwise they won't work cross platform.
-    configPath = '/usr/local/etc/nginx/nginx.conf'
-    jaleNginxFolderPath = '/usr/local/etc/nginx/jale'
+    configPath = `${OS.getInstance().usrLocalDir}/etc/nginx/nginx.conf`
+    jaleNginxFolderPath = `${OS.getInstance().usrLocalDir}/etc/nginx/jale`
     jaleNginxConfigPath = `${this.jaleNginxFolderPath}/jale.conf`
-    fastCgiParamsConfigPath = '/usr/local/etc/nginx/fastcgi_params'
+    fastCgiParamsConfigPath = `${OS.getInstance().usrLocalDir}/etc/nginx/fastcgi_params`
 
     configure = async (): Promise<boolean> => {
         await ensureDirectoryExists(this.jaleNginxFolderPath)

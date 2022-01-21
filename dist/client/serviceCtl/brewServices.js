@@ -5,10 +5,25 @@ const execa_1 = tslib_1.__importDefault(require("execa"));
 const serviceCtl_1 = tslib_1.__importDefault(require("../serviceCtl"));
 class BrewServices extends serviceCtl_1.default {
     constructor() {
-        super(...arguments);
+        super();
+        let usrLocalDir;
+        switch (`${process.platform}_${process.arch}`) {
+            case 'darwin_arm64':
+                usrLocalDir = '/opt/homebrew';
+                break;
+            default: // darwin x64
+                usrLocalDir = '/usr/local';
+                break;
+        }
         this.alias = 'brew';
         this.name = 'Homebrew';
-        this.path = '/usr/local/bin/brew';
+        this.path = `${usrLocalDir}/bin/brew`;
+    }
+    static getInstance() {
+        if (!BrewServices.instance) {
+            BrewServices.instance = new BrewServices();
+        }
+        return BrewServices.instance;
     }
     reload(pkg) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {

@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import {homedir} from 'os'
+import OS from '../client/OS'
 import {Config} from '../models/config'
 import {ensureDirectoryExists} from './filesystem'
 
@@ -36,12 +37,12 @@ const jaleFallbackServer = `${jaleHomeDir}/server/index.php`
 /**
  * Get the location of the Nginx apps vhost directory.
  */
-const jaleNginxAppsPath = '/usr/local/etc/nginx/jale/apps'
+const jaleNginxAppsPath = `${OS.getInstance().usrLocalDir}/etc/nginx/jale/apps`
 
 /**
  * Get the location of the Nginx app templates vhost directory.
  */
-const jaleNginxAppTemplatesPath = '/usr/local/etc/nginx/jale/templates'
+const jaleNginxAppTemplatesPath = `${OS.getInstance().usrLocalDir}/etc/nginx/jale/templates`
 
 /**
  * Ensure the Jale home directory exists. If it does not exist, we'll create it.
