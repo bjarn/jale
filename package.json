@@ -44,7 +44,7 @@
   "dependencies": {
     "cli-table": "^0.3.6",
     "commander": "^8.0.0",
-    "execa": "^5.1.1",
+    "execa": "^6.0.0",
     "inquirer": "^8.1.1",
     "kleur": "^4.1.4",
     "listr2": "^3.10.0"
