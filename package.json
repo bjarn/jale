@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/cli-table": "^0.3.0",
     "@types/commander": "^2.12.2",
-    "@types/inquirer": "^7.3.3",
+    "@types/inquirer": "^9.0.2",
     "@types/node": "^16.3.0",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
@@ -45,7 +45,7 @@
     "cli-table": "^0.3.6",
     "commander": "^8.0.0",
     "execa": "^5.1.1",
-    "inquirer": "^8.1.1",
+    "inquirer": "^9.1.2",
     "kleur": "^4.1.4",
     "listr2": "^3.10.0"
   }
